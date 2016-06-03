@@ -109,6 +109,7 @@ class SwipeElement: SwipeView {
     // Lazy properties
     private lazy var notificationManager = SNNotificationManager()
 
+    init(info:[String:AnyObject], scale:CGSize, parent:SwipeNode, delegate:SwipeElementDelegate) {
         var template = info["template"] as? String
         if template == nil {
             template = info["element"] as? String
@@ -117,7 +118,6 @@ class SwipeElement: SwipeView {
             }
         }
         let elementInfo = SwipeParser.inheritProperties(info, baseObject: delegate.prototypeWith(template))
-    init(info:[String:AnyObject], scale:CGSize, parent:SwipeNode, delegate:SwipeElementDelegate) {
         self.info = elementInfo
         self.scale = scale
         self.delegate = delegate
