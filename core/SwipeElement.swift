@@ -65,7 +65,7 @@ class SwipeElement: SwipeView {
     private let contentScale = UIScreen.mainScreen().scale
 #endif
     private var fRepeat = false
-    private var subViews = [SwipeNode]()
+    private var helper: SwipeNode?  // Example: SwipeList
     
     // Image Element Specific
     private var imageLayer:CALayer?
@@ -1055,8 +1055,9 @@ class SwipeElement: SwipeView {
         
         if let value = info["list"] as? [String:AnyObject] {
             let list = SwipeList(parent: self, info: value, scale:self.scale, frame: view.bounds, screenDimension: self.screenDimension, delegate: self.delegate)
-            subViews.append(list)
+            helper = list
             view.addSubview(list.tableView)
+            list.tableView.reloadData()
         }
         
         // Nested Elements
@@ -1226,8 +1227,8 @@ class SwipeElement: SwipeView {
         guard let params = value as? [String:AnyObject] else {
             return nil
         }
-        if let expr = params["eval"] as? String {
-            if let text = originator.eval(expr) as? String {
+        if let valInfo = params["valueOf"] as? [String:AnyObject] {
+            if let text = originator.getValue(valInfo) as? String {
                 return text
             }
             return nil
@@ -1333,18 +1334,71 @@ class SwipeElement: SwipeView {
     // SwipeNode
     
     
-    override func eval(expr: String) -> AnyObject? {
-        if expr == "text" {
+    override func getAttributeValue(attribute: String) -> AnyObject? {
+        switch (attribute) {
+        case "text":
             return self.text
+        default:
+            return helper?.getAttributeValue(attribute)
+        }
+    }
+    
+    override func getAttributesValue(info: [String:AnyObject]) -> AnyObject? {
+        let key = info.keys.first!
+        if let val = info[key] as? String {
+            return getAttributeValue(val)
+        } else {
+            return self.helper?.getAttributesValue(info)
+        }
+    }
+    
+    override func getValue(info: [String:AnyObject]) -> AnyObject? {
+        var name = "*"
+        if let val = info["name"] as? String {
+            name = val
         }
         
-        for sv in subViews {
-            if let value = sv.eval(expr) {
-                return value
+        var up = true
+        if let val = info["include"] as? String {
+            up = val != "children"
+        }
+        
+        if (name == "*" || self.name.caseInsensitiveCompare(name) == .OrderedSame) {
+            if let attribute = info["attribute"] as? String {
+                return getAttributeValue(attribute)
+            } else if let attributeInfo = info["attribute"] as? [String:AnyObject] {
+                return getAttributesValue(attributeInfo)
             }
         }
-    
-        return self.parent?.eval(expr)
+
+        // Find named element in parent hierarchy and update
+        var node: SwipeNode? = self
+        
+        if up {
+            while node?.parent != nil {
+                if let viewNode = node?.parent as? SwipeView {
+                    for e in viewNode.elements {
+                        if e.name.caseInsensitiveCompare(name) == .OrderedSame {
+                            if let attribute = info["attribute"] as? String {
+                                return e.getAttributeValue(attribute)
+                            } else if let attributeInfo = info["attribute"] as? [String:AnyObject] {
+                                return e.getAttributesValue(attributeInfo)
+                            }
+                        }
+                    }
+                    
+                    node = node?.parent
+                } else {
+                    return false
+                }
+            }
+        } else {
+            for e in self.elements {
+                return e.getValue(info)
+            }
+        }
+        
+        return nil
     }
 
     func update(originator: SwipeNode, info: [String:AnyObject]) {

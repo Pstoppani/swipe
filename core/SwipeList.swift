@@ -18,7 +18,7 @@ class SwipeList: SwipeView, UITableViewDelegate, UITableViewDataSource {
 
     private let info: [String:AnyObject]
     private let templatesInfo: [[String:AnyObject]]?
-    private var items = [AnyObject]()
+    private var items = [[String:AnyObject]]()
     private let scale:CGSize
     private var screenDimension = CGSize(width: 0, height: 0)
     weak var delegate:SwipeElementDelegate!
@@ -41,7 +41,6 @@ class SwipeList: SwipeView, UITableViewDelegate, UITableViewDataSource {
         if let itemsInfo = info["items"] as? [[String:AnyObject]] {
             items = itemsInfo
         }
-        self.tableView.reloadData()
         if let selectedIndex = self.info["selectedIndex"] as? Int {
             self.tableView.selectRowAtIndexPath(NSIndexPath(forRow: selectedIndex, inSection: 0), animated: true, scrollPosition: .Middle)
         }
@@ -107,25 +106,55 @@ class SwipeList: SwipeView, UITableViewDelegate, UITableViewDataSource {
     
     // SwipeNode
     
-    override func eval(expr: String) -> AnyObject? {
-        if expr == "selectedIndex" {
+    override func getAttributeValue(attribute: String) -> AnyObject? {
+        switch (attribute) {
+        case "selectedIndex":
             if let indexPath = self.tableView.indexPathForSelectedRow {
                 return "\(indexPath.row)"
+            } else {
+                return "none"
             }
-        } else if expr.hasPrefix("items") {
+        default:
+            return nil
+        }
+    }
+    
+    override func getAttributesValue(info: [String:AnyObject]) -> AnyObject? {
+        let attr = info.keys.first!
+        switch (attr) {
+        case "items":
             if let indexPath = self.cellIndexPath {
-                let item = items[indexPath.row]
-                if let p1 = item["name"] as? String {
-                    return p1
-                }
-                if let p1 = item["name"] as? [String:AnyObject] {
-                    if let p2 = p1["first"] as? String {
-                        return p2
+                var item = items[indexPath.row]
+                var path = info["items"] as! [String:AnyObject]
+                var attribute = path.keys.first!
+                
+                while (true) {
+                    if let next = path[attribute] as? String {
+                        if let sub = item[attribute] as? [String:AnyObject] {
+                            return sub[next]
+                        } else {
+                            return nil
+                        }
+                    } else if let next = path[attribute] as? [String:AnyObject] {
+                        if let sub = item[attribute] as? [String:AnyObject] {
+                            path = next
+                            attribute = path.keys.first!
+                            item = sub
+                        } else {
+                            return nil
+                        }
+                    } else {
+                        return nil
                     }
                 }
+                
+                // loop on items in info until get to a String
             }
+            break;
+        default:
+            return nil
         }
-        
+
         return nil
     }
 }

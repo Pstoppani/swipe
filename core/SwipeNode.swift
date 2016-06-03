@@ -30,7 +30,15 @@ class SwipeNode: NSObject {
         parent?.executeAction(originator, action: action)
     }
     
-    func eval(expr: String) -> AnyObject? {
+    func getAttributeValue(attribte: String) -> AnyObject? {
+        return nil
+    }
+
+    func getAttributesValue(info: [String:AnyObject]) -> AnyObject? {
+        return nil
+    }
+    
+    func getValue(info: [String:AnyObject]) -> AnyObject? {
         return nil
     }
 }
