@@ -1,0 +1,161 @@
+object : {
+	type : "group",
+	loop : -1,
+	duration : 5000,
+	state: {
+		y : 80
+	},
+	animation: {
+		0 : {
+			x : 100
+		},
+		50 : {
+			x : 1040
+		},
+		100 : {
+			x : 100
+		}
+	},
+	objects : [
+		{
+			type : "circle",
+			state : {
+				x: 100,
+				y: 100,
+				radius: 75,
+				opacity: .5,
+				fillStyle: "#ff0000"
+			},
+			zindex : 0,
+			loop: -1,
+			duration: 10000,
+			animation: {
+				0 : {
+					x: 100,
+					y: 100
+				},
+				25 : {
+					x: 150,
+					y: 100
+				},
+				50 : {
+					x: 150,
+					y: 150
+				},
+				75 : {
+					x: 100,
+					y: 150
+				},
+				100 : {
+					x: 100,
+					y: 100
+				}
+			}
+		},
+		{
+			type : "circle",
+			state : {
+				x: 150,
+				y: 100,
+				radius: 75,
+				opacity: .5,
+				fillStyle: "#00ff00"
+			},
+			zindex : 0,
+			loop: -1,
+			duration: 10000,
+			animation: {
+				0 : {
+					x: 150,
+					y: 100
+				},
+				25 : {
+					x: 150,
+					y: 150
+				},
+				50 : {
+					x: 100,
+					y: 150
+				},
+				75 : {
+					x: 100,
+					y: 100
+				},
+				100 : {
+					x: 150,
+					y: 100
+				}
+			}
+		},
+		{
+			type : "circle",
+			state : {
+				x: 150,
+				y: 150,
+				radius: 75,
+				opacity: .5,
+				fillStyle: "#ffff00"
+			},
+			zindex : 0,
+			loop: -1,
+			duration: 10000,
+			animation: {
+				0 : {
+					x: 150,
+					y: 150
+				},
+				25 : {
+					x: 100,
+					y: 150
+				},
+				50 : {
+					x: 100,
+					y: 100
+				},
+				75 : {
+					x: 150,
+					y: 100
+				},
+				100 : {
+					x: 150,
+					y: 150
+				}
+			}
+		},
+		{
+			type : "circle",
+			state : {
+				x: 100,
+				y: 150,
+				radius: 75,
+				opacity: .5,
+				fillStyle: "#0000ff"
+			},
+			zindex : 0,
+			loop: -1,
+			duration: 10000,
+			animation: {
+				0 : {
+					x: 100,
+					y: 150
+				},
+				25 : {
+					x: 100,
+					y: 100
+				},
+				50 : {
+					x: 150,
+					y: 100
+				},
+				75 : {
+					x: 150,
+					y: 150
+				},
+				100 : {
+					x: 100,
+					y: 150
+				}
+			}
+		}
+	]
+}

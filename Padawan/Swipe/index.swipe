@@ -1,0 +1,35 @@
+{
+	"elements": {
+		"templateSelf": {
+		},
+	"pages": [
+		{
+			"bc":"#fdd",
+			"transition":"scroll",
+			"elements": [
+				{ "text":"Swipe up!" }
+			]
+		},
+		{
+			"bc":"#dfd",
+			"transition":"scroll",
+			"elements": [
+				{ "text":"Hello" }
+			]
+		},
+		{	
+			"bc":"#ddf",
+			"transition":"replace",
+			"elements": [
+				{ "text":"from" }
+			]
+		},
+		{
+			"bc":"#ddd",
+			"transition":"fadein",
+			"elements": [
+				{ "text":"EXM" }
+			]
+		}
+	]
+}

@@ -1,9 +1,9 @@
 //
 //  AppDelegate.swift
-//  sample
+//  Padawan
 //
-//  Created by satoshi on 10/15/15.
-//  Copyright © 2015 Satoshi Nakajima. All rights reserved.
+//  Created by Pete Stoppani on 5/13/16.
+//  Copyright © 2016 UIEvolution. All rights reserved.
 //
 
 import UIKit
