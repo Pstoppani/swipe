@@ -1,0 +1,27 @@
+{
+    "elements": {
+        "outer": {
+            "w":180, "h":100, "bc":"#ddd",
+            "elements":[
+                { "id":"inner1", "x":"1%",  "y":"1%", "w":"19%", "h":"98%", "bc":"yellow" },
+                { "id":"inner2", "x":"21%", "y":"1%", "w":"78%", "h":"98%", "bc":"green" },
+            ],
+        },
+    },
+    "pages": [
+        {
+            "elements": [
+                { "template":"outer", "pos":[160, 100] },
+                { "template":"outer", "pos":[160, 202],
+                  "elements":[
+                    { "id":"inner1", "bc":"red", },
+                    { "id":"inner2", "bc":"blue", },
+                  ]},
+                { "template":"outer", "pos":[160, 304],
+                  "elements":[
+                    { "id":"inner2", "text":"UXML!" },
+                  ]},
+            ],
+        },
+    ]
+}

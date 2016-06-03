@@ -1,0 +1,53 @@
+{
+	"pages": [
+		{
+			"name": "main",
+			"elements": [
+				{ "bc":"#fdd"},
+				{ "name":"echo", "bc":"#eff", "h":"8%", "w":"90%", "pos":["50%","5%"], "text":"2"},
+				{
+					"name": "aList",
+					"h":"80%",
+					"w":"80%",
+					"bc":"#ffe",
+					"pos":["50%","50%"],
+					"list": {
+						"selectedIndex":2,
+						"cellTemplates": [
+								{
+								"bc":"#eef",
+								"elements": [
+									{ "name":"icon", "img":"icon-180.png", "pos":[10,"50%"], "w":20 },
+									{ "name":"label", "x":40, "w":"80%", "text":{"value":{"items":{"name":"first"}}}, "textAlign":"left" }
+								]
+							},
+							{
+								"bc":"#efe",
+								"elements": [
+									{ "name":"icon", "img":"icon-180.png", "pos":["90%","50%"], "w":20},
+									{ "name":"label", "x":0, "w":"80%", "text":{"value":{"items":{"name":"first"}}}, "textAlign":"right" }
+								]
+              }
+            ],
+						"items": [
+							{ "name": { "first":"fred", "last":"flintstone"}},
+							{ "name": { "first":"wilma", "last":"flintstone"}},
+							{ "name": { "first":"pebbles", "last":"flintstone"}},
+							{ "name": { "first":"barney", "last":"rubble"}},
+							{ "name": { "first":"betty", "last":"rubble"}},
+							{ "name": { "first":"bambam", "last":"rubble"}}
+						]
+					},
+					"events": {
+						"tap": { "//":"eat tap so browser doesn't get it"},
+						"itemSelected": {
+							"actions": [
+								{ "update": { "name":"echo", "text":{"value":"selectedIndex"}}}
+							]
+						}
+					}
+				}
+			]
+		}
+	]
+}

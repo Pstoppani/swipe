@@ -1,0 +1,229 @@
+{
+	"templates": {
+		"elements": {
+			"t1": {
+				"text": "t1",
+				"events": {
+					"tap": {
+						"actions": [
+							{
+								"update": {"text":"text1 tapped"}
+							},
+							{
+								"timer": {
+									"duration":0.5,
+									"events": {
+										"tick": {
+												"actions": [
+												{
+													"update": {"text":"one more"}
+												},
+												{
+													"timer":{
+														"duration":0.5,
+														"events": {
+															"tick": {
+																"actions": [
+																	{
+																		"update": {"text":"hello"}
+																	}
+																]
+															}
+														}
+													}
+												}
+											]
+										}
+									}
+								}
+							}
+						]
+					}
+				}
+			}
+		},
+		"pages": {
+			"p1": { "bc": "#eef"}
+		},
+	},
+	"paths": {
+		"p1": "M 0,0 C 500,0 0,800 500,500"
+	},
+	"pages": [
+		{
+			"//": "Tap on element updates element",
+			"elements": [
+				{
+					"text": "tap me",
+					"pos": ["50%", "33%"],
+					"w":"90%",
+					"h":"10%",
+					"bc":"#fdd",
+					"events": {
+						"tap": {
+							"actions": [
+								{
+									"update": {"text":"tapped"}
+								},
+							]
+						}
+					}
+				}
+			]
+		},
+		{
+			"//": "Tap on element updates other element",
+			"elements": [
+				{
+					"text": "tap me",
+					"pos": ["50%", "33%"],
+					"w":"90%",
+					"h":"10%",
+					"bc":"#fdd",
+					"events": {
+						"tap": {
+							"actions": [
+								{
+									"update": {"name":"other", "text":"tapped"}
+								},
+							]
+						}
+					}
+				},
+				{
+					"name":"other",
+					"text": "hello",
+					"pos": ["50%", "66%"],
+					"w":"90%",
+					"h":"10%",
+					"bc":"#fdd",
+				}
+			]
+		},
+		{
+			"//": "Tap on element updates self then after a pause updates self again",
+			"elements": [
+				{
+					"text": "tap me",
+					"pos": ["50%", "33%"],
+					"w":"90%",
+					"h":"10%",
+					"bc":"#fdd",
+					"events": {
+						"tap": {
+							"actions": [
+								{
+									"update": {"text":"tapped"}
+								},
+								{
+									"timer": {
+										"duration":0.5,
+										"events": {
+											"tick": {
+												"actions": [
+													{
+														"update": {"text":"tick"}
+													}
+												]
+											}
+										}
+									}
+								}
+							]
+						}
+					}
+				}
+			]
+		},
+		{
+			"//": "Tap on page, updates element",
+			"elements": [
+			  {
+				  "name": "text1",
+				  "text": "tap anywhere",
+					"pos": ["50%", "33%"],
+					"w":"90%",
+					"h":"10%",
+					"bc":"#fdd",
+			  }
+			],
+			"events": {
+				"tap": {
+					"actions": [
+						{
+							"update": {"name":"text1", "text":"main tapped"}
+						}
+					]
+				}
+			}
+		},
+		{
+			"name":"main",
+			"template":"p1",
+			"elements": [
+			  {
+					"template": "t1",
+				  "name": "text1",
+				  "text": "hello",
+					"pos": ["50%", "33%"],
+					"w":"90%",
+					"h":"10%",
+					"bc":"#fdd",
+					"path": {"ref":"p1"},
+					"lineWidth":3,
+					"events": {
+						"//": "Test merging of events",
+						"doubleTap": {
+							"actions": [
+								{
+									"update": {"name":"text2", "text":"text1 double tapped"}
+								},
+								{
+									"timer": {
+										"duration":0.5,
+										"events": {
+											"tick": {
+												"actions": [
+													{
+														"update": {"name":"text2", "text":"world"}
+													}
+												]
+											}
+										}
+									}
+								}
+							]
+						}
+					}
+			  },
+				{
+					"name": "text2", "text":"world", "pos":["50%", "66%"], "w":"90%", "h":"10%", "bc":"#dfd"
+				}
+			],
+			"events": {
+				"tap": {
+					"actions": [
+						{
+							"update": {"name":"text1", "text":"main tapped"}
+						},
+						{
+							"timer": {
+								"duration":0.5,
+								"repeats":false,
+								"events": {
+									"tick": {
+										"actions": [
+											{
+												"update": {"name":"text1", "text":"hello"}
+											}
+										]
+									}
+								}
+							}
+						}
+					]
+				}
+			}
+		}
+	]
+}

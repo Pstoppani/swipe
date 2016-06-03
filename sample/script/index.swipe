@@ -2,7 +2,11 @@
     "type":"net.swipe.list",
     "rowHeight":"10%",
     "items":[
-        { "url":"swipe.swipe", "title":"Swipe Overview", "icon":"Icon-180.png" },
+      { "url":"list.swipe", "title":"list", "icon":"Icon-180.png" },
+      { "url":"refs.swipe", "title":"refs", "icon":"Icon-180.png" },
+      { "url":"actions.swipe", "title":"actions", "icon":"Icon-180.png" },
+      { "url":"data.swipe", "title":"data", "icon":"Icon-180.png" },
+      { "url":"swipe.swipe", "title":"Swipe Overview", "icon":"Icon-180.png" },
         { "url":"tutorial.swipe", "title":"Swipe Tutorial", "icon":"Icon-180.png" },
         { "url":"videostream.swipe", "title":"Streaming Video", "icon":"movie.png" },
         { "url":"radiostream.swipe", "title":"Internet Radio Stations", "icon":"radio.png" },
