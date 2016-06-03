@@ -159,9 +159,9 @@ class SwipeViewController: UIViewController, UIScrollViewDelegate, SwipeDocument
         // Since the paging is not enabled on tvOS, we handle PanGesture directly at this view instead.
         // scrollView.panGestureRecognizer.allowedTouchTypes = [UITouchType.Indirect.rawValue, UITouchType.Direct.rawValue]
         //scrollView.panGestureRecognizer.enabled = false
-        let pan = UIPanGestureRecognizer(target: self, action: "handlePan:")
+        let pan = UIPanGestureRecognizer(target: self, action: #selector(SwipeViewController.handlePan(_:)))
         self.view.addGestureRecognizer(pan)
-        let tap = UITapGestureRecognizer(target: self, action: "handlePlayButton:")
+        let tap = UITapGestureRecognizer(target: self, action: #selector(SwipeViewController.handlePlayButton(_:)))
         tap.allowedPressTypes = [UIPressType.PlayPause.rawValue]
         self.view.addGestureRecognizer(tap)
 #endif
@@ -326,7 +326,7 @@ class SwipeViewController: UIViewController, UIScrollViewDelegate, SwipeDocument
 #elseif os(tvOS)
     func scrollViewDidEndScrollingAnimation(scrollView: UIScrollView) {
         let index = self.scrollIndex
-        self.scrollingCount--
+        self.scrollingCount -= 1
         MyLog("SWView didEndScrolling \(index), \(scrollingTarget), c=\(scrollingCount)", level: 1)
         if self.scrollingCount > 0 {
             return
@@ -399,17 +399,17 @@ class SwipeViewController: UIViewController, UIScrollViewDelegate, SwipeDocument
                 if self.book.horizontal {
                     let extra = offset.x - CGFloat(target) * size.width - velocity.x * factor
                     if extra > size.width / 2.0 {
-                        target++
+                        target += 1
                     } else if extra > 0 - size.width / 2 {
-                        target--
+                        target -= 1
                     }
                 } else {
                     let extra = offset.y - CGFloat(target) * size.height - velocity.y * factor
                     //MyLog("SwiftVC handlePan: \(Int(offset.y - CGFloat(target) * size.height)) - \(Int(velocity.y)) * \(factor) = \(Int(extra))")
                     if extra > size.height / 2 {
-                        target++
+                        target += 1
                     } else if extra < 0 - size.height / 2 {
-                        target--
+                        target -= 1
                     }
                 }
             }
@@ -436,7 +436,7 @@ class SwipeViewController: UIViewController, UIScrollViewDelegate, SwipeDocument
                     MyLog("SWView scrolling back c=\(scrollingCount+1)", level:1)
                 }
             }
-            self.scrollingCount++
+            self.scrollingCount += 1
             MyLog("SWView scrollling to \(offsetAligned)", level:1)
             scrollView.setContentOffset(offsetAligned, animated: true)
             break

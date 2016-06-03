@@ -40,7 +40,7 @@ protocol SwipePageDelegate: NSObjectProtocol {
     func languageIdentifier() -> String?
 }
 
-class SwipePage: NSObject, SwipeElementDelegate {
+class SwipePage: SwipeView, SwipeElementDelegate {
     // Debugging
     static var objectCount = 0
     var accessCount = 0
@@ -69,7 +69,6 @@ class SwipePage: NSObject, SwipeElementDelegate {
 
     // Private properties
     private var pageInfo:[String:AnyObject]
-    private var elements = [SwipeElement]()
     private var fSeeking = false
     private var fEntered = false
     private var cPlaying = 0
@@ -134,6 +133,13 @@ class SwipePage: NSObject, SwipeElementDelegate {
             NSLog("SWPage  memory leak detected ###")
         }
     }
+    
+    lazy var name:String = {
+        if let value = self.pageInfo["name"] as? String {
+            return value
+        }
+        return "" // default
+    }()
     
     // Private lazy properties
     private lazy var backgroundColor:CGColor = {
@@ -391,7 +397,7 @@ class SwipePage: NSObject, SwipeElementDelegate {
         if let elementsInfo = self.pageInfo["elements"] as? [[String:AnyObject]] {
             let scaleDummy = CGSizeMake(0.1, 0.1)
             for e in elementsInfo {
-                let element = SwipeElement(info: e, scale:scaleDummy, delegate:self)
+                let element = SwipeElement(info: e, scale:scaleDummy, parent:self, delegate:self)
                 for (url, prefix) in element.resourceURLs {
                     urls[url] = prefix
                 }
@@ -459,11 +465,18 @@ class SwipePage: NSObject, SwipeElementDelegate {
             if completed {
                 if self.view != nil {
                     // NOTE: We are intentionally ignoring fetch errors (of network resources) here.
+                    if let eventsInfo = self.pageInfo["events"] as? [String:AnyObject] {
+                        self.eventHandler.parse(eventsInfo)
+                    }
+
                     self.loadSubviews()
                     callback?()
                 }
             }
         }
+        
+        setupGestureRecognizers(view)
+        
         return view
     }
     
@@ -485,7 +498,7 @@ class SwipePage: NSObject, SwipeElementDelegate {
 
         if let elementsInfo = self.pageInfo["elements"] as? [[String:AnyObject]] {
             for e in elementsInfo {
-                let element = SwipeElement(info: e, scale:scale, delegate:self)
+                let element = SwipeElement(info: e, scale:scale, parent:self, delegate:self)
                 if let subview = element.loadView(dimension) {
                     if self.autoplay && element.isVideoElement() {
                         // HACK: video element can not be played normally if it is added to the animation layer, which has the speed property zero.
@@ -503,7 +516,7 @@ class SwipePage: NSObject, SwipeElementDelegate {
 // REVIEW: Disabled for OSX for now
 #if !os(OSX)
         if let speech = self.pageInfo["speech"] as? [String:AnyObject],
-           let text = parseText(speech, key: "text") {
+           let text = parseText(self, info: speech, key: "text") {
             let voice = self.delegate.voice(speech["voice"] as? String)
             let utterance = AVSpeechUtterance(string: text)
             
@@ -610,7 +623,7 @@ class SwipePage: NSObject, SwipeElementDelegate {
         return delegate.languageIdentifier()
     }
 
-    func parseText(info:[String:AnyObject], key:String) -> String? {
+    func parseText(originator: SwipeNode, info:[String:AnyObject], key:String) -> String? {
         guard let value = info[key] else {
             return nil
         }
@@ -677,6 +690,20 @@ class SwipePage: NSObject, SwipeElementDelegate {
                 return true
             }
         }
+        return false
+    }
+    
+    // SwipeNode
+    
+    override func updateElement(originator: SwipeNode, name: String, up: Bool, info: [String:AnyObject]) -> Bool {
+        // Find named element and update
+        for e in self.elements {
+            if e.name.caseInsensitiveCompare(name) == .OrderedSame {
+                e.update(originator, info: info)
+                return true
+            }
+        }
+        
         return false
     }
 }
