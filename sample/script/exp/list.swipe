@@ -4,11 +4,13 @@
 			"name": "main",
 			"elements": [
 				{ "bc":"#fdd"},
-				{ "name":"echo", "bc":"#eff", "h":"8%", "w":"90%", "pos":["50%","5%"],"text":"2"},
+				{ "h":"8%", "w":"45%", "pos":["25%","95%"],"text":"selected", "textAlign":"right"},
+				{ "name":"echo", "h":"8%", "w":"45%", "pos":["75%","95%"],"text":"2"},
+				{ "text":"Tap on List Items", "h":"8%", "pos":["50%", "5%"]},
 				{
 					"name": "aList",
 					"h":"80%",
-					"w":"80%",
+					"w":"90%",
 					"bc":"#ffe",
 					"pos":["50%","50%"],
 					"list": {
@@ -17,7 +19,7 @@
 								{
 								"bc":"#eef",
 								"elements": [
-									{ "name":"icon", "img":"icon-180.png", "pos":[10,"50%"], "w":20 },
+									{ "name":"icon", "img":"icon-180.png", "pos":[20,"50%"], "w":20 },
 									{ "name":"label", "x":40, "w":"80%", "text":{"valueOf":{"name":"aList", "attribute":{"items":{"person":{"name":"first"}}}}}, "textAlign":"left" }
 								]
 							},
