@@ -46,9 +46,6 @@
 			"p1": { "bc": "#eef"}
 		},
 	},
-	"paths": {
-		"p1": "M 0,0 C 500,0 0,800 500,500"
-	},
 	"pages": [
 		{
 			"//": "Tap on element updates element",
@@ -169,8 +166,6 @@
 					"w":"90%",
 					"h":"10%",
 					"bc":"#fdd",
-					"path": {"ref":"p1"},
-					"lineWidth":3,
 					"events": {
 						"//": "Test merging of events",
 						"doubleTap": {

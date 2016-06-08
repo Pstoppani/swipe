@@ -50,7 +50,6 @@ class SwipeElement: SwipeView {
     weak var delegate:SwipeElementDelegate!
     var action:String?
 
-    private var view:UIView?
     private var layer:CALayer?
     private var btn:UIButton?
     private let info:[String:AnyObject]
@@ -65,7 +64,7 @@ class SwipeElement: SwipeView {
     private let contentScale = UIScreen.mainScreen().scale
 #endif
     private var fRepeat = false
-    private var helper: SwipeNode?  // Example: SwipeList
+    private var helper: SwipeView?  // Example: SwipeList
     
     // Image Element Specific
     private var imageLayer:CALayer?
@@ -169,7 +168,7 @@ class SwipeElement: SwipeView {
     }
     
     func loadView(dimension:CGSize) -> UIView? {
-        return self.loadViewInternal(dimension, screenDimention: dimension)
+        return self.loadViewInternal(dimension, screenDimension: dimension)
     }
     
     // Returns the list of URLs of required resouces for this element (including children)
@@ -196,7 +195,7 @@ class SwipeElement: SwipeView {
             }
         }
         if let listInfo = self.info["list"] as? [String:AnyObject] {
-            if let elementsInfo = listInfo["cellTemplates"] as? [[String:AnyObject]] {
+            if let elementsInfo = listInfo["rowTemplates"] as? [[String:AnyObject]] {
                 let scaleDummy = CGSizeMake(1.0, 1.0)
                 for e in elementsInfo {
                     let element = SwipeElement(info: e, scale:scaleDummy, parent:self, delegate:self.delegate!)
@@ -209,8 +208,8 @@ class SwipeElement: SwipeView {
         return urls
     }()
     
-    func loadViewInternal(dimension:CGSize, screenDimention:CGSize) -> UIView? {
-        self.screenDimension = screenDimention
+    func loadViewInternal(dimension:CGSize, screenDimension:CGSize) -> UIView? {
+        self.screenDimension = screenDimension
         let baseURL = delegate.baseURL()
         var x = CGFloat(0.0)
         var y = CGFloat(0.0)
@@ -603,8 +602,16 @@ class SwipeElement: SwipeView {
 #endif
         }
         
+        if let value = info["textArea"] as? [String:AnyObject] {
+            let textArea = SwipeTextArea(parent: self, info: value, frame: view.bounds, screenDimension: self.screenDimension)
+            helper = textArea
+            view.addSubview(textArea.view!)
+        }
+        
         if let text = parseText(self, info: info, key:"text") {
-            self.setTextLayer(text, scale:self.scale, info: info, dimension:screenDimention, layer: layer)
+            if self.helper == nil || !self.helper!.setText(text, scale:self.scale, info: info, dimension:screenDimension, layer: layer) {
+                self.setTextLayer(text, scale:self.scale, info: info, dimension:screenDimension, layer: layer)
+            }
         }
         
         // http://stackoverflow.com/questions/9290972/is-it-possible-to-make-avurlasset-work-without-a-file-extension
@@ -1064,16 +1071,16 @@ class SwipeElement: SwipeView {
         if let elementsInfo = info["elements"] as? [[String:AnyObject]] {
             for e in elementsInfo {
                 let element = SwipeElement(info: e, scale:scale, parent:self, delegate:self.delegate!)
-                if let subview = element.loadViewInternal(CGSizeMake(w0, h0), screenDimention: screenDimention) {
+                if let subview = element.loadViewInternal(CGSizeMake(w0, h0), screenDimension: screenDimension) {
                     view.addSubview(subview)
                     elements.append(element)
                 }
             }
         }
         
-        setupGestureRecognizers(view)
-        
         self.view = view
+        setupGestureRecognizers()
+        
         return view
     }
 
@@ -1331,24 +1338,48 @@ class SwipeElement: SwipeView {
     }
     */
     
+    // SwipeView
+    
+    override func isFirstResponder() -> Bool {
+        if let v = self.view {
+            if v.isFirstResponder() {
+                return true
+            }
+            
+            if helper != nil {
+                return helper!.isFirstResponder()
+            }
+        }
+        
+        return super.isFirstResponder()
+    }
+    
     // SwipeNode
     
-    
     override func getAttributeValue(attribute: String) -> AnyObject? {
+        if let val = helper?.getAttributeValue(attribute) {
+            return val
+        }
+        
         switch (attribute) {
         case "text":
             return self.text
         default:
-            return helper?.getAttributeValue(attribute)
+            return nil
         }
     }
     
     override func getAttributesValue(info: [String:AnyObject]) -> AnyObject? {
+        if let val = self.helper?.getAttributesValue(info) {
+            return val
+        }
+
         let key = info.keys.first!
+        
         if let val = info[key] as? String {
             return getAttributeValue(val)
         } else {
-            return self.helper?.getAttributesValue(info)
+            return nil
         }
     }
     

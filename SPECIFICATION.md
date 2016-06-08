@@ -653,7 +653,7 @@ Following example wiggles the text "I'm wiggling!" three times when the second p
 					"h":"80%",
 					"bc":"#eef",
 					"list": {
-						"cellTemplates": {
+						"rowTemplates": {
 							"odd": {
 								"bc":"#eef",
 								"elements": [
@@ -710,7 +710,7 @@ Following example wiggles the text "I'm wiggling!" three times when the second p
 				{
 					"name": "aList",
 					"list": {
-						cellTemplates: {
+						rowTemplates: {
 							"odd": {
 								"bc":"#eef",
 								"elements": [
@@ -874,7 +874,7 @@ Send/Receive Data
 				{
 					"name": "aList",
 					"list": {
-						cellTemplates: {
+						rowTemplates: {
 							"odd": {
 								"bc":"#eef",
 								"elements": [

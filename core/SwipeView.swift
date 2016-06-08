@@ -16,30 +16,55 @@ import Foundation
 
 class SwipeView: SwipeNode {
     var elements = [SwipeElement]()
+    var view: UIView?
     
-    func setupGestureRecognizers(view: UIView) {
+    func setupGestureRecognizers() {
         var doubleTapRecognizer: UITapGestureRecognizer?
         
         if eventHandler.actionsFor("doubleTap") != nil {
             doubleTapRecognizer = UITapGestureRecognizer(target: self, action:#selector(SwipeView.didDoubleTap(_:)))
             doubleTapRecognizer!.numberOfTapsRequired = 2
             doubleTapRecognizer!.cancelsTouchesInView = false
-            view.addGestureRecognizer(doubleTapRecognizer!)
+            view!.addGestureRecognizer(doubleTapRecognizer!)
         }
         
-        if eventHandler.actionsFor("tap") != nil {
-            let tapRecognizer = UITapGestureRecognizer(target: self, action:#selector(SwipeView.didTap(_:)))
-            if doubleTapRecognizer != nil {
-                tapRecognizer.requireGestureRecognizerToFail(doubleTapRecognizer!)
+        let tapRecognizer = UITapGestureRecognizer(target: self, action:#selector(SwipeView.didTap(_:)))
+        if doubleTapRecognizer != nil {
+            tapRecognizer.requireGestureRecognizerToFail(doubleTapRecognizer!)
+        }
+        tapRecognizer.cancelsTouchesInView = false
+        view!.addGestureRecognizer(tapRecognizer)
+    }
+    
+    func endEditing() {
+        let ended = view!.endEditing(true)
+        if !ended {
+            if let p = self.parent as? SwipeView {
+                p.endEditing()
             }
-            tapRecognizer.cancelsTouchesInView = false
-            view.addGestureRecognizer(tapRecognizer)
+        }
+    }
+    
+    func setText(text:String, scale:CGSize, info:[String:AnyObject], dimension:CGSize, layer:CALayer) -> Bool {
+        return false
+    }
+    
+    func tapped() {
+        if let p = self.parent as? SwipeView {
+            p.tapped()
         }
     }
     
     func didTap(recognizer: UITapGestureRecognizer) {
         if let actions = eventHandler.actionsFor("tap") {
+            endEditing()
+            tapped()
             execute(self, actions: actions)
+        } else  if let p = self.parent as? SwipeView {
+            p.didTap(recognizer)
+        } else {
+            endEditing()
+            tapped()
         }
     }
     
@@ -68,4 +93,23 @@ class SwipeView: SwipeNode {
     func updateElement(originator: SwipeNode, name: String, up: Bool, info: [String:AnyObject])  -> Bool {
         fatalError("Must Override")
     }
+    
+    func isFirstResponder() -> Bool {
+        return false
+    }
+    
+    func findFirstResponder() -> SwipeView? {
+        if self.isFirstResponder() {
+            return self
+        }
+        
+        for e in self.elements {
+            if let fr = e.findFirstResponder() {
+                return fr
+            }
+        }
+        
+        return nil;
+    }
+
 }

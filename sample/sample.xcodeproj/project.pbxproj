@@ -164,6 +164,9 @@
 		74F1794F1BD8553F00126B49 /* text.png in Resources */ = {isa = PBXBuildFile; fileRef = 74F1794E1BD8553F00126B49 /* text.png */; };
 		74F179501BD8553F00126B49 /* text.png in Resources */ = {isa = PBXBuildFile; fileRef = 74F1794E1BD8553F00126B49 /* text.png */; };
 		980482031CB8B51C0068F18C /* SwipeBrowser.xib in Resources */ = {isa = PBXBuildFile; fileRef = 980482021CB8B51C0068F18C /* SwipeBrowser.xib */; };
+		C13521D81D07027700CE2E74 /* input.swipe in Resources */ = {isa = PBXBuildFile; fileRef = C13521D71D07027700CE2E74 /* input.swipe */; };
+		C13521DA1D07123B00CE2E74 /* SwipeTextArea.swift in Sources */ = {isa = PBXBuildFile; fileRef = C13521D91D07123B00CE2E74 /* SwipeTextArea.swift */; };
+		C13521DB1D07123B00CE2E74 /* SwipeTextArea.swift in Sources */ = {isa = PBXBuildFile; fileRef = C13521D91D07123B00CE2E74 /* SwipeTextArea.swift */; };
 		C13B9FBA1CE13CFF00D4C62A /* elements.swipe in Resources */ = {isa = PBXBuildFile; fileRef = C13B9FB91CE13CFF00D4C62A /* elements.swipe */; };
 		C13B9FBB1CE13CFF00D4C62A /* elements.swipe in Resources */ = {isa = PBXBuildFile; fileRef = C13B9FB91CE13CFF00D4C62A /* elements.swipe */; };
 		C13B9FBC1CE1410600D4C62A /* lang.swipe in Resources */ = {isa = PBXBuildFile; fileRef = C14A0F001CD95CA300765CB2 /* lang.swipe */; };
@@ -285,6 +288,8 @@
 		74F1794B1BD8552700126B49 /* speech.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = speech.png; sourceTree = "<group>"; };
 		74F1794E1BD8553F00126B49 /* text.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = text.png; sourceTree = "<group>"; };
 		980482021CB8B51C0068F18C /* SwipeBrowser.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SwipeBrowser.xib; sourceTree = "<group>"; };
+		C13521D71D07027700CE2E74 /* input.swipe */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = input.swipe; sourceTree = "<group>"; };
+		C13521D91D07123B00CE2E74 /* SwipeTextArea.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SwipeTextArea.swift; sourceTree = "<group>"; };
 		C13B9FB91CE13CFF00D4C62A /* elements.swipe */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = elements.swipe; sourceTree = "<group>"; };
 		C14A0F001CD95CA300765CB2 /* lang.swipe */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = lang.swipe; sourceTree = "<group>"; };
 		C15EEF201CEE09F100EF3280 /* SwipeEvent.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SwipeEvent.swift; sourceTree = "<group>"; };
@@ -479,6 +484,7 @@
 				C19B68531CF37E1B00EAE4F4 /* SwipeTimer.swift */,
 				74EA71A81BD04DA7006808EA /* SwipeViewController.swift */,
 				C1E5BC961CFD03BF00DE97B8 /* SwipeView.swift */,
+				C13521D91D07123B00CE2E74 /* SwipeTextArea.swift */,
 			);
 			name = core;
 			path = ../core;
@@ -544,6 +550,7 @@
 		C14A0EFF1CD95CA300765CB2 /* exp */ = {
 			isa = PBXGroup;
 			children = (
+				C13521D71D07027700CE2E74 /* input.swipe */,
 				C17DF66C1D008DF100DADBCB /* refs.swipe */,
 				C170B7061CF76B8E005956A8 /* actions.swipe */,
 				C170B7071CF76B8E005956A8 /* data.swipe */,
@@ -688,6 +695,7 @@
 				74DD7F461BDD3E610042BB9D /* IMG_8167.m4v in Resources */,
 				74F1794C1BD8552700126B49 /* speech.png in Resources */,
 				74DD7FE81BDFE33F0042BB9D /* shuttle.png in Resources */,
+				C13521D81D07027700CE2E74 /* input.swipe in Resources */,
 				74DD7F991BDD3E770042BB9D /* nasa004.jpg in Resources */,
 				74F1794F1BD8553F00126B49 /* text.png in Resources */,
 				74DD7FA71BDD3E770042BB9D /* nasa011.jpg in Resources */,
@@ -795,6 +803,7 @@
 				74EA71B51BD04DA7006808EA /* SwipePage.swift in Sources */,
 				74EA71CA1BD04EAD006808EA /* SwipeAssetManager.swift in Sources */,
 				74EA71B61BD04DA7006808EA /* SwipeElement.swift in Sources */,
+				C13521DA1D07123B00CE2E74 /* SwipeTextArea.swift in Sources */,
 				C170B7011CF7589A005956A8 /* SwipeList.swift in Sources */,
 				74EA71C21BD04E47006808EA /* SwipeExtensions.swift in Sources */,
 				C1E5BC971CFD03BF00DE97B8 /* SwipeView.swift in Sources */,
@@ -828,6 +837,7 @@
 				74EA71FA1BD0B15C006808EA /* SwipeBook.swift in Sources */,
 				74EA71E41BD0B0EE006808EA /* AppDelegate.swift in Sources */,
 				74EA71F51BD0B156006808EA /* SwipeConnection.swift in Sources */,
+				C13521DB1D07123B00CE2E74 /* SwipeTextArea.swift in Sources */,
 				C170B7021CF7589A005956A8 /* SwipeList.swift in Sources */,
 				74EA71F31BD0B156006808EA /* SNNotificationManager.swift in Sources */,
 				C1E5BC981CFD03BF00DE97B8 /* SwipeView.swift in Sources */,

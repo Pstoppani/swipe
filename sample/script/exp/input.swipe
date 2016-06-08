@@ -1,0 +1,27 @@
+{
+  "templates": {
+    "elements": {
+      "text": { "h":"10%", "w":"90%", "x":"5%", "y":"15%", "bc":"#eef" }
+    }
+  },
+  "pages": [
+    {
+      "elements": [
+        { "template":"text", "text":"Enter Text Below"},
+        {
+          "name":"input", "textArea":{}, "template":"text", "text":"hello", "h":"20%", "y":"55%",
+          "events": {
+            "endEdit": {
+              "actions": [
+                { "update": { "name":"echo", "text":{"valueOf":{"attribute":"text"}}}}
+              ]
+            }
+          }
+        },
+        {
+          "name":"echo", "template":"text", "h":"20%", "text":"", "y":"30%"
+        }
+      ]
+    }
+  ]
+}

@@ -15,6 +15,19 @@ import AVFoundation
 import MediaPlayer
 #endif
 
+extension UIResponder {
+    private weak static var _currentFirstResponder: UIResponder? = nil
+    
+    public class func currentFirstResponder() -> UIResponder? {
+        UIResponder._currentFirstResponder = nil
+        UIApplication.sharedApplication().sendAction(#selector(UIResponder.findFirstResponder(_:)), to: nil, from: nil, forEvent: nil)
+        return UIResponder._currentFirstResponder
+    }
+    
+    internal func findFirstResponder(sender: AnyObject) {
+        UIResponder._currentFirstResponder = self
+    }
+}
 
 private func MyLog(text:String, level:Int = 0) {
     let s_verbosLevel = 0
@@ -38,6 +51,7 @@ protocol SwipePageDelegate: NSObjectProtocol {
     func baseURL() -> NSURL?
     func voice(k:String?) -> [String:AnyObject]
     func languageIdentifier() -> String?
+    func tapped()
 }
 
 class SwipePage: SwipeView, SwipeElementDelegate {
@@ -54,7 +68,6 @@ class SwipePage: SwipeView, SwipeElementDelegate {
     // Public properties
     let index:Int
     var pageTemplate:SwipePageTemplate?
-    var view:UIView?
     weak var delegate:SwipePageDelegate!
     
     // Public Lazy Properties
@@ -102,6 +115,9 @@ class SwipePage: SwipeView, SwipeElementDelegate {
     }
 
     func unloadView() {
+        NSNotificationCenter.defaultCenter().removeObserver(self, name: UIKeyboardWillShowNotification, object: nil)
+        NSNotificationCenter.defaultCenter().removeObserver(self, name: UIKeyboardWillHideNotification, object: nil)
+        
         if let view = self.view {
             MyLog("SWPage  unloading @\(index)", level: 2)
             view.removeFromSuperview()
@@ -475,9 +491,39 @@ class SwipePage: SwipeView, SwipeElementDelegate {
             }
         }
         
-        setupGestureRecognizers(view)
+        setupGestureRecognizers()
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(SwipePage.keyboardWillShow(_:)), name: UIKeyboardWillShowNotification, object: nil)
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(SwipePage.keyboardWillHide(_:)), name: UIKeyboardWillHideNotification, object: nil)
+
         
         return view
+    }
+    
+    func keyboardWillShow(notification: NSNotification) {
+        if let info:NSDictionary = notification.userInfo {
+            if let kbFrame = (info[UIKeyboardFrameBeginUserInfoKey] as? NSValue)?.CGRectValue() {
+                if let fr = findFirstResponder() {
+                    let frFrame = fr.view!.frame
+                    let myFrame = self.view!.frame
+                    //let duration = info[UIKeyboardAnimationDurationUserInfoKey] as! NSNumber as NSTimeInterval
+                    //UIView.animateWithDuration(0.25, delay: 0.25, options: UIViewAnimationOptions.CurveEaseInOut, animations: {
+                        self.view!.frame = CGRectMake(0, myFrame.origin.y - max(0, (frFrame.origin.y + frFrame.size.height) - (myFrame.size.height - kbFrame.size.height)), myFrame.size.height, myFrame.size.height)
+                    //    }, completion: nil)
+                }
+            }
+        }
+    }
+    
+    func keyboardWillHide(notification: NSNotification) {
+        if let _:NSDictionary = notification.userInfo {
+            if findFirstResponder() != nil {
+                let myFrame = self.view!.frame
+                //let duration = info[UIKeyboardAnimationDurationUserInfoKey] as! NSNumber as NSTimeInterval
+                //UIView.animateWithDuration(0.25, delay: 0.25, options: UIViewAnimationOptions.CurveEaseInOut, animations: {
+                    self.view!.frame = CGRectMake(0, 0, myFrame.size.height, myFrame.size.height)
+                //    }, completion: nil)
+            }
+        }
     }
     
     private func loadSubviews() {
@@ -693,8 +739,16 @@ class SwipePage: SwipeView, SwipeElementDelegate {
         return false
     }
     
-    // SwipeNode
     
+    // SwipeView
+ 
+    override func tapped() {
+        self.delegate.tapped()
+    }
+    
+
+    // SwipeNode
+
     override func updateElement(originator: SwipeNode, name: String, up: Bool, info: [String:AnyObject]) -> Bool {
         // Find named element and update
         for e in self.elements {

@@ -3,7 +3,7 @@
     "rowHeight":"10%",
     "items":[
       { "url":"list.swipe", "title":"list", "icon":"Icon-180.png" },
-      { "url":"refs.swipe", "title":"refs", "icon":"Icon-180.png" },
+      { "url":"input.swipe", "title":"input", "icon":"Icon-180.png" },
       { "url":"actions.swipe", "title":"actions", "icon":"Icon-180.png" },
       { "url":"data.swipe", "title":"data", "icon":"Icon-180.png" },
       { "url":"swipe.swipe", "title":"Swipe Overview", "icon":"Icon-180.png" },

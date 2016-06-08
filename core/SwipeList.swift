@@ -7,9 +7,6 @@
 import Foundation
 #if os(OSX)
     import Cocoa
-    public typealias UIView = NSView
-    public typealias UIButton = NSButton
-    public typealias UIScreen = NSScreen
 #else
     import UIKit
 #endif
@@ -29,7 +26,7 @@ class SwipeList: SwipeView, UITableViewDelegate, UITableViewDataSource {
         self.screenDimension = screenDimension
         self.info = info
         self.delegate = delegate
-        self.templatesInfo = self.info["cellTemplates"] as? [[String:AnyObject]]
+        self.templatesInfo = self.info["rowTemplates"] as? [[String:AnyObject]]
         self.tableView = UITableView(frame: frame, style: .Plain)
         super.init(parent: parent)
         self.tableView.delegate = self
@@ -38,10 +35,10 @@ class SwipeList: SwipeView, UITableViewDelegate, UITableViewDataSource {
         self.tableView.separatorStyle = .None
         self.tableView.allowsSelection = true
         self.tableView.backgroundColor = UIColor.clearColor()
-        if let itemsInfo = info["items"] as? [[String:AnyObject]] {
+        if let itemsInfo = info["rowItems"] as? [[String:AnyObject]] {
             items = itemsInfo
         }
-        if let selectedIndex = self.info["selectedIndex"] as? Int {
+        if let selectedIndex = self.info["selectedRow"] as? Int {
             self.tableView.selectRowAtIndexPath(NSIndexPath(forRow: selectedIndex, inSection: 0), animated: true, scrollPosition: .Middle)
         }
     }
@@ -58,10 +55,9 @@ class SwipeList: SwipeView, UITableViewDelegate, UITableViewDataSource {
     }
 
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-        if let actions = parent!.eventHandler.actionsFor("itemSelected") {
+        if let actions = parent!.eventHandler.actionsFor("rowSelected") {
             parent!.execute(self, actions: actions)
         }
-
     }
     
     // UITableViewDataSource
@@ -76,16 +72,17 @@ class SwipeList: SwipeView, UITableViewDelegate, UITableViewDataSource {
         if let templates = self.templatesInfo {
             let template = templates[indexPath.row % templates.count]
                     let element = SwipeElement(info: template, scale:self.scale, parent:self, delegate:self.delegate!)
-                    if let subview = element.loadViewInternal(CGSizeMake(self.tableView.bounds.size.width, kH), screenDimention: self.screenDimension) {
+                    if let subview = element.loadViewInternal(CGSizeMake(self.tableView.bounds.size.width, kH), screenDimension: self.screenDimension) {
                         cell.contentView.addSubview(subview)
                         elements.append(element)
-                        if let item = items[indexPath.row] as? [String:AnyObject] {
-                            if let actionsInfo = item["actions"] as? [[String:AnyObject]] {
-                                for actionInfo in actionsInfo {
-                                    element.executeAction(self, action: SwipeAction(info:actionInfo))
-                                }
+                        /*
+                        let item = items[indexPath.row]
+                        if let actionsInfo = item["actions"] as? [[String:AnyObject]] {
+                            for actionInfo in actionsInfo {
+                                element.executeAction(self, action: SwipeAction(info:actionInfo))
                             }
                         }
+                        */
                     }
             
         } else {
@@ -108,7 +105,7 @@ class SwipeList: SwipeView, UITableViewDelegate, UITableViewDataSource {
     
     override func getAttributeValue(attribute: String) -> AnyObject? {
         switch (attribute) {
-        case "selectedIndex":
+        case "selectedRow":
             if let indexPath = self.tableView.indexPathForSelectedRow {
                 return "\(indexPath.row)"
             } else {
@@ -122,10 +119,10 @@ class SwipeList: SwipeView, UITableViewDelegate, UITableViewDataSource {
     override func getAttributesValue(info: [String:AnyObject]) -> AnyObject? {
         let attr = info.keys.first!
         switch (attr) {
-        case "items":
+        case "rowItems":
             if let indexPath = self.cellIndexPath {
                 var item = items[indexPath.row]
-                var path = info["items"] as! [String:AnyObject]
+                var path = info["rowItems"] as! [String:AnyObject]
                 var attribute = path.keys.first!
                 
                 while (true) {
