@@ -59,13 +59,4 @@ class SwipeTimer : SwipeNode {
             cancel()
         }
     }
-    
-    
-    override func executeAction(originator: SwipeNode, action:SwipeAction) {
-        if let timerInfo = action.info["timer"] as? [String:AnyObject] {
-            SwipeTimer.create(self, timerInfo: timerInfo)
-        } else {
-            self.parent?.executeAction(originator, action:action)
-        }
-    }
 }

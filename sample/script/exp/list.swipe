@@ -5,7 +5,7 @@
 			"elements": [
 				{ "bc":"#fdd"},
 				{ "h":"8%", "w":"45%", "pos":["25%","95%"],"text":"selected", "textAlign":"right"},
-				{ "name":"echo", "h":"8%", "w":"45%", "pos":["25%","95%"],"text":"2"},
+				{ "name":"echo", "h":"8%", "w":"45%", "pos":["75%","95%"],"text":"2"},
 				{ "text":"Tap on List Items", "h":"8%", "pos":["50%", "5%"]},
 				{
 					"name": "aList",
@@ -20,14 +20,14 @@
 								"bc":"#eef",
 								"elements": [
 									{ "name":"icon", "img":"icon-180.png", "pos":[20,"50%"], "w":20 },
-									{ "name":"label", "x":40, "w":"80%", "text":{"valueOf":{"name":"aList", "attribute":{"rowItems":{"person":{"name":"first"}}}}}, "textAlign":"left" }
+									{ "name":"label", "x":40, "w":"80%", "text":{"valueOf":{"name":"aList", "property":{"rowItems":{"person":{"name":"first"}}}}}, "textAlign":"left" }
 								]
 							},
 							{
 								"bc":"#efe",
 								"elements": [
 									{ "name":"icon", "img":"icon-180.png", "pos":["90%","50%"], "w":20},
-									{ "name":"label", "x":0, "w":"80%", "text":{"valueOf":{"name":"aList", "attribute":{"rowItems":{"person":{"name":"first"}}}}}, "textAlign":"right" }
+									{ "name":"label", "x":0, "w":"80%", "text":{"valueOf":{"name":"aList", "property":{"rowItems":{"person":{"name":"first"}}}}}, "textAlign":"right" }
 								]
               }
             ],
@@ -43,7 +43,7 @@
 					"events": {
 						"rowSelected": {
 							"actions": [
-								{ "update": { "name":"echo", "text":{"valueOf":{"attribute":"selectedRow"}}}}
+								{ "update": { "name":"echo", "text":{"valueOf":{"name":"aList", "property":"selectedRow"}}}}
 							]
 						}
 					}

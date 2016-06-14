@@ -23,4 +23,8 @@ class SwipeEventHandler: NSObject {
     func actionsFor(event: String) -> [SwipeAction]? {
         return events[event]?.actions
     }
+    
+    func getEvent(event: String) -> SwipeEvent? {
+        return events[event]
+    }
 }

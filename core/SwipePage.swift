@@ -121,10 +121,12 @@ class SwipePage: SwipeView, SwipeElementDelegate {
         if let view = self.view {
             MyLog("SWPage  unloading @\(index)", level: 2)
             view.removeFromSuperview()
-            for element in elements {
-                element.clear() // PARANOIA (extra effort to clean up everything)
+            for c in children {
+                if let element = c as? SwipeElement {
+                    element.clear() // PARANOIA (extra effort to clean up everything)
+                }
             }
-            elements.removeAll()
+            children.removeAll()
             self.view = nil
             self.viewVideo = nil
             self.viewAnimation = nil
@@ -238,8 +240,10 @@ class SwipePage: SwipeView, SwipeElementDelegate {
             assert(self.viewAnimation != nil, "must have self.viewAnimation")
             assert(self.viewVideo != nil, "must have viewVideo")
             self.aniLayer?.timeOffset = CFTimeInterval(offset)
-            for element in elements {
-                element.setTimeOffsetTo(offset)
+            for c in children {
+                if let element = c as? SwipeElement {
+                    element.setTimeOffsetTo(offset)
+                }
             }
             CATransaction.commit()
         }
@@ -323,8 +327,10 @@ class SwipePage: SwipeView, SwipeElementDelegate {
         CATransaction.begin()
         CATransaction.setDisableActions(true)
         self.aniLayer?.timeOffset = fForward ? 0.0 : 1.0
-        for element in elements {
-            element.setTimeOffsetTo(fForward ? 0.0 : 1.0)
+        for c in children {
+            if let element = c as? SwipeElement {
+                element.setTimeOffsetTo(fForward ? 0.0 : 1.0)
+            }
         }
         CATransaction.commit()
         self.offsetPaused = nil
@@ -384,8 +390,10 @@ class SwipePage: SwipeView, SwipeElementDelegate {
                 if !fElementRepeatNext {
                     self.aniLayer?.timeOffset = CFTimeInterval(nextOffset)
                 }
-                for element in self.elements {
-                    element.setTimeOffsetTo(nextOffset, fAutoPlay: true)
+                for c in self.children {
+                    if let element = c as? SwipeElement {
+                        element.setTimeOffsetTo(nextOffset, fAutoPlay: true)
+                    }
                 }
                 CATransaction.commit()
             }
@@ -495,7 +503,10 @@ class SwipePage: SwipeView, SwipeElementDelegate {
         NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(SwipePage.keyboardWillShow(_:)), name: UIKeyboardWillShowNotification, object: nil)
         NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(SwipePage.keyboardWillHide(_:)), name: UIKeyboardWillHideNotification, object: nil)
 
-        
+        if let actions = eventHandler.actionsFor("load") {
+            execute(self, actions: actions)
+        }
+
         return view
     }
     
@@ -552,7 +563,7 @@ class SwipePage: SwipeView, SwipeElementDelegate {
                     } else {
                         self.viewAnimation!.addSubview(subview)
                     }
-                    elements.append(element)
+                    children.append(element)
                 }
             } // for e in elementsInfo
         }
@@ -731,9 +742,11 @@ class SwipePage: SwipeView, SwipeElementDelegate {
     }
     */
     func hasRepeatElement() -> Bool {
-        for element in elements {
-            if element.isRepeatElement() {
-                return true
+        for c in children {
+            if let element = c as? SwipeElement {
+                if element.isRepeatElement() {
+                    return true
+                }
             }
         }
         return false
@@ -751,10 +764,12 @@ class SwipePage: SwipeView, SwipeElementDelegate {
 
     override func updateElement(originator: SwipeNode, name: String, up: Bool, info: [String:AnyObject]) -> Bool {
         // Find named element and update
-        for e in self.elements {
-            if e.name.caseInsensitiveCompare(name) == .OrderedSame {
-                e.update(originator, info: info)
-                return true
+        for c in children {
+            if let e = c as? SwipeElement {
+                if e.name.caseInsensitiveCompare(name) == .OrderedSame {
+                    e.update(originator, info: info)
+                    return true
+                }
             }
         }
         

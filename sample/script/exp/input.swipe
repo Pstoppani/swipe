@@ -13,7 +13,7 @@
           "events": {
             "endEdit": {
               "actions": [
-                { "update": { "name":"echo", "text":{"valueOf":{"attribute":"text"}}}}
+                { "update": { "name":"echo", "text":{"valueOf":{"property":"text"}}}}
               ]
             }
           }

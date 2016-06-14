@@ -69,8 +69,8 @@ class SwipeTextArea: SwipeView, UITextViewDelegate {
         return true
     }
     
-    override func getAttributeValue(attribute: String) -> AnyObject? {
-        switch (attribute) {
+    override func getPropertyValue(property: String) -> AnyObject? {
+        switch (property) {
         case "text":
             return self.textView.text
         default:

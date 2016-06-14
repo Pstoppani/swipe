@@ -15,7 +15,6 @@ import Foundation
 #endif
 
 class SwipeView: SwipeNode {
-    var elements = [SwipeElement]()
     var view: UIView?
     
     func setupGestureRecognizers() {
@@ -55,16 +54,20 @@ class SwipeView: SwipeNode {
         }
     }
     
+    private func completeTap() {
+        endEditing()
+        tapped()
+    }
+    
     func didTap(recognizer: UITapGestureRecognizer) {
         if let actions = eventHandler.actionsFor("tap") {
-            endEditing()
-            tapped()
             execute(self, actions: actions)
+            completeTap()
         } else  if let p = self.parent as? SwipeView {
             p.didTap(recognizer)
+            // parent will completeTap()
         } else {
-            endEditing()
-            tapped()
+            completeTap()
         }
     }
     
@@ -84,9 +87,9 @@ class SwipeView: SwipeNode {
             if let value = updateInfo["include"] as? String {
                 up = value != "children"
             }
-            updateElement(self, name:name, up:up, info: updateInfo)
-        } else if let timerInfo = action.info["timer"] as? [String:AnyObject] {
-            SwipeTimer.create(self, timerInfo: timerInfo)
+            updateElement(originator, name:name, up:up, info: updateInfo)
+        } else  {
+           super.executeAction(originator, action: action)
         }
     }
     
@@ -103,9 +106,11 @@ class SwipeView: SwipeNode {
             return self
         }
         
-        for e in self.elements {
+        for c in self.children {
+            if let e = c as? SwipeElement {
             if let fr = e.findFirstResponder() {
                 return fr
+            }
             }
         }
         

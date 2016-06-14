@@ -15,10 +15,13 @@ import Foundation
  */
 
 class SwipeEvent: NSObject {
- 
-    var actions = [SwipeAction]()
     private let info:[String:AnyObject]
-
+    var actions = [SwipeAction]()
+    var data: [String:AnyObject]?
+    lazy var params: [String:AnyObject]? = {
+        return self.info["params"] as? [String:AnyObject]
+    }()
+    
     init(type: String, info: [String:AnyObject]) {
         self.info = info
         if let paramsInfo = info["params"] as? [String:AnyObject] {

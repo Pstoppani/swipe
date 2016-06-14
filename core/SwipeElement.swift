@@ -1073,13 +1073,17 @@ class SwipeElement: SwipeView {
                 let element = SwipeElement(info: e, scale:scale, parent:self, delegate:self.delegate!)
                 if let subview = element.loadViewInternal(CGSizeMake(w0, h0), screenDimension: screenDimension) {
                     view.addSubview(subview)
-                    elements.append(element)
+                    children.append(element)
                 }
             }
         }
         
         self.view = view
         setupGestureRecognizers()
+        
+        if let actions = eventHandler.actionsFor("load") {
+            execute(self, actions: actions)
+        }
         
         return view
     }
@@ -1126,8 +1130,10 @@ class SwipeElement: SwipeView {
             layer.timeOffset = CFTimeInterval(offset)
         }
         
-        for element in elements {
-            element.setTimeOffsetTo(offset, fAutoPlay: fAutoPlay, fElementRepeat: fElementRepeat)
+        for c in children {
+            if let element = c as? SwipeElement {
+                element.setTimeOffsetTo(offset, fAutoPlay: fAutoPlay, fElementRepeat: fElementRepeat)
+            }
         }
         
         if fElementRepeat && !self.fRepeat {
@@ -1204,9 +1210,11 @@ class SwipeElement: SwipeView {
         if self.videoPlayer != nil {
             return true
         }
-        for element in elements {
-            if element.isVideoElement() {
-                return true
+        for c in children {
+            if let element = c as? SwipeElement {
+                if element.isVideoElement() {
+                    return true
+                }
             }
         }
         return false
@@ -1216,9 +1224,11 @@ class SwipeElement: SwipeView {
         if fRepeat {
             return true
         }
-        for element in elements {
-            if element.isRepeatElement() {
-                return true
+        for c in children {
+            if let element = c as? SwipeElement {
+                if element.isRepeatElement() {
+                    return true
+                }
             }
         }
         return false
@@ -1356,12 +1366,12 @@ class SwipeElement: SwipeView {
     
     // SwipeNode
     
-    override func getAttributeValue(attribute: String) -> AnyObject? {
-        if let val = helper?.getAttributeValue(attribute) {
+    override func getPropertyValue(property: String) -> AnyObject? {
+        if let val = helper?.getPropertyValue(property) {
             return val
         }
         
-        switch (attribute) {
+        switch (property) {
         case "text":
             return self.text
         default:
@@ -1369,15 +1379,15 @@ class SwipeElement: SwipeView {
         }
     }
     
-    override func getAttributesValue(info: [String:AnyObject]) -> AnyObject? {
-        if let val = self.helper?.getAttributesValue(info) {
+    override func getPropertiesValue(info: [String:AnyObject]) -> AnyObject? {
+        if let val = self.helper?.getPropertiesValue(info) {
             return val
         }
 
         let key = info.keys.first!
         
         if let val = info[key] as? String {
-            return getAttributeValue(val)
+            return getPropertyValue(val)
         } else {
             return nil
         }
@@ -1395,10 +1405,10 @@ class SwipeElement: SwipeView {
         }
         
         if (name == "*" || self.name.caseInsensitiveCompare(name) == .OrderedSame) {
-            if let attribute = info["attribute"] as? String {
-                return getAttributeValue(attribute)
-            } else if let attributeInfo = info["attribute"] as? [String:AnyObject] {
-                return getAttributesValue(attributeInfo)
+            if let attribute = info["property"] as? String {
+                return getPropertyValue(attribute)
+            } else if let attributeInfo = info["property"] as? [String:AnyObject] {
+                return getPropertiesValue(attributeInfo)
             }
         }
 
@@ -1408,12 +1418,14 @@ class SwipeElement: SwipeView {
         if up {
             while node?.parent != nil {
                 if let viewNode = node?.parent as? SwipeView {
-                    for e in viewNode.elements {
-                        if e.name.caseInsensitiveCompare(name) == .OrderedSame {
-                            if let attribute = info["attribute"] as? String {
-                                return e.getAttributeValue(attribute)
-                            } else if let attributeInfo = info["attribute"] as? [String:AnyObject] {
-                                return e.getAttributesValue(attributeInfo)
+                    for c in viewNode.children {
+                        if let e = c as? SwipeElement {
+                            if e.name.caseInsensitiveCompare(name) == .OrderedSame {
+                                if let attribute = info["property"] as? String {
+                                    return e.getPropertyValue(attribute)
+                                } else if let attributeInfo = info["property"] as? [String:AnyObject] {
+                                    return e.getPropertiesValue(attributeInfo)
+                                }
                             }
                         }
                     }
@@ -1424,8 +1436,10 @@ class SwipeElement: SwipeView {
                 }
             }
         } else {
-            for e in self.elements {
-                return e.getValue(info)
+            for c in children {
+                if let e = c as? SwipeElement {
+                    return e.getValue(info)
+                }
             }
         }
         
@@ -1451,10 +1465,12 @@ class SwipeElement: SwipeView {
         if up {
             while node?.parent != nil {
                 if let viewNode = node?.parent as? SwipeView {
-                    for e in viewNode.elements {
-                        if e.name.caseInsensitiveCompare(name) == .OrderedSame {
-                            e.update(originator, info: info)
-                            return true
+                    for c in viewNode.children {
+                        if let e = c as? SwipeElement {
+                            if e.name.caseInsensitiveCompare(name) == .OrderedSame {
+                                e.update(originator, info: info)
+                                return true
+                            }
                         }
                     }
                     
@@ -1464,9 +1480,11 @@ class SwipeElement: SwipeView {
                 }
             }
         } else {
-            for e in self.elements {
-                if e.updateElement(originator, name:name, up:up, info:info) {
-                    return true
+            for c in children {
+                if let e = c as? SwipeElement {
+                    if e.updateElement(originator, name:name, up:up, info:info) {
+                        return true
+                    }
                 }
             }
         }

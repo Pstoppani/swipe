@@ -12,9 +12,5 @@ class SwipeAction: NSObject {
     
     init(info:[String:AnyObject]) {
         self.info = info
-        
-        for k in info.keys {
-            NSLog("XdAction key:\(k)")
-        }
     }
 }

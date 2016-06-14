@@ -74,7 +74,7 @@ class SwipeList: SwipeView, UITableViewDelegate, UITableViewDataSource {
                     let element = SwipeElement(info: template, scale:self.scale, parent:self, delegate:self.delegate!)
                     if let subview = element.loadViewInternal(CGSizeMake(self.tableView.bounds.size.width, kH), screenDimension: self.screenDimension) {
                         cell.contentView.addSubview(subview)
-                        elements.append(element)
+                        children.append(element)
                         /*
                         let item = items[indexPath.row]
                         if let actionsInfo = item["actions"] as? [[String:AnyObject]] {
@@ -103,8 +103,8 @@ class SwipeList: SwipeView, UITableViewDelegate, UITableViewDataSource {
     
     // SwipeNode
     
-    override func getAttributeValue(attribute: String) -> AnyObject? {
-        switch (attribute) {
+    override func getPropertyValue(property: String) -> AnyObject? {
+        switch (property) {
         case "selectedRow":
             if let indexPath = self.tableView.indexPathForSelectedRow {
                 return "\(indexPath.row)"
@@ -116,26 +116,26 @@ class SwipeList: SwipeView, UITableViewDelegate, UITableViewDataSource {
         }
     }
     
-    override func getAttributesValue(info: [String:AnyObject]) -> AnyObject? {
-        let attr = info.keys.first!
-        switch (attr) {
+    override func getPropertiesValue(info: [String:AnyObject]) -> AnyObject? {
+        let prop = info.keys.first!
+        switch (prop) {
         case "rowItems":
             if let indexPath = self.cellIndexPath {
                 var item = items[indexPath.row]
                 var path = info["rowItems"] as! [String:AnyObject]
-                var attribute = path.keys.first!
+                var property = path.keys.first!
                 
                 while (true) {
-                    if let next = path[attribute] as? String {
-                        if let sub = item[attribute] as? [String:AnyObject] {
+                    if let next = path[property] as? String {
+                        if let sub = item[property] as? [String:AnyObject] {
                             return sub[next]
                         } else {
                             return nil
                         }
-                    } else if let next = path[attribute] as? [String:AnyObject] {
-                        if let sub = item[attribute] as? [String:AnyObject] {
+                    } else if let next = path[property] as? [String:AnyObject] {
+                        if let sub = item[property] as? [String:AnyObject] {
                             path = next
-                            attribute = path.keys.first!
+                            property = path.keys.first!
                             item = sub
                         } else {
                             return nil
@@ -145,7 +145,7 @@ class SwipeList: SwipeView, UITableViewDelegate, UITableViewDataSource {
                     }
                 }
                 
-                // loop on items in info until get to a String
+                // loop on properties in info until get to a String
             }
             break;
         default:
