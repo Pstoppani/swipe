@@ -93,7 +93,7 @@ class SwipeBook: NSObject, SwipePageDelegate {
         var pages = [SwipePage]()
         if let pageInfos = self.bookInfo["pages"] as? [[String:AnyObject]] {
             for (index, pageInfo) in pageInfos.enumerate() {
-                let page = SwipePage(index:index, pageInfo: pageInfo, delegate: self)
+                let page = SwipePage(index:index, info: pageInfo, delegate: self)
                 pages.append(page)
             }
         }

@@ -52,7 +52,6 @@ class SwipeElement: SwipeView {
 
     private var layer:CALayer?
     private var btn:UIButton?
-    private let info:[String:AnyObject]
     private let scale:CGSize
     private var screenDimension = CGSize(width: 0, height: 0)
     private var repeatCount = CGFloat(1.0)
@@ -98,13 +97,6 @@ class SwipeElement: SwipeView {
     //private var webView:WKWebView?
 #endif
     
-    lazy var name:String = {
-        if let value = self.info["name"] as? String {
-            return value
-        }
-        return "" // default
-    }()
-
     // Lazy properties
     private lazy var notificationManager = SNNotificationManager()
 
@@ -116,12 +108,11 @@ class SwipeElement: SwipeView {
                 MyLog("SwElement DEPRECATED element; use 'template'")
             }
         }
-        let elementInfo = SwipeParser.inheritProperties(info, baseObject: delegate.prototypeWith(template))
-        self.info = elementInfo
         self.scale = scale
         self.delegate = delegate
         self.pageIndex = delegate.pageIndex() // only for debugging
-        super.init(parent: parent)
+        let elementInfo = SwipeParser.inheritProperties(info, baseObject: delegate.prototypeWith(template))
+        super.init(parent: parent, info: elementInfo)
         self.setTimeOffsetTo(0.0)
         
         SwipeElement.objectCount += 1
@@ -195,12 +186,15 @@ class SwipeElement: SwipeView {
             }
         }
         if let listInfo = self.info["list"] as? [String:AnyObject] {
-            if let elementsInfo = listInfo["rowTemplates"] as? [[String:AnyObject]] {
+            if let templatesInfo = listInfo["rowTemplates"] as? [String:AnyObject] {
                 let scaleDummy = CGSizeMake(1.0, 1.0)
-                for e in elementsInfo {
-                    let element = SwipeElement(info: e, scale:scaleDummy, parent:self, delegate:self.delegate!)
-                    for (url, prefix) in element.resourceURLs {
-                        urls[url] = prefix
+                
+                for k in templatesInfo.keys {
+                    if let e = templatesInfo[k] as? [String:AnyObject] {
+                        let element = SwipeElement(info: e, scale:scaleDummy, parent:self, delegate:self.delegate!)
+                        for (url, prefix) in element.resourceURLs {
+                            urls[url] = prefix
+                        }
                     }
                 }
             }
@@ -1458,6 +1452,50 @@ class SwipeElement: SwipeView {
     }
     
     override func updateElement(originator: SwipeNode, name: String, up: Bool, info: [String:AnyObject]) -> Bool {
+        if (name == "*" || self.name.caseInsensitiveCompare(name) == .OrderedSame) {
+            // Update self
+            update(originator, info: info)
+            return true
+        }
+        
+        // Find named element in parent hierarchy and update
+        var node: SwipeNode? = self
+        
+        if up {
+            while node?.parent != nil {
+                if let viewNode = node?.parent as? SwipeView {
+                    for c in viewNode.children {
+                        if let e = c as? SwipeElement {
+                            if e.name.caseInsensitiveCompare(name) == .OrderedSame {
+                                e.update(originator, info: info)
+                                return true
+                            }
+                        }
+                    }
+                    
+                    node = node?.parent
+                } else {
+                    return false
+                }
+            }
+        } else {
+            for c in children {
+                if let e = c as? SwipeElement {
+                    if e.updateElement(originator, name:name, up:up, info:info) {
+                        return true
+                    }
+                }
+            }
+        }
+        
+        return false
+    }
+    
+    override func appendList(originator: SwipeNode, info: [String:AnyObject]) {
+        self.helper?.appendList(originator, info: info)
+    }
+
+    override func appendList(originator: SwipeNode, name: String, up: Bool, info: [String:AnyObject])  -> Bool {
         if (name == "*" || self.name.caseInsensitiveCompare(name) == .OrderedSame) {
             // Update self
             update(originator, info: info)

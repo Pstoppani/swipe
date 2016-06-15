@@ -65,8 +65,9 @@ class SwipeFetcher : SwipeNode {
             self.data = ["message":errorMsg]
             self.params = event.params
             self.execute(self, actions: actionsInfo)
+        } else {
+            NSLog(TAG + errorMsg)
         }
-
     }
     
     func cancel() {

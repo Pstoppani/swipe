@@ -16,6 +16,17 @@ import Foundation
 
 class SwipeView: SwipeNode {
     var view: UIView?
+    internal let info:[String:AnyObject]
+    
+    init(info: [String:AnyObject]) {
+        self.info = info
+        super.init()
+    }
+    
+    init(parent: SwipeNode, info: [String:AnyObject]) {
+        self.info = info
+        super.init(parent: parent)
+    }
     
     func setupGestureRecognizers() {
         var doubleTapRecognizer: UITapGestureRecognizer?
@@ -34,6 +45,13 @@ class SwipeView: SwipeNode {
         tapRecognizer.cancelsTouchesInView = false
         view!.addGestureRecognizer(tapRecognizer)
     }
+    
+    lazy var name:String = {
+        if let value = self.info["name"] as? String {
+            return value
+        }
+        return "" // default
+    }()
     
     func endEditing() {
         let ended = view!.endEditing(true)
@@ -88,6 +106,16 @@ class SwipeView: SwipeNode {
                 up = value != "children"
             }
             updateElement(originator, name:name, up:up, info: updateInfo)
+        } else if let appendInfo = action.info["append"] as? [String:AnyObject] {
+            var name = "*"; // default is 'self'
+            if let value = appendInfo["name"] as? String {
+                name = value
+            }
+            var up = true
+            if let value = appendInfo["include"] as? String {
+                up = value != "children"
+            }
+            appendList(originator, name:name, up:up, info: appendInfo)
         } else  {
            super.executeAction(originator, action: action)
         }
@@ -95,6 +123,13 @@ class SwipeView: SwipeNode {
     
     func updateElement(originator: SwipeNode, name: String, up: Bool, info: [String:AnyObject])  -> Bool {
         fatalError("Must Override")
+    }
+    
+    func appendList(originator: SwipeNode, name: String, up: Bool, info: [String:AnyObject])  -> Bool {
+        fatalError("Must Override")
+    }
+    
+    func appendList(originator: SwipeNode, info: [String:AnyObject]) {
     }
     
     func isFirstResponder() -> Bool {

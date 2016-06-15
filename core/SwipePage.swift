@@ -81,7 +81,6 @@ class SwipePage: SwipeView, SwipeElementDelegate {
     }()
 
     // Private properties
-    private var pageInfo:[String:AnyObject]
     private var fSeeking = false
     private var fEntered = false
     private var cPlaying = 0
@@ -99,18 +98,17 @@ class SwipePage: SwipeView, SwipeElementDelegate {
     private var aniLayer:CALayer?
     private var audioPlayer:AVAudioPlayer?
     
-    init(index:Int, pageInfo:[String:AnyObject], delegate:SwipePageDelegate) {
+    init(index:Int, info:[String:AnyObject], delegate:SwipePageDelegate) {
         self.index = index
         self.delegate = delegate
-        self.pageTemplate = delegate.pageTemplateWith(pageInfo["template"] as? String)
+        self.pageTemplate = delegate.pageTemplateWith(info["template"] as? String)
         if self.pageTemplate == nil {
-            self.pageTemplate = delegate.pageTemplateWith(pageInfo["scene"] as? String)
+            self.pageTemplate = delegate.pageTemplateWith(info["scene"] as? String)
             if self.pageTemplate != nil {
                 MyLog("SwPage DEPRECATED 'scene'; use 'template'")
             }
         }
-        self.pageInfo = SwipeParser.inheritProperties(pageInfo, baseObject: pageTemplate?.pageTemplateInfo)
-        super.init()
+        super.init(info: SwipeParser.inheritProperties(info, baseObject: pageTemplate?.pageTemplateInfo))
         SwipePage.objectCount += 1
     }
 
@@ -152,40 +150,33 @@ class SwipePage: SwipeView, SwipeElementDelegate {
         }
     }
     
-    lazy var name:String = {
-        if let value = self.pageInfo["name"] as? String {
-            return value
-        }
-        return "" // default
-    }()
-    
     // Private lazy properties
     private lazy var backgroundColor:CGColor = {
-        if let value: AnyObject = self.pageInfo["bc"] {
+        if let value: AnyObject = self.info["bc"] {
             return SwipeParser.parseColor(value)
         }
         return UIColor.whiteColor().CGColor
     }()
 
     private lazy var transition:String = {
-        if let value = self.pageInfo["transition"] as? String {
+        if let value = self.info["transition"] as? String {
             return value
         }
         return (self.animation == "scroll") ? "replace": "scroll" // default
     }()
 
     private lazy var fps:Int = {
-        if let value = self.pageInfo["fps"] as? Int {
+        if let value = self.info["fps"] as? Int {
             return value
         }
         return 60 // default
     }()
 
     private lazy var animation:String = {
-        if let value = self.pageInfo["play"] as? String {
+        if let value = self.info["play"] as? String {
             return value
         }
-        if let value = self.pageInfo["animation"] as? String {
+        if let value = self.info["animation"] as? String {
             NSLog("SWPage  #### animation instead of play ####")
             return value
         }
@@ -205,28 +196,28 @@ class SwipePage: SwipeView, SwipeElementDelegate {
     }()
 
     private lazy var vibrate:Bool = {
-        if let value = self.pageInfo["vibrate"] as? Bool {
+        if let value = self.info["vibrate"] as? Bool {
             return value
         }
         return false
     }()
 
     private lazy var duration:CGFloat = {
-        if let value = self.pageInfo["duration"] as? CGFloat {
+        if let value = self.info["duration"] as? CGFloat {
             return value
         }
         return 0.2
     }()
 
     private lazy var fRepeat:Bool = {
-        if let value = self.pageInfo["repeat"] as? Bool {
+        if let value = self.info["repeat"] as? Bool {
             return value
         }
         return false
     }()
 
     private lazy var rewind:Bool = {
-        if let value = self.pageInfo["rewind"] as? Bool {
+        if let value = self.info["rewind"] as? Bool {
             return value
         }
         return false
@@ -413,12 +404,12 @@ class SwipePage: SwipeView, SwipeElementDelegate {
         var urls = [NSURL:String]()
         let baseURL = self.delegate.baseURL()
         for key in ["audio"] {
-            if let src = self.pageInfo[key] as? String,
+            if let src = self.info[key] as? String,
                    url = NSURL.url(src, baseURL: baseURL) {
                 urls[url] = ""
             }
         }
-        if let elementsInfo = self.pageInfo["elements"] as? [[String:AnyObject]] {
+        if let elementsInfo = self.info["elements"] as? [[String:AnyObject]] {
             let scaleDummy = CGSizeMake(0.1, 0.1)
             for e in elementsInfo {
                 let element = SwipeElement(info: e, scale:scaleDummy, parent:self, delegate:self)
@@ -463,7 +454,7 @@ class SwipePage: SwipeView, SwipeElementDelegate {
         let dimension = delegate.dimension(self)
         var transform = CATransform3DIdentity
         transform.m34 = -1 / dimension.width // default eyePosition is canvas width
-        if let eyePosition = pageInfo["eyePosition"] as? CGFloat {
+        if let eyePosition = info["eyePosition"] as? CGFloat {
             transform.m34 = -1 / (dimension.width * eyePosition)
         }
         aniLayer.sublayerTransform = transform
@@ -489,7 +480,7 @@ class SwipePage: SwipeView, SwipeElementDelegate {
             if completed {
                 if self.view != nil {
                     // NOTE: We are intentionally ignoring fetch errors (of network resources) here.
-                    if let eventsInfo = self.pageInfo["events"] as? [String:AnyObject] {
+                    if let eventsInfo = self.info["events"] as? [String:AnyObject] {
                         self.eventHandler.parse(eventsInfo)
                     }
 
@@ -540,7 +531,7 @@ class SwipePage: SwipeView, SwipeElementDelegate {
     private func loadSubviews() {
         let scale = delegate.scale(self)
         let dimension = delegate.dimension(self)
-        if let value = self.pageInfo["audio"] as? String,
+        if let value = self.info["audio"] as? String,
                url = NSURL.url(value, baseURL: self.delegate.baseURL()),
                urlLocal = self.prefetcher.map(url) {
             do {
@@ -553,7 +544,7 @@ class SwipePage: SwipeView, SwipeElementDelegate {
 
         prepareUtterance()
 
-        if let elementsInfo = self.pageInfo["elements"] as? [[String:AnyObject]] {
+        if let elementsInfo = self.info["elements"] as? [[String:AnyObject]] {
             for e in elementsInfo {
                 let element = SwipeElement(info: e, scale:scale, parent:self, delegate:self)
                 if let subview = element.loadView(dimension) {
@@ -572,7 +563,7 @@ class SwipePage: SwipeView, SwipeElementDelegate {
     private func prepareUtterance() {
 // REVIEW: Disabled for OSX for now
 #if !os(OSX)
-        if let speech = self.pageInfo["speech"] as? [String:AnyObject],
+        if let speech = self.info["speech"] as? [String:AnyObject],
            let text = parseText(self, info: speech, key: "text") {
             let voice = self.delegate.voice(speech["voice"] as? String)
             let utterance = AVSpeechUtterance(string: text)
@@ -668,7 +659,7 @@ class SwipePage: SwipeView, SwipeElementDelegate {
 
     // <SwipeElementDelegate> method
     func localizedStringForKey(key:String) -> String? {
-        if let strings = pageInfo["strings"] as? [String:AnyObject],
+        if let strings = self.info["strings"] as? [String:AnyObject],
                texts = strings[key] as? [String:AnyObject] {
             return SwipeParser.localizedString(texts, langId: delegate.languageIdentifier())
         }
@@ -775,4 +766,19 @@ class SwipePage: SwipeView, SwipeElementDelegate {
         
         return false
     }
+    
+    override func appendList(originator: SwipeNode, name: String, up: Bool, info: [String : AnyObject]) -> Bool {
+        // Find named element and update
+        for c in children {
+            if let e = c as? SwipeElement {
+                if e.name.caseInsensitiveCompare(name) == .OrderedSame {
+                    e.appendList(originator, info: info)
+                    return true
+                }
+            }
+        }
+        
+        return false
+    }
+
 }

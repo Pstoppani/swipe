@@ -15,29 +15,29 @@
 					"pos":["50%","50%"],
 					"list": {
 						"selectedRow":2,
-						"rowTemplates": [
-								{
+						"rowTemplates": {
+							"*": {
 								"bc":"#eef",
 								"elements": [
 									{ "name":"icon", "img":"icon-180.png", "pos":[20,"50%"], "w":20 },
 									{ "name":"label", "x":40, "w":"80%", "text":{"valueOf":{"name":"aList", "property":{"rowItems":{"person":{"name":"first"}}}}}, "textAlign":"left" }
 								]
 							},
-							{
+							"odd": {
 								"bc":"#efe",
 								"elements": [
 									{ "name":"icon", "img":"icon-180.png", "pos":["90%","50%"], "w":20},
 									{ "name":"label", "x":0, "w":"80%", "text":{"valueOf":{"name":"aList", "property":{"rowItems":{"person":{"name":"first"}}}}}, "textAlign":"right" }
 								]
               }
-            ],
+            },
 						"rowItems": [
-							{ "person": { "name": { "first":"fred", "last":"flintstone"}}},
-							{ "person": { "name": { "first":"wilma", "last":"flintstone"}}},
+							{ "template":"*", "person": { "name": { "first":"fred", "last":"flintstone"}}},
+							{ "template":"odd", "person": { "name": { "first":"wilma", "last":"flintstone"}}},
 							{ "person": { "name": { "first":"pebbles", "last":"flintstone"}}},
-							{ "person": { "name": { "first":"barney", "last":"rubble"}}},
+							{ "template":"odd", "person": { "name": { "first":"barney", "last":"rubble"}}},
 							{ "person": { "name": { "first":"betty", "last":"rubble"}}},
-							{ "person": { "name": { "first":"bambam", "last":"rubble"}}}
+							{ "template":"odd", "person": { "name": { "first":"bambam", "last":"rubble"}}}
 						]
 					},
 					"events": {
@@ -48,7 +48,21 @@
 						}
 					}
 				}
-			]
+			],
+			"events": {
+				"load": {
+					"actions": [
+						{ "append": { "name":"aList", "rowItems": [
+							{ "person": { "name": { "first":"george", "last":"jetson"}}},
+							{ "template":"odd", "person": { "name": { "first":"jane", "last":"jetson"}}},
+							{ "person": { "name": { "first":"elroy", "last":"jetson"}}},
+							{ "template":"odd", "person": { "name": { "first":"judy", "last":"jetson"}}},
+							{ "person": { "name": { "first":"rosie"}}},
+							{ "template":"odd", "person": { "name": { "first":"cosmo", "last":"spacely"}}}
+						]	} }
+					]
+				}
+			}
 		}
 	]
 }

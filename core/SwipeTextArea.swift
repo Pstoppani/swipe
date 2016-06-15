@@ -13,15 +13,13 @@ import Foundation
 #endif
 
 class SwipeTextArea: SwipeView, UITextViewDelegate {
-    private let info: [String:AnyObject]
     private var screenDimension = CGSize(width: 0, height: 0)
     private var textView: UITextView
 
     init(parent: SwipeNode, info: [String:AnyObject], frame: CGRect, screenDimension: CGSize) {
-        self.info = info
         self.screenDimension = screenDimension
         self.textView = UITextView(frame: frame)
-        super.init(parent: parent)
+        super.init(parent: parent, info: info)
         self.textView.delegate = self
         self.textView.backgroundColor = UIColor.clearColor()
         self.textView.becomeFirstResponder()

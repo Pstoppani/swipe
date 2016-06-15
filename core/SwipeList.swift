@@ -12,9 +12,8 @@ import Foundation
 #endif
 
 class SwipeList: SwipeView, UITableViewDelegate, UITableViewDataSource {
-
-    private let info: [String:AnyObject]
-    private let templatesInfo: [[String:AnyObject]]?
+    let TAG = "SWList"
+    private let templatesInfo: [String:AnyObject]?
     private var items = [[String:AnyObject]]()
     private let scale:CGSize
     private var screenDimension = CGSize(width: 0, height: 0)
@@ -24,11 +23,10 @@ class SwipeList: SwipeView, UITableViewDelegate, UITableViewDataSource {
     init(parent: SwipeNode, info: [String:AnyObject], scale: CGSize, frame: CGRect, screenDimension: CGSize, delegate:SwipeElementDelegate) {
         self.scale = scale
         self.screenDimension = screenDimension
-        self.info = info
         self.delegate = delegate
-        self.templatesInfo = self.info["rowTemplates"] as? [[String:AnyObject]]
+        self.templatesInfo = info["rowTemplates"] as? [String:AnyObject]
         self.tableView = UITableView(frame: frame, style: .Plain)
-        super.init(parent: parent)
+        super.init(parent: parent, info: info)
         self.tableView.delegate = self
         self.tableView.dataSource = self
         self.tableView.registerClass(UITableViewCell.self, forCellReuseIdentifier: "cell")
@@ -65,32 +63,52 @@ class SwipeList: SwipeView, UITableViewDelegate, UITableViewDataSource {
     var cellIndexPath: NSIndexPath?
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
+        let subviewTag = 999
         self.cellIndexPath = indexPath
         
         let cell = self.tableView.dequeueReusableCellWithIdentifier("cell")! as UITableViewCell
+        if let subView = cell.contentView.viewWithTag(subviewTag) {
+            subView.removeFromSuperview()
+        }
+        var cellError: String?
+        
+        var templateId = "*" // default
+        let item = items[indexPath.row]
+        if let val = item["template"] as? String {
+            templateId = val
+        }
         
         if let templates = self.templatesInfo {
-            let template = templates[indexPath.row % templates.count]
-                    let element = SwipeElement(info: template, scale:self.scale, parent:self, delegate:self.delegate!)
-                    if let subview = element.loadViewInternal(CGSizeMake(self.tableView.bounds.size.width, kH), screenDimension: self.screenDimension) {
-                        cell.contentView.addSubview(subview)
-                        children.append(element)
-                        /*
-                        let item = items[indexPath.row]
-                        if let actionsInfo = item["actions"] as? [[String:AnyObject]] {
-                            for actionInfo in actionsInfo {
-                                element.executeAction(self, action: SwipeAction(info:actionInfo))
-                            }
+            if let template = templates[templateId] as? [String:AnyObject] {
+                let element = SwipeElement(info: template, scale:self.scale, parent:self, delegate:self.delegate!)
+                if let subview = element.loadViewInternal(CGSizeMake(self.tableView.bounds.size.width, kH), screenDimension: self.screenDimension) {
+                    subview.tag = subviewTag
+                    cell.contentView.addSubview(subview)
+                    children.append(element)
+                    /*
+                    let item = items[indexPath.row]
+                    if let actionsInfo = item["actions"] as? [[String:AnyObject]] {
+                        for actionInfo in actionsInfo {
+                            element.executeAction(self, action: SwipeAction(info:actionInfo))
                         }
-                        */
                     }
-            
+                    */
+                } else {
+                    cellError = "can't load"
+                }
+            } else {
+                cellError = "no template for id '" + templateId + "'"
+            }
         } else {
+            cellError = "no templates"
+        }
+        
+        if cellError != nil {
             let v = UIView(frame: CGRect(x: 0, y: 0, width: self.tableView.bounds.size.width, height: kH))
             let l = UILabel(frame: CGRect(x:0, y:0, width: v.bounds.size.width, height: v.bounds.size.height))
             v.addSubview(l)
             cell.contentView.addSubview(v)
-            l.text = "cell \(indexPath.row))"
+            l.text = "row \(indexPath.row) error " + cellError!
         }
         
         self.cellIndexPath = nil
@@ -101,6 +119,55 @@ class SwipeList: SwipeView, UITableViewDelegate, UITableViewDataSource {
         return items.count
     }
     
+    // SwipeView
+
+    override func appendList(originator: SwipeNode, info: [String:AnyObject]) {
+        if let itemsInfo = info["rowItems"] as? [[String:AnyObject]] {
+            items.appendContentsOf(itemsInfo)
+            self.tableView.reloadData()
+        }
+    }
+    
+    override func appendList(originator: SwipeNode, name: String, up: Bool, info: [String:AnyObject])  -> Bool {
+        if (name == "*" || self.name.caseInsensitiveCompare(name) == .OrderedSame) {
+            // Update self
+            appendList(originator, info: info)
+            return true
+        }
+        
+        // Find named element in parent hierarchy and update
+        var node: SwipeNode? = self
+        
+        if up {
+            while node?.parent != nil {
+                if let viewNode = node?.parent as? SwipeView {
+                    for c in viewNode.children {
+                        if let e = c as? SwipeElement {
+                            if e.name.caseInsensitiveCompare(name) == .OrderedSame {
+                                e.update(originator, info: info)
+                                return true
+                            }
+                        }
+                    }
+                    
+                    node = node?.parent
+                } else {
+                    return false
+                }
+            }
+        } else {
+            for c in children {
+                if let e = c as? SwipeElement {
+                    if e.updateElement(originator, name:name, up:up, info:info) {
+                        return true
+                    }
+                }
+            }
+        }
+        
+        return false
+    }
+
     // SwipeNode
     
     override func getPropertyValue(property: String) -> AnyObject? {
