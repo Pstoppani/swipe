@@ -250,10 +250,11 @@ An **Element** is a visible entity on a **Page**. It occupies a specified rectan
 - **rotate** (Float or Float[3]): Rotation in degree around the anchor point, clockwise, default is 0, animatable.
 - **scale** (Float or [Float, Float]): Scaling factor around the anchor point, default is [1, 1], animatable
 - **translate** ([Float, Float]): Translation, default is [0, 0], animatable
-- **text** (String, [langId:String] or ["strings":StringId]): Text to display
-	- **textAlign** (String): Text alignment, *center* (default), *left* or *right*
-	- **fontSize** (Float or Percent): Font size
-	- **textColor** (Color): Color of the text, animatable
+- **text** (String, [langId:String] or ["ref":StringId]): Text to display
+  - **textAlign** (String): Text alignment, *center* (default), *left* or *right*
+  - **fontSize** (Float or Percent): Font size
+  - **fontName** (String or [String]): Font name or names (the first name existing in the system is used)
+  - **textColor** (Color): Color of the text, animatable
 - **img** (URL): Image to display, animatable
 - **mask** (URL): Image mask (PNG with the alpha channel)
 - **sprite** (URL): Sprite to display
