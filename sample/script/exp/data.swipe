@@ -1,9 +1,9 @@
 {
 	"pages": [
 		{
-			"name": "fetchPage",
 			"elements": [
-				{"name":"label", "text":"", "h":"20%", "pos":["50%", "10%"] },
+				{"text":"HTTP GET", "h":"10%", "pos":["50%", "5%"]},
+				{"name":"label", "text":"", "h":"20%", "pos":["50%", "20%"] },
 				{"name":"error", "textColor":"red", "h":"50%", "pos":["50%", "75%"] },
 			 ],
 			"events": {
@@ -25,6 +25,41 @@
 										"params": {"d1":{"type":"string"}},
 										"actions": [
 											{ "update":{"name":"label", "text":{"valueOf":{"property":{"params":"d1"}}}}}
+										]
+									}
+								}
+							}
+						}
+					]
+				}
+			}
+		},
+		{
+			"elements": [
+				{"text":"HTTP POST", "h":"10%", "pos":["50%", "5%"]},
+				{"name":"label", "text":"", "h":"20%", "pos":["50%", "20%"] },
+				{"name":"error", "textColor":"red", "h":"50%", "pos":["50%", "75%"] },
+			 ],
+			"events": {
+					"load": {
+						"actions": [
+						{ "update":{"name":"label", "text":"Loading ..."}},
+						{
+							"post":{
+								"target": {"url":"https://cloudtestv2-1.uiexm.com/v1/xos/chatbot/talk/"},
+								"data": { "text":"hello"},
+								"events": {
+									"error": {
+										"params": {"message":{"type":"string"}},
+										"actions": [
+											{ "update":{"name":"label", "text":"** Error **"}},
+											{ "update":{"name":"error", "text":{"valueOf":{"property":{"params":"message"}}, "opacity":1}}}
+										]
+									},
+									"completion": {
+										"params": {"status":"string","responses":["string"],"sessionid":"number"},
+										"actions": [
+											{ "update":{"name":"label", "text":{"valueOf":{"property":{"params":"responses"}}}}}
 										]
 									}
 								}

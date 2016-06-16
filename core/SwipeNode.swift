@@ -31,6 +31,8 @@ class SwipeNode: NSObject {
     func executeAction(originator: SwipeNode, action: SwipeAction) {
         if let fetchInfo = action.info["fetch"] as? [String:AnyObject] {
             SwipeFetcher.create(self, fetchInfo: fetchInfo)
+        } else if let postInfo = action.info["post"] as? [String:AnyObject] {
+            SwipePoster.create(self, postInfo: postInfo)
         } else if let timerInfo = action.info["timer"] as? [String:AnyObject] {
             SwipeTimer.create(self, timerInfo: timerInfo)
         } else {

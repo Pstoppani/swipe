@@ -86,7 +86,7 @@ class SwipeFetcher : SwipeNode {
     
     override func getPropertiesValue(info: [String:AnyObject]) -> AnyObject? {
         let prop = info.keys.first!
-        NSLog("SWNode getPropsVal(\(prop))")
+        NSLog(TAG + " getPropsVal(\(prop))")
         
         switch (prop) {
         case "params":
