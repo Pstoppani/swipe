@@ -186,14 +186,15 @@ class SwipeElement: SwipeView {
             }
         }
         if let listInfo = self.info["list"] as? [String:AnyObject] {
-            if let templatesInfo = listInfo["rowTemplates"] as? [String:AnyObject] {
-                let scaleDummy = CGSizeMake(1.0, 1.0)
-                
-                for k in templatesInfo.keys {
-                    if let e = templatesInfo[k] as? [String:AnyObject] {
-                        let element = SwipeElement(info: e, scale:scaleDummy, parent:self, delegate:self.delegate!)
-                        for (url, prefix) in element.resourceURLs {
-                            urls[url] = prefix
+            if let itemsInfo = listInfo["items"] as? [[String:AnyObject]] {
+                for itemInfo in itemsInfo {
+                    if let elementsInfo = itemInfo["elements"] as? [[String:AnyObject]] {
+                        let scaleDummy = CGSizeMake(1.0, 1.0)
+                        for e in elementsInfo {
+                            let element = SwipeElement(info: e, scale:scaleDummy, parent:self, delegate:self.delegate!)
+                            for (url, prefix) in element.resourceURLs {
+                                urls[url] = prefix
+                            }
                         }
                     }
                 }

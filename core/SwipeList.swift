@@ -13,7 +13,6 @@ import Foundation
 
 class SwipeList: SwipeView, UITableViewDelegate, UITableViewDataSource {
     let TAG = "SWList"
-    private let templatesInfo: [String:AnyObject]?
     private var items = [[String:AnyObject]]()
     private let scale:CGSize
     private var screenDimension = CGSize(width: 0, height: 0)
@@ -24,7 +23,6 @@ class SwipeList: SwipeView, UITableViewDelegate, UITableViewDataSource {
         self.scale = scale
         self.screenDimension = screenDimension
         self.delegate = delegate
-        self.templatesInfo = info["rowTemplates"] as? [String:AnyObject]
         self.tableView = UITableView(frame: frame, style: .Plain)
         super.init(parent: parent, info: info)
         self.tableView.delegate = self
@@ -33,10 +31,10 @@ class SwipeList: SwipeView, UITableViewDelegate, UITableViewDataSource {
         self.tableView.separatorStyle = .None
         self.tableView.allowsSelection = true
         self.tableView.backgroundColor = UIColor.clearColor()
-        if let itemsInfo = info["rowItems"] as? [[String:AnyObject]] {
+        if let itemsInfo = info["items"] as? [[String:AnyObject]] {
             items = itemsInfo
         }
-        if let selectedIndex = self.info["selectedRow"] as? Int {
+        if let selectedIndex = self.info["selectedItem"] as? Int {
             self.tableView.selectRowAtIndexPath(NSIndexPath(forRow: selectedIndex, inSection: 0), animated: true, scrollPosition: .Middle)
         }
     }
@@ -72,35 +70,21 @@ class SwipeList: SwipeView, UITableViewDelegate, UITableViewDataSource {
         }
         var cellError: String?
         
-        var templateId = "*" // default
-        let item = items[indexPath.row]
-        if let val = item["template"] as? String {
-            templateId = val
-        }
+        let item = self.items[indexPath.row]
         
-        if let templates = self.templatesInfo {
-            if let template = templates[templateId] as? [String:AnyObject] {
-                let element = SwipeElement(info: template, scale:self.scale, parent:self, delegate:self.delegate!)
+        if let elementsInfo = item["elements"] as? [[String:AnyObject]] {
+            for elementInfo in elementsInfo {
+                let element = SwipeElement(info: elementInfo, scale:self.scale, parent:self, delegate:self.delegate!)
                 if let subview = element.loadViewInternal(CGSizeMake(self.tableView.bounds.size.width, kH), screenDimension: self.screenDimension) {
                     subview.tag = subviewTag
                     cell.contentView.addSubview(subview)
                     children.append(element)
-                    /*
-                    let item = items[indexPath.row]
-                    if let actionsInfo = item["actions"] as? [[String:AnyObject]] {
-                        for actionInfo in actionsInfo {
-                            element.executeAction(self, action: SwipeAction(info:actionInfo))
-                        }
-                    }
-                    */
                 } else {
                     cellError = "can't load"
                 }
-            } else {
-                cellError = "no template for id '" + templateId + "'"
             }
         } else {
-            cellError = "no templates"
+            cellError = "no elements"
         }
         
         if cellError != nil {
@@ -122,7 +106,7 @@ class SwipeList: SwipeView, UITableViewDelegate, UITableViewDataSource {
     // SwipeView
 
     override func appendList(originator: SwipeNode, info: [String:AnyObject]) {
-        if let itemsInfo = info["rowItems"] as? [[String:AnyObject]] {
+        if let itemsInfo = info["items"] as? [[String:AnyObject]] {
             items.appendContentsOf(itemsInfo)
             self.tableView.reloadData()
         }
@@ -172,7 +156,7 @@ class SwipeList: SwipeView, UITableViewDelegate, UITableViewDataSource {
     
     override func getPropertyValue(property: String) -> AnyObject? {
         switch (property) {
-        case "selectedRow":
+        case "selectedItem":
             if let indexPath = self.tableView.indexPathForSelectedRow {
                 return "\(indexPath.row)"
             } else {
@@ -186,10 +170,10 @@ class SwipeList: SwipeView, UITableViewDelegate, UITableViewDataSource {
     override func getPropertiesValue(info: [String:AnyObject]) -> AnyObject? {
         let prop = info.keys.first!
         switch (prop) {
-        case "rowItems":
+        case "items":
             if let indexPath = self.cellIndexPath {
                 var item = items[indexPath.row]
-                var path = info["rowItems"] as! [String:AnyObject]
+                var path = info["items"] as! [String:AnyObject]
                 var property = path.keys.first!
                 
                 while (true) {

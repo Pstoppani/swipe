@@ -1,0 +1,72 @@
+{
+  "templates": {
+    "elements": {
+			"userText": {
+				"bc":"#dff", "x":"2%", "w":"80%", "cornerRadius":10,
+				"elements": [
+					{
+            "x":"2%", "textAlign":"left",
+            "text":{"valueOf":{"name":"aList", "property":{"items":{"data":{"person":{"name":"first"}}}}}}
+          }
+				]
+			},
+			"botText": {
+				"bc":"#ffd", "x":"18%", "w":"80%", "cornerRadius":10,
+				"elements": [
+					{
+            "textAlign":"right",
+            "text":{"valueOf":{"name":"aList", "property":{"items":{"data":{"person":{"name":"first"}}}}}}
+          }
+				]
+      }
+    }
+  },
+  "pages": [
+    {
+      "elements": [
+        {
+					"name": "aList",
+					"h":"50%",
+					"w":"98%",
+					"bc":"#eee",
+          "cornerRadius":10,
+					"pos":["50%","25%"],
+					"list": {
+						"items": [
+							{ "elements":[ { "template":"userText" }], "data":{ "person":{"name":{"first":"fred", "last":"flintstone"}}} },
+							{ "elements":[ { "template":"botText"}], "data":{  "person": { "name": { "first":"wilma", "last":"flintstone"}}} },
+							{ "elements":[ { "template":"userText"}], "data":{  "person": { "name": { "first":"pebbles", "last":"flintstone"}}} },
+							{ "elements":[ { "template":"botText"}], "data":{  "person": { "name": { "first":"barney", "last":"rubble"}}} },
+							{ "elements":[ { "template":"userText"}], "data":{  "person": { "name": { "first":"betty", "last":"rubble"}}} },
+							{ "elements":[ { "template":"botText"}], "data":{  "person": { "name": { "first":"bambam", "last":"rubble"}}} }
+						]
+					}
+        },
+        {
+          "name":"input", "textArea":{}, "text":"hello", "textAlign":"left", "fontSize":16,
+          "borderWidth":1, "borderColor":"#ddf", "cornerRadius":10,
+          "x":"2%", "y":"51%", "w":"78%", "h":"10%", "bc":"#eef",
+          "events": {
+            "endEdit": {
+              "actions": [
+              ]
+            }
+          }
+        },
+        {
+          "name":"btn", "text":"^", "x":"81%", "y":"51%", "w":"18%", "h":"10%", "textColor":"#8f8", "bc":"#dfd", "borderWidth":1, "borderColor":"#ccf", "cornerRadius":10,
+          "events": {
+            "tap": {
+              "actions": [
+                { "update": { "text":"*"} },
+                { "timer": { "duration":0.4, "events":{ "tick": { "actions":[
+                  { "update": { "text":"^"} }
+                  ]}}}}
+              ]
+            }
+          }
+        }
+      ]
+    }
+  ]
+}
