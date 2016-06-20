@@ -106,20 +106,34 @@ class SwipeList: SwipeView, UITableViewDelegate, UITableViewDataSource {
     // SwipeView
 
     override func appendList(originator: SwipeNode, info: [String:AnyObject]) {
-        if let itemsInfo = info["items"] as? [[String:AnyObject]] {
-            items.appendContentsOf(itemsInfo)
-            self.tableView.reloadData()
+        if let itemsInfoArray = info["items"] as? [[String:AnyObject]] {
+            for itemsInfo in itemsInfoArray {
+                if let data = itemsInfo["data"] as? [String:AnyObject] {
+                    if let valInfo = data["valueOf"] as? [String:AnyObject] {
+                        var itemVal = [String:AnyObject]()
+                        if let elements = itemsInfo["elements"] {
+                            itemVal["elements"] = elements
+                        }
+                        itemVal["data"] = originator.getValue(originator, info: valInfo)
+                        items.append(itemVal)
+                    } else {
+                        items.append(itemsInfo)
+                    }
+                } else {
+                    items.append(itemsInfo)
+                }
+                self.tableView.reloadData()
+                self.tableView.scrollToRowAtIndexPath(NSIndexPath(forRow: self.items.count - 1, inSection: 0), atScrollPosition: UITableViewScrollPosition.Bottom, animated: true)
+            }
         }
     }
     
     override func appendList(originator: SwipeNode, name: String, up: Bool, info: [String:AnyObject])  -> Bool {
         if (name == "*" || self.name.caseInsensitiveCompare(name) == .OrderedSame) {
-            // Update self
             appendList(originator, info: info)
             return true
         }
         
-        // Find named element in parent hierarchy and update
         var node: SwipeNode? = self
         
         if up {
@@ -128,7 +142,7 @@ class SwipeList: SwipeView, UITableViewDelegate, UITableViewDataSource {
                     for c in viewNode.children {
                         if let e = c as? SwipeElement {
                             if e.name.caseInsensitiveCompare(name) == .OrderedSame {
-                                e.update(originator, info: info)
+                                e.appendList(originator, info: info)
                                 return true
                             }
                         }
@@ -154,7 +168,7 @@ class SwipeList: SwipeView, UITableViewDelegate, UITableViewDataSource {
 
     // SwipeNode
     
-    override func getPropertyValue(property: String) -> AnyObject? {
+    override func getPropertyValue(originator: SwipeNode, property: String) -> AnyObject? {
         switch (property) {
         case "selectedItem":
             if let indexPath = self.tableView.indexPathForSelectedRow {
@@ -167,12 +181,23 @@ class SwipeList: SwipeView, UITableViewDelegate, UITableViewDataSource {
         }
     }
     
-    override func getPropertiesValue(info: [String:AnyObject]) -> AnyObject? {
+    override func getPropertiesValue(originator: SwipeNode, info: [String:AnyObject]) -> AnyObject? {
         let prop = info.keys.first!
         switch (prop) {
         case "items":
             if let indexPath = self.cellIndexPath {
                 var item = items[indexPath.row]
+                if let itemStr = info["items"] as? String {
+                    if let val = item[itemStr] as? String {
+                        return val
+                    } else if let valInfo = item[itemStr] as? [String:AnyObject] {
+                        if let valOfInfo = valInfo["valueOf"] as? [String:AnyObject] {
+                            return originator.getValue(originator, info: valOfInfo)
+                        } else {
+                            return valInfo
+                        }
+                    }
+                }
                 var path = info["items"] as! [String:AnyObject]
                 var property = path.keys.first!
                 

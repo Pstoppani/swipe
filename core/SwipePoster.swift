@@ -34,18 +34,26 @@ class SwipePoster : SwipeNode {
                 
                 let request = NSMutableURLRequest(URL: url)
                 request.HTTPMethod = "POST"
-                request.setValue("application/json", forHTTPHeaderField: "Content-Type")
-                request.setValue("BASIC dWllY2hhdDp1aWVjaGF0", forHTTPHeaderField: "Authorization")
 
+                if let dataStr = postInfo["data"] as? String {
+                    request.HTTPBody = dataStr.dataUsingEncoding(NSUTF8StringEncoding)
+                    request.setValue("text/plain; charset=UTF-8", forHTTPHeaderField: "Content-Type")
+                }
                 if let data = postInfo["data"] as? [String:AnyObject] {
                     do {
-                        let postString = try NSString(data: NSJSONSerialization.dataWithJSONObject(data, options: NSJSONWritingOptions.PrettyPrinted), encoding: NSUTF8StringEncoding)
-                        request.HTTPBody = postString!.dataUsingEncoding(NSUTF8StringEncoding)
-                        print("posting'\(NSString(data: request.HTTPBody!, encoding: NSUTF8StringEncoding))'")
+                        request.HTTPBody =  try NSJSONSerialization.dataWithJSONObject(data, options: NSJSONWritingOptions.PrettyPrinted)
+                        request.setValue("application/json; charset=UTF-8", forHTTPHeaderField: "Content-Type")
                     } catch let error as NSError {
                         print("error=\(error)")
                     }
                 }
+                
+                if let headers = postInfo["headers"] as? [String:String] {
+                    for h in headers.keys {
+                        request.setValue(headers[h], forHTTPHeaderField: h)
+                    }
+                }
+                
                 let task = NSURLSession.sharedSession().dataTaskWithRequest(request) { data, response, error in
                     guard error == nil && data != nil else {                                                          // check for fundamental networking error
                         print("error=\(error)")
@@ -67,9 +75,11 @@ class SwipePoster : SwipeNode {
                         }
                         // Success
                         if let event = self.eventHandler.getEvent("completion"), actionsInfo = self.eventHandler.actionsFor("completion") {
-                            self.data = json
-                            self.params = event.params
-                            self.execute(self, actions: actionsInfo)
+                            dispatch_async(dispatch_get_main_queue()) {
+                                self.data = json
+                                self.params = event.params
+                                self.execute(self, actions: actionsInfo)
+                            }
                         }
                     } catch let error as NSError {
                         self.handleError("post \(urlString): invalid JSON file \(error.localizedDescription)")
@@ -110,7 +120,7 @@ class SwipePoster : SwipeNode {
     
     // SwipeNode
     
-    override func getPropertiesValue(info: [String:AnyObject]) -> AnyObject? {
+    override func getPropertiesValue(originator: SwipeNode, info: [String:AnyObject]) -> AnyObject? {
         let prop = info.keys.first!
         NSLog(TAG + " getPropsVal(\(prop))")
         
@@ -130,8 +140,11 @@ class SwipePoster : SwipeNode {
                                 return str
                             } else if let arr = ret as? [AnyObject] {
                                 if arr.count > 0 {
+                                    let warning = "Array handling needs to be completed"
                                     return arr[0]
                                 }
+                            } else {
+                                return ret
                             }
                         } else {
                             return nil

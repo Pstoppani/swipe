@@ -35,6 +35,9 @@
 		C17DF6691D00790800DADBCB /* SwipePageTemplate.swift in Sources */ = {isa = PBXBuildFile; fileRef = C17DF6611D00790800DADBCB /* SwipePageTemplate.swift */; };
 		C17DF66A1D00790800DADBCB /* SwipeTimer.swift in Sources */ = {isa = PBXBuildFile; fileRef = C17DF6621D00790800DADBCB /* SwipeTimer.swift */; };
 		C17DF66B1D00790800DADBCB /* SwipeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C17DF6631D00790800DADBCB /* SwipeView.swift */; };
+		C1D6D8FE1D18622D00128195 /* SwipeFetcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1D6D8FB1D18622D00128195 /* SwipeFetcher.swift */; };
+		C1D6D8FF1D18622D00128195 /* SwipePoster.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1D6D8FC1D18622D00128195 /* SwipePoster.swift */; };
+		C1D6D9001D18622D00128195 /* SwipeTextArea.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1D6D8FD1D18622D00128195 /* SwipeTextArea.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -68,6 +71,9 @@
 		C17DF6611D00790800DADBCB /* SwipePageTemplate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SwipePageTemplate.swift; sourceTree = "<group>"; };
 		C17DF6621D00790800DADBCB /* SwipeTimer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SwipeTimer.swift; sourceTree = "<group>"; };
 		C17DF6631D00790800DADBCB /* SwipeView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SwipeView.swift; sourceTree = "<group>"; };
+		C1D6D8FB1D18622D00128195 /* SwipeFetcher.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SwipeFetcher.swift; sourceTree = "<group>"; };
+		C1D6D8FC1D18622D00128195 /* SwipePoster.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SwipePoster.swift; sourceTree = "<group>"; };
+		C1D6D8FD1D18622D00128195 /* SwipeTextArea.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SwipeTextArea.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -115,6 +121,9 @@
 		C13B9FEA1CE62E6C00D4C62A /* core */ = {
 			isa = PBXGroup;
 			children = (
+				C1D6D8FB1D18622D00128195 /* SwipeFetcher.swift */,
+				C1D6D8FC1D18622D00128195 /* SwipePoster.swift */,
+				C1D6D8FD1D18622D00128195 /* SwipeTextArea.swift */,
 				C17DF65C1D00790800DADBCB /* SwipeAction.swift */,
 				C17DF65D1D00790800DADBCB /* SwipeEvent.swift */,
 				C17DF65E1D00790800DADBCB /* SwipeEventHandler.swift */,
@@ -228,6 +237,7 @@
 				C13BA0041CE62E6C00D4C62A /* SwipeDocumentViewer.swift in Sources */,
 				C13BA00A1CE62E6C00D4C62A /* SwipePath.swift in Sources */,
 				C13BA00D1CE62E6C00D4C62A /* SwipeViewController.swift in Sources */,
+				C1D6D8FE1D18622D00128195 /* SwipeFetcher.swift in Sources */,
 				C13BA0081CE62E6C00D4C62A /* SwipePage.swift in Sources */,
 				C13BA0101CE62E6C00D4C62A /* SwipeAssetManager.swift in Sources */,
 				C13BA00C1CE62E6C00D4C62A /* SwipeSynthesizer.swift in Sources */,
@@ -241,9 +251,11 @@
 				C13BA00F1CE62E6C00D4C62A /* SNNotificationManager.swift in Sources */,
 				C13B9FD01CE62CF800D4C62A /* AppDelegate.swift in Sources */,
 				C13BA0121CE62E6C00D4C62A /* SwipePrefetcher.swift in Sources */,
+				C1D6D8FF1D18622D00128195 /* SwipePoster.swift in Sources */,
 				C17DF6641D00790800DADBCB /* SwipeAction.swift in Sources */,
 				C13BA0071CE62E6C00D4C62A /* SwipeMarkdown.swift in Sources */,
 				C17DF66A1D00790800DADBCB /* SwipeTimer.swift in Sources */,
+				C1D6D9001D18622D00128195 /* SwipeTextArea.swift in Sources */,
 				C13BA0111CE62E6C00D4C62A /* SwipeConnection.swift in Sources */,
 				C13BA0091CE62E6C00D4C62A /* SwipeParser.swift in Sources */,
 				C17DF6651D00790800DADBCB /* SwipeEvent.swift in Sources */,

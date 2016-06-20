@@ -63,16 +63,26 @@
 				"load": {
 					"actions": [
 						{
-							"append": {
-								"name":"aList",
-								"items": [
-									{ "elements":[ {"template":"even" }], "data":{ "person": { "name": { "first":"george", "last":"jetson"}}}},
-									{ "elements":[ {"template":"odd" }], "data":{ "person": { "name": { "first":"jane", "last":"jetson"}}}},
-									{ "elements":[ {"template":"even" }], "data":{ "person": { "name": { "first":"elroy", "last":"jetson"}}}},
-									{ "elements":[ {"template":"odd" }], "data":{ "person": { "name": { "first":"judy", "last":"jetson"}}}},
-									{ "elements":[ {"template":"even" }], "data":{ "person": { "name": { "first":"rosie"}}}},
-									{ "elements":[ {"template":"odd" }], "data":{ "person": { "name": { "first":"cosmo", "last":"spacely"}}}}
-								]
+							"timer": {
+								"events": {
+									"tick": {
+										"actions": [
+											{
+												"append": {
+													"name":"aList",
+													"items": [
+														{ "elements":[ {"template":"even" }], "data":{ "person": { "name": { "first":"george", "last":"jetson"}}}},
+														{ "elements":[ {"template":"odd" }], "data":{ "person": { "name": { "first":"jane", "last":"jetson"}}}},
+														{ "elements":[ {"template":"even" }], "data":{ "person": { "name": { "first":"elroy", "last":"jetson"}}}},
+														{ "elements":[ {"template":"odd" }], "data":{ "person": { "name": { "first":"judy", "last":"jetson"}}}},
+														{ "elements":[ {"template":"even" }], "data":{ "person": { "name": { "first":"rosie"}}}},
+														{ "elements":[ {"template":"odd" }], "data":{ "person": { "name": { "first":"cosmo", "last":"spacely"}}}}
+													]
+												}
+											}
+										]
+									}
+								}
 							}
 						}
 					]

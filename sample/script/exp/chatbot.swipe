@@ -6,7 +6,7 @@
 				"elements": [
 					{
             "x":"2%", "textAlign":"left",
-            "text":{"valueOf":{"name":"aList", "property":{"items":{"data":{"person":{"name":"first"}}}}}}
+            "text":{"valueOf":{"name":"aList", "property":{"items":"data"}}}
           }
 				]
 			},
@@ -15,7 +15,7 @@
 				"elements": [
 					{
             "textAlign":"right",
-            "text":{"valueOf":{"name":"aList", "property":{"items":{"data":{"person":{"name":"first"}}}}}}
+            "text":{"valueOf":{"name":"aList", "property":{"items":"data"}}}
           }
 				]
       }
@@ -25,27 +25,17 @@
     {
       "elements": [
         {
-					"name": "aList",
-					"h":"50%",
-					"w":"98%",
-					"bc":"#eee",
-          "cornerRadius":10,
-					"pos":["50%","25%"],
+					"name": "aList", "x":0, "y":0, "h":"88%","w":"98%", "cornerRadius":10,
 					"list": {
 						"items": [
-							{ "elements":[ { "template":"userText" }], "data":{ "person":{"name":{"first":"fred", "last":"flintstone"}}} },
-							{ "elements":[ { "template":"botText"}], "data":{  "person": { "name": { "first":"wilma", "last":"flintstone"}}} },
-							{ "elements":[ { "template":"userText"}], "data":{  "person": { "name": { "first":"pebbles", "last":"flintstone"}}} },
-							{ "elements":[ { "template":"botText"}], "data":{  "person": { "name": { "first":"barney", "last":"rubble"}}} },
-							{ "elements":[ { "template":"userText"}], "data":{  "person": { "name": { "first":"betty", "last":"rubble"}}} },
-							{ "elements":[ { "template":"botText"}], "data":{  "person": { "name": { "first":"bambam", "last":"rubble"}}} }
+							{ "elements":[{"template":"botText"}], "data":"Hello!"}
 						]
 					}
         },
         {
           "name":"input", "textArea":{}, "text":"hello", "textAlign":"left", "fontSize":16,
           "borderWidth":1, "borderColor":"#ddf", "cornerRadius":10,
-          "x":"2%", "y":"51%", "w":"78%", "h":"10%", "bc":"#eef",
+          "x":"2%", "y":"89%", "w":"78%", "h":"10%", "bc":"#eef",
           "events": {
             "endEdit": {
               "actions": [
@@ -54,14 +44,49 @@
           }
         },
         {
-          "name":"btn", "text":"^", "x":"81%", "y":"51%", "w":"18%", "h":"10%", "textColor":"#8f8", "bc":"#dfd", "borderWidth":1, "borderColor":"#ccf", "cornerRadius":10,
+          "name":"btn", "text":"^", "x":"81%", "y":"89%", "w":"18%", "h":"10%", "textColor":"#8f8", "bc":"#dfd", "borderWidth":1, "borderColor":"#ccf", "cornerRadius":10,
           "events": {
             "tap": {
               "actions": [
+                {
+                  "append": {
+                    "name":"aList",
+                    "items": [
+                      { "elements":[{"template":"userText" }], "data":{"valueOf":{"name":"input", "property":"text"}}}
+                    ]
+                  }
+                },
                 { "update": { "text":"*"} },
-                { "timer": { "duration":0.4, "events":{ "tick": { "actions":[
-                  { "update": { "text":"^"} }
-                  ]}}}}
+                { "update": { "name":"input", "text":""} },
+                {
+                  "post":{
+                    "target": {"url":"https://cloudtestv2-1.uiexm.com/v1/xos/chatbot/talk/"},
+                    "headers": { "Authorization":"BASIC dWllY2hhdDp1aWVjaGF0" },
+                    "data": { "text":"hello"},
+                    "events": {
+                      "error": {
+                        "params": {"message":{"type":"string"}},
+                        "actions": [
+                          { "update": { "text":"^"} }
+                        ]
+                      },
+                      "completion": {
+                        "params": {"status":"string","responses":["string"],"sessionid":"number"},
+                        "actions": [
+                          { "update": { "text":"^"} },
+                          {
+                            "append": {
+                              "name":"aList",
+                              "items": [
+                                { "elements":[{"template":"botText" }], "data":{"valueOf":{"property":{"params":"responses"}}}}
+                              ]
+                            }
+                          }
+                        ]
+                      }
+                    }
+                  }
+                }
               ]
             }
           }

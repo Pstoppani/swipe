@@ -24,7 +24,19 @@
 									"completion": {
 										"params": {"d1":{"type":"string"}},
 										"actions": [
-											{ "update":{"name":"label", "text":{"valueOf":{"property":{"params":"d1"}}}}}
+											{
+												"timer": {
+													"events": {
+														"tick": {
+															"actions": [
+																{
+																	"update":{"name":"label", "text":{"valueOf":{"property":{"params":"d1"}}}}
+																}
+															]
+														}
+													}
+												}
+											}
 										]
 									}
 								}
@@ -47,6 +59,7 @@
 						{
 							"post":{
 								"target": {"url":"https://cloudtestv2-1.uiexm.com/v1/xos/chatbot/talk/"},
+								"headers": { "Authorization":"BASIC dWllY2hhdDp1aWVjaGF0" },
 								"data": { "text":"hello"},
 								"events": {
 									"error": {
@@ -59,7 +72,19 @@
 									"completion": {
 										"params": {"status":"string","responses":["string"],"sessionid":"number"},
 										"actions": [
-											{ "update":{"name":"label", "text":{"valueOf":{"property":{"params":"responses"}}}}}
+											{
+												"timer": {
+													"events": {
+														"tick": {
+															"actions": [
+																{
+																	"update":{"name":"label", "text":{"valueOf":{"property":{"params":"responses"}}}}
+																}
+															]
+														}
+													}
+												}
+											}
 										]
 									}
 								}

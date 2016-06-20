@@ -1240,7 +1240,7 @@ class SwipeElement: SwipeView {
             return nil
         }
         if let valInfo = params["valueOf"] as? [String:AnyObject] {
-            if let text = originator.getValue(valInfo) as? String {
+            if let text = originator.getValue(originator, info: valInfo) as? String {
                 return text
             }
             return nil
@@ -1366,8 +1366,8 @@ class SwipeElement: SwipeView {
     
     // SwipeNode
     
-    override func getPropertyValue(property: String) -> AnyObject? {
-        if let val = helper?.getPropertyValue(property) {
+    override func getPropertyValue(originator: SwipeNode, property: String) -> AnyObject? {
+        if let val = helper?.getPropertyValue(originator, property: property) {
             return val
         }
         
@@ -1379,21 +1379,21 @@ class SwipeElement: SwipeView {
         }
     }
     
-    override func getPropertiesValue(info: [String:AnyObject]) -> AnyObject? {
-        if let val = self.helper?.getPropertiesValue(info) {
+    override func getPropertiesValue(originator: SwipeNode, info: [String:AnyObject]) -> AnyObject? {
+        if let val = self.helper?.getPropertiesValue(originator, info: info) {
             return val
         }
 
         let key = info.keys.first!
         
         if let val = info[key] as? String {
-            return getPropertyValue(val)
+            return getPropertyValue(originator, property: val)
         } else {
             return nil
         }
     }
     
-    override func getValue(info: [String:AnyObject]) -> AnyObject? {
+    override func getValue(originator: SwipeNode, info: [String:AnyObject]) -> AnyObject? {
         var name = "*"
         if let val = info["name"] as? String {
             name = val
@@ -1406,13 +1406,12 @@ class SwipeElement: SwipeView {
         
         if (name == "*" || self.name.caseInsensitiveCompare(name) == .OrderedSame) {
             if let attribute = info["property"] as? String {
-                return getPropertyValue(attribute)
+                return getPropertyValue(originator, property: attribute)
             } else if let attributeInfo = info["property"] as? [String:AnyObject] {
-                return getPropertiesValue(attributeInfo)
+                return getPropertiesValue(originator, info: attributeInfo)
             }
         }
 
-        // Find named element in parent hierarchy and update
         var node: SwipeNode? = self
         
         if up {
@@ -1420,11 +1419,11 @@ class SwipeElement: SwipeView {
                 if let viewNode = node?.parent as? SwipeView {
                     for c in viewNode.children {
                         if let e = c as? SwipeElement {
-                            if e.name.caseInsensitiveCompare(name) == .OrderedSame {
+                            if name == "*" || e.name.caseInsensitiveCompare(name) == .OrderedSame {
                                 if let attribute = info["property"] as? String {
-                                    return e.getPropertyValue(attribute)
+                                    return e.getPropertyValue(originator, property: attribute)
                                 } else if let attributeInfo = info["property"] as? [String:AnyObject] {
-                                    return e.getPropertiesValue(attributeInfo)
+                                    return e.getPropertiesValue(originator, info: attributeInfo)
                                 }
                             }
                         }
@@ -1432,13 +1431,13 @@ class SwipeElement: SwipeView {
                     
                     node = node?.parent
                 } else {
-                    return false
+                    return nil
                 }
             }
         } else {
             for c in children {
                 if let e = c as? SwipeElement {
-                    return e.getValue(info)
+                    return e.getValue(originator, info: info)
                 }
             }
         }
@@ -1448,11 +1447,20 @@ class SwipeElement: SwipeView {
 
     func update(originator: SwipeNode, info: [String:AnyObject]) {
         if let text = parseText(originator, info: info, key:"text") {
-            self.setTextLayer(text, scale:self.scale, info: info, dimension:screenDimension, layer: layer!)
+            if let textAreaHelper = self.helper as? SwipeTextArea {
+                textAreaHelper.setText(text, scale: self.scale, info: info, dimension: screenDimension, layer: nil)
+            }
+            else {
+                self.setTextLayer(text, scale:self.scale, info: info, dimension:screenDimension, layer: layer!)
+            }
         }
     }
     
     override func updateElement(originator: SwipeNode, name: String, up: Bool, info: [String:AnyObject]) -> Bool {
+        if let textAreaHelper = self.helper as? SwipeTextArea {
+            return textAreaHelper.updateElement(originator, name: name, up: up, info: info)
+        }
+        
         if (name == "*" || self.name.caseInsensitiveCompare(name) == .OrderedSame) {
             // Update self
             update(originator, info: info)
@@ -1499,7 +1507,7 @@ class SwipeElement: SwipeView {
     override func appendList(originator: SwipeNode, name: String, up: Bool, info: [String:AnyObject])  -> Bool {
         if (name == "*" || self.name.caseInsensitiveCompare(name) == .OrderedSame) {
             // Update self
-            update(originator, info: info)
+            appendList(originator, info: info)
             return true
         }
         
@@ -1512,7 +1520,7 @@ class SwipeElement: SwipeView {
                     for c in viewNode.children {
                         if let e = c as? SwipeElement {
                             if e.name.caseInsensitiveCompare(name) == .OrderedSame {
-                                e.update(originator, info: info)
+                                e.appendList(originator, info: info)
                                 return true
                             }
                         }
@@ -1526,7 +1534,7 @@ class SwipeElement: SwipeView {
         } else {
             for c in children {
                 if let e = c as? SwipeElement {
-                    if e.updateElement(originator, name:name, up:up, info:info) {
+                    if e.appendList(originator, name:name, up:up, info:info) {
                         return true
                     }
                 }

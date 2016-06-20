@@ -62,7 +62,7 @@ class SwipeView: SwipeNode {
         }
     }
     
-    func setText(text:String, scale:CGSize, info:[String:AnyObject], dimension:CGSize, layer:CALayer) -> Bool {
+    func setText(text:String, scale:CGSize, info:[String:AnyObject], dimension:CGSize, layer:CALayer?) -> Bool {
         return false
     }
     

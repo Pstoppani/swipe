@@ -26,7 +26,7 @@ class SwipeTextArea: SwipeView, UITextViewDelegate {
         self.view = self.textView
     }
     
-    override func setText(text:String, scale:CGSize, info:[String:AnyObject], dimension:CGSize, layer:CALayer) -> Bool {
+    override func setText(text:String, scale:CGSize, info:[String:AnyObject], dimension:CGSize, layer:CALayer?) -> Bool {
         self.textView.text = text
         self.textView.textAlignment = NSTextAlignment.Center
         
@@ -67,7 +67,7 @@ class SwipeTextArea: SwipeView, UITextViewDelegate {
         return true
     }
     
-    override func getPropertyValue(property: String) -> AnyObject? {
+    override func getPropertyValue(originator: SwipeNode, property: String) -> AnyObject? {
         switch (property) {
         case "text":
             return self.textView.text

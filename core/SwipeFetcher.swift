@@ -84,7 +84,7 @@ class SwipeFetcher : SwipeNode {
     
     // SwipeNode
     
-    override func getPropertiesValue(info: [String:AnyObject]) -> AnyObject? {
+    override func getPropertiesValue(originator: SwipeNode, info: [String:AnyObject]) -> AnyObject? {
         let prop = info.keys.first!
         NSLog(TAG + " getPropsVal(\(prop))")
         

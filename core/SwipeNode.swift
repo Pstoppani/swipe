@@ -40,30 +40,30 @@ class SwipeNode: NSObject {
         }
     }
 
-    func getPropertyValue(property: String) -> AnyObject? {
-        return nil
+    func getPropertyValue(originator: SwipeNode, property: String) -> AnyObject? {
+        return self.parent?.getPropertyValue(originator, property: property)
     }
     
-    func getPropertiesValue(info: [String:AnyObject]) -> AnyObject? {
-        return nil
+    func getPropertiesValue(originator: SwipeNode, info: [String:AnyObject]) -> AnyObject? {
+        return self.parent?.getPropertiesValue(originator, info: info)
     }
     
-    func getValue(info: [String:AnyObject]) -> AnyObject? {
+    func getValue(originator: SwipeNode, info: [String:AnyObject]) -> AnyObject? {
         var up = true
         if let val = info["include"] as? String {
             up = val != "children"
         }
         
         if let property = info["property"] as? String {
-            return getPropertyValue(property)
+            return getPropertyValue(originator, property: property)
         } else if let propertyInfo = info["property"] as? [String:AnyObject] {
-            return getPropertiesValue(propertyInfo)
+            return getPropertiesValue(originator, info: propertyInfo)
         } else {
             if up {
-                return self.parent?.getValue(info)
+                return self.parent?.getValue(originator, info: info)
             } else {
                 for c in self.children {
-                    let val = c.getValue(info)
+                    let val = c.getValue(originator, info: info)
                     if val != nil {
                         return val
                     }
