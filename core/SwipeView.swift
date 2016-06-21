@@ -122,11 +122,11 @@ class SwipeView: SwipeNode {
     }
     
     func updateElement(originator: SwipeNode, name: String, up: Bool, info: [String:AnyObject])  -> Bool {
-        fatalError("Must Override")
+        return false
     }
     
     func appendList(originator: SwipeNode, name: String, up: Bool, info: [String:AnyObject])  -> Bool {
-        fatalError("Must Override")
+        return false
     }
     
     func appendList(originator: SwipeNode, info: [String:AnyObject]) {

@@ -22,6 +22,20 @@ class SwipeNode: NSObject {
         super.init()
     }
     
+    func evaluate(info:[String:AnyObject]) -> [String:AnyObject] {
+        var result = [String:AnyObject]()
+        
+        for k in info.keys {
+            var val = info[k]
+            if let valInfo = val as? [String:AnyObject], valOfInfo = valInfo["valueOf"] as? [String:AnyObject] {
+                val = getValue(self, info: valOfInfo)
+            }
+            
+            result[k] = val
+        }
+        return result
+    }
+    
     func execute(originator: SwipeNode, actions:[SwipeAction]) {
         for action in actions {
             executeAction(originator, action: action)

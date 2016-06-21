@@ -5,7 +5,7 @@
 				"bc":"#dff", "x":"2%", "w":"80%", "cornerRadius":10,
 				"elements": [
 					{
-            "x":"2%", "textAlign":"left",
+            "x":"2%", "textAlign":"left", "fontSize":16,
             "text":{"valueOf":{"name":"aList", "property":{"items":"data"}}}
           }
 				]
@@ -14,7 +14,7 @@
 				"bc":"#ffd", "x":"18%", "w":"80%", "cornerRadius":10,
 				"elements": [
 					{
-            "textAlign":"right",
+            "textAlign":"right", "fontSize":16,
             "text":{"valueOf":{"name":"aList", "property":{"items":"data"}}}
           }
 				]
@@ -57,12 +57,11 @@
                   }
                 },
                 { "update": { "text":"*"} },
-                { "update": { "name":"input", "text":""} },
                 {
                   "post":{
                     "target": {"url":"https://cloudtestv2-1.uiexm.com/v1/xos/chatbot/talk/"},
                     "headers": { "Authorization":"BASIC dWllY2hhdDp1aWVjaGF0" },
-                    "data": { "text":"hello"},
+                    "data": { "text":{"valueOf":{"name":"input", "property":"text"}}},
                     "events": {
                       "error": {
                         "params": {"message":{"type":"string"}},
@@ -86,7 +85,8 @@
                       }
                     }
                   }
-                }
+                },
+                { "update": { "name":"input", "text":""} }
               ]
             }
           }

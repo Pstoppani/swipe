@@ -108,17 +108,8 @@ class SwipeList: SwipeView, UITableViewDelegate, UITableViewDataSource {
     override func appendList(originator: SwipeNode, info: [String:AnyObject]) {
         if let itemsInfoArray = info["items"] as? [[String:AnyObject]] {
             for itemsInfo in itemsInfoArray {
-                if let data = itemsInfo["data"] as? [String:AnyObject] {
-                    if let valInfo = data["valueOf"] as? [String:AnyObject] {
-                        var itemVal = [String:AnyObject]()
-                        if let elements = itemsInfo["elements"] {
-                            itemVal["elements"] = elements
-                        }
-                        itemVal["data"] = originator.getValue(originator, info: valInfo)
-                        items.append(itemVal)
-                    } else {
-                        items.append(itemsInfo)
-                    }
+                if let _ = itemsInfo["data"] as? [String:AnyObject] {
+                    items.append(originator.evaluate(itemsInfo))
                 } else {
                     items.append(itemsInfo)
                 }
@@ -188,16 +179,16 @@ class SwipeList: SwipeView, UITableViewDelegate, UITableViewDataSource {
             if let indexPath = self.cellIndexPath {
                 var item = items[indexPath.row]
                 if let itemStr = info["items"] as? String {
+                    // ie "property":{"items":"data"}}
                     if let val = item[itemStr] as? String {
+                        // ie "data":String
                         return val
                     } else if let valInfo = item[itemStr] as? [String:AnyObject] {
-                        if let valOfInfo = valInfo["valueOf"] as? [String:AnyObject] {
-                            return originator.getValue(originator, info: valOfInfo)
-                        } else {
-                            return valInfo
-                        }
+                        // ie "data":{...}
+                        return originator.evaluate(valInfo)
                     }
                 }
+                // ie "property":{"items":{"data":{...}}}
                 var path = info["items"] as! [String:AnyObject]
                 var property = path.keys.first!
                 

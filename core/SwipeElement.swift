@@ -1458,7 +1458,9 @@ class SwipeElement: SwipeView {
     
     override func updateElement(originator: SwipeNode, name: String, up: Bool, info: [String:AnyObject]) -> Bool {
         if let textAreaHelper = self.helper as? SwipeTextArea {
-            return textAreaHelper.updateElement(originator, name: name, up: up, info: info)
+            if textAreaHelper.updateElement(originator, name: name, up: up, info: info) {
+                return true
+            }
         }
         
         if (name == "*" || self.name.caseInsensitiveCompare(name) == .OrderedSame) {

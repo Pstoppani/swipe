@@ -40,8 +40,9 @@ class SwipePoster : SwipeNode {
                     request.setValue("text/plain; charset=UTF-8", forHTTPHeaderField: "Content-Type")
                 }
                 if let data = postInfo["data"] as? [String:AnyObject] {
+                    let evalData = parent.evaluate(data)
                     do {
-                        request.HTTPBody =  try NSJSONSerialization.dataWithJSONObject(data, options: NSJSONWritingOptions.PrettyPrinted)
+                        request.HTTPBody =  try NSJSONSerialization.dataWithJSONObject(evalData, options: NSJSONWritingOptions.PrettyPrinted)
                         request.setValue("application/json; charset=UTF-8", forHTTPHeaderField: "Content-Type")
                     } catch let error as NSError {
                         print("error=\(error)")
