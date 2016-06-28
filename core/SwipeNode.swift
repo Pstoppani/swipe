@@ -29,6 +29,9 @@ class SwipeNode: NSObject {
             var val = info[k]
             if let valInfo = val as? [String:AnyObject], valOfInfo = valInfo["valueOf"] as? [String:AnyObject] {
                 val = getValue(self, info: valOfInfo)
+                if val == nil {
+                    val = ""
+                }
             }
             
             result[k] = val
@@ -46,7 +49,7 @@ class SwipeNode: NSObject {
         if let fetchInfo = action.info["fetch"] as? [String:AnyObject] {
             SwipeFetcher.create(self, fetchInfo: fetchInfo)
         } else if let postInfo = action.info["post"] as? [String:AnyObject] {
-            SwipePoster.create(self, postInfo: postInfo)
+            SwipeHttpPost.create(self, postInfo: postInfo)
         } else if let timerInfo = action.info["timer"] as? [String:AnyObject] {
             SwipeTimer.create(self, timerInfo: timerInfo)
         } else {

@@ -59,14 +59,27 @@
                 { "update": { "text":"*"} },
                 {
                   "post":{
-                    "target": {"url":"https://cloudtestv2-1.uiexm.com/v1/xos/chatbot/talk/"},
+                    "target": {"url":"https://aiaas.pandorabots.com/talk/1409612655930/padawan"},
+                    "//": "?input=hi.%20%20how%20are%20you%3F&user_key=c8df9d6e0866e2655ac73132bb5bb7fa",
+                    "params": {
+                      "input":{"valueOf":{"name":"input", "property":"text"}},
+                      "user_key":"c8df9d6e0866e2655ac73132bb5bb7fa"
+                    },
                     "headers": { "Authorization":"BASIC dWllY2hhdDp1aWVjaGF0" },
                     "data": { "text":{"valueOf":{"name":"input", "property":"text"}}},
                     "events": {
                       "error": {
                         "params": {"message":{"type":"string"}},
                         "actions": [
-                          { "update": { "text":"^"} }
+                          { "update": { "text":"^"} },
+                          {
+                            "append": {
+                              "name":"aList",
+                              "items": [
+                                { "elements":[{"template":"botText" }], "data":{"valueOf":{"property":{"params":"message"}}}}
+                              ]
+                            }
+                          }
                         ]
                       },
                       "completion": {
