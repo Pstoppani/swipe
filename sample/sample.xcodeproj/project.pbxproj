@@ -192,6 +192,7 @@
 		C170B70D1CF76B8E005956A8 /* list.swipe in Resources */ = {isa = PBXBuildFile; fileRef = C170B7081CF76B8E005956A8 /* list.swipe */; };
 		C170B70E1CF76B8E005956A8 /* list.swipe in Resources */ = {isa = PBXBuildFile; fileRef = C170B7081CF76B8E005956A8 /* list.swipe */; };
 		C17DF66D1D008DF100DADBCB /* refs.swipe in Resources */ = {isa = PBXBuildFile; fileRef = C17DF66C1D008DF100DADBCB /* refs.swipe */; };
+		C182D88F1D2326B6005C95D0 /* rules.swipe in Resources */ = {isa = PBXBuildFile; fileRef = C182D88E1D2326B6005C95D0 /* rules.swipe */; };
 		C19B68541CF37E1B00EAE4F4 /* SwipeTimer.swift in Sources */ = {isa = PBXBuildFile; fileRef = C19B68531CF37E1B00EAE4F4 /* SwipeTimer.swift */; };
 		C19B68551CF37E1B00EAE4F4 /* SwipeTimer.swift in Sources */ = {isa = PBXBuildFile; fileRef = C19B68531CF37E1B00EAE4F4 /* SwipeTimer.swift */; };
 		C1D6D8CE1D11C67C00128195 /* chatbot.swipe in Resources */ = {isa = PBXBuildFile; fileRef = C1D6D8CD1D11C67C00128195 /* chatbot.swipe */; };
@@ -308,6 +309,7 @@
 		C170B7071CF76B8E005956A8 /* data.swipe */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = data.swipe; sourceTree = "<group>"; };
 		C170B7081CF76B8E005956A8 /* list.swipe */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = list.swipe; sourceTree = "<group>"; };
 		C17DF66C1D008DF100DADBCB /* refs.swipe */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = refs.swipe; sourceTree = "<group>"; };
+		C182D88E1D2326B6005C95D0 /* rules.swipe */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = rules.swipe; sourceTree = "<group>"; };
 		C19B68531CF37E1B00EAE4F4 /* SwipeTimer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SwipeTimer.swift; sourceTree = "<group>"; };
 		C1D6D8CD1D11C67C00128195 /* chatbot.swipe */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = chatbot.swipe; sourceTree = "<group>"; };
 		C1D6D8F81D13045A00128195 /* SwipeHttpPost.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SwipeHttpPost.swift; sourceTree = "<group>"; };
@@ -560,6 +562,7 @@
 		C14A0EFF1CD95CA300765CB2 /* exp */ = {
 			isa = PBXGroup;
 			children = (
+				C182D88E1D2326B6005C95D0 /* rules.swipe */,
 				C1D6D8CD1D11C67C00128195 /* chatbot.swipe */,
 				C13521D71D07027700CE2E74 /* input.swipe */,
 				C17DF66C1D008DF100DADBCB /* refs.swipe */,
@@ -681,6 +684,7 @@
 				74DD7FEA1BDFE33F0042BB9D /* sound01.wav in Resources */,
 				C170B7091CF76B8E005956A8 /* actions.swipe in Resources */,
 				74DD7F171BDD3E570042BB9D /* MonkeysSpinningMonkeys.mp3 in Resources */,
+				C182D88F1D2326B6005C95D0 /* rules.swipe in Resources */,
 				74DD7FEC1BDFE33F0042BB9D /* swipe.swipe in Resources */,
 				C170B7041CF76B7A005956A8 /* index.swipe in Resources */,
 				74DD7F381BDD3E610042BB9D /* IMG_8156.JPG in Resources */,

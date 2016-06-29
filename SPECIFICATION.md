@@ -361,7 +361,7 @@ The "timing" property specifies the timing of animation with two floating values
 					{ "w":50 "h":20 "bc":"#ddd" }
 				],
 				"events: {
-					"tap":[
+					"tapped":[
 						{
 							"animate": { "bc":"#ccc"}, "duration":.2},
 							"events": {
@@ -385,7 +385,7 @@ The "timing" property specifies the timing of animation with two floating values
 					"template": "button",
 					"text:"<",
 					"events: {
-						"tap":[
+						"tapped":[
 							{ "update": { "hello": "hello" } },
 						]
 					}
@@ -464,7 +464,7 @@ Following example wiggles the text "I'm wiggling!" three times when the second p
 					"bc":"#ddd",
 					"events: [
 						{
-							"on": ["tap", "click"],
+							"on": ["tapped", "click"],
 							"actions": [
 								"animate": {
 									"name": "bg",
@@ -496,7 +496,7 @@ Following example wiggles the text "I'm wiggling!" three times when the second p
 			"t1": {
 				"text": "t1",
 				"events": {
-					"tap": [
+					"tapped": [
 						{
 							"update": {"text":"text1 tapped"}
 						},
@@ -539,7 +539,7 @@ Following example wiggles the text "I'm wiggling!" three times when the second p
 							"bc":"#ddd",
 							"events: [
 								{
-									"on": ["tap"],
+									"on": ["tapped"],
 									"do": [
 										"animate": {
 											"name": "bg",
@@ -769,7 +769,7 @@ Following example wiggles the text "I'm wiggling!" three times when the second p
 	"pages": [
 		{
 			"events": {
-				"tap": [
+				"tapped": [
 					"template": "action1"
 				]
 			}
@@ -793,7 +793,7 @@ Page Params
 					"text": "hello",
 					"events": [
 						{
-							"on": ["tap"], "do": [ { "segue": { "page": "pageWithParams", "params: { "text":"world" }, "style":"fadeIn", "duration":.2 } } ]
+							"on": ["tapped"], "do": [ { "segue": { "page": "pageWithParams", "params: { "text":"world" }, "style":"fadeIn", "duration":.2 } } ]
 						}
 					]
 				}

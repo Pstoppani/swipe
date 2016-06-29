@@ -17,7 +17,8 @@ import Foundation
 class SwipeView: SwipeNode {
     var view: UIView?
     internal let info:[String:AnyObject]
-    
+    internal var fEnabled = true
+
     init(info: [String:AnyObject]) {
         self.info = info
         super.init()
@@ -78,7 +79,7 @@ class SwipeView: SwipeNode {
     }
     
     func didTap(recognizer: UITapGestureRecognizer) {
-        if let actions = eventHandler.actionsFor("tap") {
+        if let actions = eventHandler.actionsFor("tapped") where fEnabled {
             execute(self, actions: actions)
             completeTap()
         } else  if let p = self.parent as? SwipeView {

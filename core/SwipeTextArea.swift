@@ -64,6 +64,8 @@ class SwipeTextArea: SwipeView, UITextViewDelegate {
         self.textView.font = UIFont(name: "Helvetica", size: fontSize)
         self.textView.textColor = UIColor(CGColor: SwipeParser.parseColor(info["textColor"], defaultColor: UIColor.blackColor().CGColor))
         
+        parent!.execute(self, actions: parent!.eventHandler.actionsFor("textChanged"))
+
         return true
     }
     
@@ -71,8 +73,10 @@ class SwipeTextArea: SwipeView, UITextViewDelegate {
         switch (property) {
         case "text":
             return self.textView.text
+        case "text.length":
+            return self.textView.text?.characters.count
         default:
-            return nil
+            return super.getPropertyValue(originator, property: property)
         }
     }
 
@@ -82,12 +86,14 @@ class SwipeTextArea: SwipeView, UITextViewDelegate {
 
     // UITextViewDelegate
 
+    func textViewDidChange(textView: UITextView) {
+        parent!.execute(self, actions: parent!.eventHandler.actionsFor("textChanged"))
+    }
+    
     func textViewDidBeginEditing(textView: UITextView) {
     }
     
     func textViewDidEndEditing(textView: UITextView) {
-        if let actions = parent!.eventHandler.actionsFor("endEdit") {
-            parent!.execute(self, actions: actions)
-        }
+        parent!.execute(self, actions: parent!.eventHandler.actionsFor("endEdit"))
     }
 }

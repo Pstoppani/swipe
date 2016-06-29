@@ -1374,6 +1374,10 @@ class SwipeElement: SwipeView {
         switch (property) {
         case "text":
             return self.text
+        case "text.length":
+            return self.text?.characters.count
+        case "enabled":
+            return self.fEnabled
         default:
             return nil
         }
@@ -1452,6 +1456,30 @@ class SwipeElement: SwipeView {
             }
             else {
                 self.setTextLayer(text, scale:self.scale, info: info, dimension:screenDimension, layer: layer!)
+            }
+        }
+        
+        var enabledVal: AnyObject?
+        var enabled = false
+        
+        if let enabledInfo = info["enabled"] as? [String:AnyObject], valOfInfo = enabledInfo["valueOf"] as? [String:AnyObject] {
+            enabledVal = originator.getValue(originator, info:valOfInfo)
+        } else {
+            enabledVal = info["enabled"]
+        }
+        
+        if let enabledInt = enabledVal as? Int {
+            enabled = (enabledInt > 0)
+        } else if let enabledBool = enabledVal as? Bool {
+            enabled = enabledBool
+        }
+
+        if enabledVal != nil && self.fEnabled != enabled {
+            self.fEnabled = enabled
+            if enabled {
+                self.execute(self, actions: self.eventHandler.actionsFor("enabled"))
+            } else {
+                self.execute(self, actions: self.eventHandler.actionsFor("disabled"))
             }
         }
     }

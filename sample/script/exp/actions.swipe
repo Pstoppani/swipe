@@ -4,7 +4,7 @@
 			"t1": {
 				"text": "t1",
 				"events": {
-					"tap": {
+					"tapped": {
 						"actions": [
 							{
 								"update": {"text":"text1 tapped"}
@@ -57,7 +57,7 @@
 					"h":"10%",
 					"bc":"#fdd",
 					"events": {
-						"tap": {
+						"tapped": {
 							"actions": [
 								{
 									"update": {"text":"tapped"}
@@ -78,7 +78,7 @@
 					"h":"10%",
 					"bc":"#fdd",
 					"events": {
-						"tap": {
+						"tapped": {
 							"actions": [
 								{
 									"update": {"name":"other", "text":"tapped"}
@@ -107,7 +107,7 @@
 					"h":"10%",
 					"bc":"#fdd",
 					"events": {
-						"tap": {
+						"tapped": {
 							"actions": [
 								{
 									"update": {"text":"tapped"}
@@ -145,7 +145,7 @@
 			  }
 			],
 			"events": {
-				"tap": {
+				"tapped": {
 					"actions": [
 						{
 							"update": {"name":"text1", "text":"main tapped"}
@@ -196,7 +196,7 @@
 				}
 			],
 			"events": {
-				"tap": {
+				"tapped": {
 					"actions": [
 						{
 							"update": {"name":"text1", "text":"main tapped"}

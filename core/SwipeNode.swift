@@ -39,8 +39,11 @@ class SwipeNode: NSObject {
         return result
     }
     
-    func execute(originator: SwipeNode, actions:[SwipeAction]) {
-        for action in actions {
+    func execute(originator: SwipeNode, actions:[SwipeAction]?) {
+        if actions == nil {
+            return
+        }
+        for action in actions! {
             executeAction(originator, action: action)
         }
     }
