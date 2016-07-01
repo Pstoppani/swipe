@@ -58,14 +58,17 @@
   },
   "pages":[
     {
+      "play":"pause",
       "elements":[
         { "//":"Temporary hack to cache images used in the demo.  Browser needs to scan 'templates' and loaded"},
-        { "w":0, "height":0,            "img":"https://dev.uiexm.com/uploads/v2/image/392B75DDF5B1415FA50008176EED7F3E/AB41C45220C74BDB970E873F74DBE0EE/fig_hood_1.png" },
-        { "w":0, "height":0,            "img":"https://dev.uiexm.com/uploads/v2/image/392B75DDF5B1415FA50008176EED7F3E/2FC0D9BFCBBB43E5B3F06BAD290150F2/fig_hood_2.png" },
-        { "w":0, "height":0,            "img":"https://dev.uiexm.com/uploads/v2/image/392B75DDF5B1415FA50008176EED7F3E/A3CB6914ACB94F01B3CF7DA640D927EF/fig_hood_3.png" },
-        { "w":0, "height":0,            "img":"https://dev.uiexm.com/uploads/v2/image/392B75DDF5B1415FA50008176EED7F3E/81686F86F5984A77A4FD213DCBB4B546/fig_washer_1.png" },
-        { "w":0, "height":0,            "img":"https://dev.uiexm.com/uploads/v2/image/392B75DDF5B1415FA50008176EED7F3E/11A32DB3E40541209B91EFC987FBA893/fig_washer_2.png" },
-        { "w":0, "height":0,            "img":"https://dev.uiexm.com/uploads/v2/image/392B75DDF5B1415FA50008176EED7F3E/AFBC635FCA39421395442C08CF4267AC/fig_washer_3.png" },
+        { "w":0, "h":0,            "img":"https://dev.uiexm.com/uploads/v2/image/392B75DDF5B1415FA50008176EED7F3E/AB41C45220C74BDB970E873F74DBE0EE/fig_hood_1.png" },
+        { "w":0, "h":0,            "img":"https://dev.uiexm.com/uploads/v2/image/392B75DDF5B1415FA50008176EED7F3E/2FC0D9BFCBBB43E5B3F06BAD290150F2/fig_hood_2.png" },
+        { "w":0, "h":0,            "img":"https://dev.uiexm.com/uploads/v2/image/392B75DDF5B1415FA50008176EED7F3E/A3CB6914ACB94F01B3CF7DA640D927EF/fig_hood_3.png" },
+        { "w":0, "h":0,            "img":"https://dev.uiexm.com/uploads/v2/image/392B75DDF5B1415FA50008176EED7F3E/81686F86F5984A77A4FD213DCBB4B546/fig_washer_1.png" },
+        { "w":0, "h":0,            "img":"https://dev.uiexm.com/uploads/v2/image/392B75DDF5B1415FA50008176EED7F3E/11A32DB3E40541209B91EFC987FBA893/fig_washer_2.png" },
+        { "w":0, "h":0,            "img":"https://dev.uiexm.com/uploads/v2/image/392B75DDF5B1415FA50008176EED7F3E/AFBC635FCA39421395442C08CF4267AC/fig_washer_3.png" },
+        {"h":0, "h":0,
+          "video":"https://dev.uiexm.com/uploads/v2/video/392B75DDF5B1415FA50008176EED7F3E/C1EB0677786940669FF326AF5C43B92E/prius.mp4" },
         { "//":"Temporary hack END"},
         {
           "//":"Chat list contains user and bot msgs",
@@ -134,6 +137,13 @@
               ]
             }
           }
+        }
+      ]
+    },
+    {
+      "elements": [
+        {
+          "video":"https://dev.uiexm.com/uploads/v2/video/392B75DDF5B1415FA50008176EED7F3E/C1EB0677786940669FF326AF5C43B92E/prius.mp4"
         }
       ]
     }
