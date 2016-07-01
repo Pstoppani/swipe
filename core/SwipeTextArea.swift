@@ -22,7 +22,7 @@ class SwipeTextArea: SwipeView, UITextViewDelegate {
         super.init(parent: parent, info: info)
         self.textView.delegate = self
         self.textView.backgroundColor = UIColor.clearColor()
-        self.textView.becomeFirstResponder()
+        //self.textView.becomeFirstResponder()
         self.view = self.textView
     }
     

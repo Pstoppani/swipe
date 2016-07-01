@@ -1,104 +1,128 @@
 {
-  "templates": {
-    "elements": {
-			"userText": {
-				"bc":"#dff", "x":"2%", "w":"80%", "cornerRadius":10,
-				"elements": [
-					{
-            "x":"2%", "textAlign":"left", "fontSize":16,
-            "text":{"valueOf":{"name":"aList", "property":{"items":"data"}}}
-          }
+  "templates":{
+    "elements":{
+			"userText":{
+        "//":"List element for user's msgs to the bot",
+				"bc":"#1E88E5", "x":"20%", "y":"4%", "w":"80%", "h":"94%", "cornerRadius":10,
+				"elements":[
+					{ "w":"92%", "textAlign":"right", "fontSize":16, "textColor":"#fff", "text":{ "valueOf":{ "name":"aList", "property":{ "items":"data" }}}}
 				]
 			},
-			"botText": {
-				"bc":"#ffd", "x":"18%", "w":"80%", "cornerRadius":10,
-				"elements": [
-					{
-            "textAlign":"right", "fontSize":16,
-            "text":{"valueOf":{"name":"aList", "property":{"items":"data"}}}
-          }
+			"botText":{
+        "//":"List element for bots's reply msgs",
+				"bc":"#eee", "x":"2%", "y":"4%", "w":"80%", "h":"94%", "cornerRadius":10,
+				"elements":[
+					{ "x":"4%", "w":"96%", "textAlign":"left", "fontSize":16, "text":{ "valueOf":{ "name":"aList", "property":{ "items":"data" }}}}
 				]
+      },
+      "botHeader":{
+        "bc":"#eee", "fontSize":16, "textAlign":"left"
+      },
+      "botButton":{
+        "bc":"#fff", "textAlign":"center", "textColor":"#1E88E5", "fontSize":16,
+        "events": {
+          "tapped": {
+            "actions":[
+              {
+                "post":{
+                  "target":{ "url":"https://aiaas.pandorabots.com/talk/1409612655930/padawan" },
+                  "params":{
+                    "input":{ "valueOf":{ "property":"text"}},
+                    "user_key":"c8df9d6e0866e2655ac73132bb5bb7fa"
+                  },
+                  "events":{
+                    "error":{
+                      "params":{ "message":{ "type":"string" }},
+                      "actions":[
+                        { "append":{ "name":"aList", "items":[{ "elements":[{ "template":"botText" }], "data":{ "valueOf":{ "property":{ "params":"message" }}}}]}}
+                      ]
+                    },
+                    "completion":{
+                      "params":{ "status":"string", "responses":["string"], "sessionid":"number" },
+                      "actions":[
+                        {
+                          "append":{
+                            "name":"aList", "items":[{ "elements":[{ "template":"botText" }], "data":{ "valueOf":{ "property":{ "params":"responses" }}}}]
+                          }
+                        }
+                      ]
+                    }
+                  }
+                }
+              }
+            ]
+          }
+        }
       }
     }
   },
-  "pages": [
+  "pages":[
     {
-      "elements": [
+      "elements":[
+        { "//":"Temporary hack to cache images used in the demo.  Browser needs to scan 'templates' and loaded"},
+        { "w":0, "height":0,            "img":"https://dev.uiexm.com/uploads/v2/image/392B75DDF5B1415FA50008176EED7F3E/AB41C45220C74BDB970E873F74DBE0EE/fig_hood_1.png" },
+        { "w":0, "height":0,            "img":"https://dev.uiexm.com/uploads/v2/image/392B75DDF5B1415FA50008176EED7F3E/2FC0D9BFCBBB43E5B3F06BAD290150F2/fig_hood_2.png" },
+        { "w":0, "height":0,            "img":"https://dev.uiexm.com/uploads/v2/image/392B75DDF5B1415FA50008176EED7F3E/A3CB6914ACB94F01B3CF7DA640D927EF/fig_hood_3.png" },
+        { "w":0, "height":0,            "img":"https://dev.uiexm.com/uploads/v2/image/392B75DDF5B1415FA50008176EED7F3E/81686F86F5984A77A4FD213DCBB4B546/fig_washer_1.png" },
+        { "w":0, "height":0,            "img":"https://dev.uiexm.com/uploads/v2/image/392B75DDF5B1415FA50008176EED7F3E/11A32DB3E40541209B91EFC987FBA893/fig_washer_2.png" },
+        { "w":0, "height":0,            "img":"https://dev.uiexm.com/uploads/v2/image/392B75DDF5B1415FA50008176EED7F3E/AFBC635FCA39421395442C08CF4267AC/fig_washer_3.png" },
+        { "//":"Temporary hack END"},
         {
-					"name": "aList", "x":0, "y":0, "h":"88%","w":"98%", "cornerRadius":10,
-					"list": {
-						"items": [
-							{ "elements":[{"template":"botText"}], "data":"Hello!"}
-						]
-					}
+          "//":"Chat list contains user and bot msgs",
+					"name":"aList", "x":0, "y":0, "h":"88%","w":"98%", "cornerRadius":10, "list":{
+            "itemH":26, "items":[{ "elements":[{ "template":"botText" }], "data":"Hi.  How can I help you?"}]
+          }
         },
         {
-          "name":"input", "textArea":{}, "text":"hello", "textAlign":"left", "fontSize":16,
-          "borderWidth":1, "borderColor":"#ddf", "cornerRadius":10,
-          "x":"2%", "y":"89%", "w":"78%", "h":"10%", "bc":"#eef",
-          "events": {
-            "textChanged": {
-              "actions": [
-                {"update":{"name":"btn", "enabled":{"valueOf":{"property":"text.length"}}}}
-              ]
+          "//":"Text input box",
+          "name":"input", "textArea":{}, "textAlign":"center", "text":"", "borderWidth":1, "borderColor":"#ccc", "cornerRadius":10,
+          "x":"1%", "y":"91%", "w":"82%", "h":50, "bc":"#fff",
+          "events":{
+            "textChanged":{
+              "actions":[{ "update":{ "name":"btn", "enabled":{ "valueOf":{ "property":"text.length" }}}}]
             }
           }
         },
         {
-          "name":"btn", "text":"^", "x":"81%", "y":"89%", "w":"18%", "h":"10%", "textColor":"#8f8", "bc":"#dfd", "borderWidth":1, "borderColor":"#ccf", "cornerRadius":30,
-          "events": {
+          "//":"Send button",
+          "name":"btn", "text":"^", "x":"84%", "y":"91%", "w":50, "h":50, "textColor":"#1E88E5", "bc":"#fff", "borderWidth":1, "borderColor":"#1E88E5", "cornerRadius":25,
+          "events":{
             "enabled":{
-                "actions": [
-                  { "update": { "text":"^" } },
-                ]
+              "actions":[ { "update":{ "text":"^" } } ]
             },
-            "disabled": {
-              "actions": [
-                { "update": { "text":"" } },
-              ]
+            "disabled":{
+              "actions":[ { "update":{ "text":"" } } ]
             },
-            "tapped": {
-              "actions": [
+            "tapped":{
+              "//": "fired only if enabled",
+              "actions":[
                 {
-                  "append": {
+                  "append":{
                     "name":"aList",
-                    "items": [
-                      { "elements":[{"template":"userText" }], "data":{"valueOf":{"name":"input", "property":"text"}}}
-                    ]
+                    "items":[{ "elements":[{ "template":"userText" }], "data":{ "valueOf":{ "name":"input", "property":"text" }}}]
                   }
                 },
-                { "update": { "enabled":false } },
+                { "update":{ "enabled":false } },
                 {
                   "post":{
-                    "target": {"url":"https://aiaas.pandorabots.com/talk/1409612655930/padawan"},
-                    "params": {
-                      "input":{"valueOf":{"name":"input", "property":"text"}},
+                    "target":{ "url":"https://aiaas.pandorabots.com/talk/1409612655930/padawan" },
+                    "params":{ "input":{ "valueOf":{ "name":"input", "property":"text" }},
                       "user_key":"c8df9d6e0866e2655ac73132bb5bb7fa"
                     },
-                    "headers": { "Authorization":"BASIC dWllY2hhdDp1aWVjaGF0" },
-                    "events": {
-                      "error": {
-                        "params": {"message":{"type":"string"}},
-                        "actions": [
-                          {
-                            "append": {
-                              "name":"aList",
-                              "items": [
-                                { "elements":[{"template":"botText" }], "data":{"valueOf":{"property":{"params":"message"}}}}
-                              ]
-                            }
-                          }
+                    "events":{
+                      "error":{
+                        "params":{ "message":{ "type":"string" }},
+                        "actions":[
+                          { "append":{ "name":"aList", "items":[{ "elements":[{ "template":"botText" }], "data":{ "valueOf":{ "property":{ "params":"message" }}}}]}}
                         ]
                       },
-                      "completion": {
-                        "params": {"status":"string","responses":["string"],"sessionid":"number"},
-                        "actions": [
+                      "completion":{
+                        "params":{ "status":"string", "responses":["string"], "sessionid":"number" },
+                        "actions":[
                           {
-                            "append": {
+                            "append":{
                               "name":"aList",
-                              "items": [
-                                { "elements":[{"template":"botText" }], "data":{"valueOf":{"property":{"params":"responses"}}}}
-                              ]
+                              "items":[{ "elements":[{ "template":"botText" }], "data":{ "valueOf":{ "property":{ "params":"responses" }}}}]
                             }
                           }
                         ]
@@ -106,7 +130,7 @@
                     }
                   }
                 },
-                { "update": { "name":"input", "text":""} }
+                { "update":{ "name":"input", "text":"" } }
               ]
             }
           }

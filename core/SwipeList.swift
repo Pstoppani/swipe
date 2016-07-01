@@ -14,6 +14,8 @@ import Foundation
 class SwipeList: SwipeView, UITableViewDelegate, UITableViewDataSource {
     let TAG = "SWList"
     private var items = [[String:AnyObject]]()
+    private var itemHeights = [CGFloat]()
+    private var defaultItemHeight: CGFloat = 40
     private let scale:CGSize
     private var screenDimension = CGSize(width: 0, height: 0)
     weak var delegate:SwipeElementDelegate!
@@ -31,8 +33,18 @@ class SwipeList: SwipeView, UITableViewDelegate, UITableViewDataSource {
         self.tableView.separatorStyle = .None
         self.tableView.allowsSelection = true
         self.tableView.backgroundColor = UIColor.clearColor()
+        
+        if let value = info["itemH"] as? CGFloat {
+            defaultItemHeight = value
+        } else if let value = info["itemH"] as? String {
+            defaultItemHeight = SwipeParser.parsePercent(value, full: screenDimension.height, defaultValue: defaultItemHeight)
+        }
+
         if let itemsInfo = info["items"] as? [[String:AnyObject]] {
             items = itemsInfo
+            for _ in items {
+                itemHeights.append(defaultItemHeight)
+            }
         }
         if let selectedIndex = self.info["selectedItem"] as? Int {
             self.tableView.selectRowAtIndexPath(NSIndexPath(forRow: selectedIndex, inSection: 0), animated: true, scrollPosition: .Middle)
@@ -44,10 +56,9 @@ class SwipeList: SwipeView, UITableViewDelegate, UITableViewDataSource {
     }
     
     // UITableViewDataDelegate
-    let kH: CGFloat = 70.0
     
     func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
-        return kH
+        return itemHeights[indexPath.row]
     }
 
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
@@ -72,10 +83,15 @@ class SwipeList: SwipeView, UITableViewDelegate, UITableViewDataSource {
         
         let item = self.items[indexPath.row]
         
+        if let itemH = item["h"] as? CGFloat {
+            self.itemHeights[indexPath.row] = itemH
+        }
+        let itemHeight = self.itemHeights[indexPath.row]
+        
         if let elementsInfo = item["elements"] as? [[String:AnyObject]] {
             for elementInfo in elementsInfo {
                 let element = SwipeElement(info: elementInfo, scale:self.scale, parent:self, delegate:self.delegate!)
-                if let subview = element.loadViewInternal(CGSizeMake(self.tableView.bounds.size.width, kH), screenDimension: self.screenDimension) {
+                if let subview = element.loadViewInternal(CGSizeMake(self.tableView.bounds.size.width, itemHeight), screenDimension: self.screenDimension) {
                     subview.tag = subviewTag
                     cell.contentView.addSubview(subview)
                     children.append(element)
@@ -88,13 +104,14 @@ class SwipeList: SwipeView, UITableViewDelegate, UITableViewDataSource {
         }
         
         if cellError != nil {
-            let v = UIView(frame: CGRect(x: 0, y: 0, width: self.tableView.bounds.size.width, height: kH))
+            let v = UIView(frame: CGRect(x: 0, y: 0, width: self.tableView.bounds.size.width, height: itemHeight))
             let l = UILabel(frame: CGRect(x:0, y:0, width: v.bounds.size.width, height: v.bounds.size.height))
             v.addSubview(l)
             cell.contentView.addSubview(v)
             l.text = "row \(indexPath.row) error " + cellError!
         }
         
+        cell.selectionStyle = .None
         self.cellIndexPath = nil
         return cell
     }
@@ -109,12 +126,35 @@ class SwipeList: SwipeView, UITableViewDelegate, UITableViewDataSource {
         if let itemsInfoArray = info["items"] as? [[String:AnyObject]] {
             for itemsInfo in itemsInfoArray {
                 if let _ = itemsInfo["data"] as? [String:AnyObject] {
-                    items.append(originator.evaluate(itemsInfo))
+                    let eval = originator.evaluate(itemsInfo)
+                    // if 'data' is a JSON object, use it, otherwise, use the info as is
+                    if let dataStr = eval["data"] as? String, data = dataStr.dataUsingEncoding(NSUTF8StringEncoding) {
+                        do {
+                            guard let json = try NSJSONSerialization.JSONObjectWithData(data, options: NSJSONReadingOptions()) as? [String:AnyObject] else {
+                                // 'data' is a plain String
+                                items.append(eval)
+                                itemHeights.append(defaultItemHeight)
+                                break
+                            }
+                            
+                            // 'data' is a JSON object
+                            items.append(json)
+                            itemHeights.append(defaultItemHeight)
+                        } catch  {
+                            // 'data' is a plain String
+                            items.append(eval)
+                            itemHeights.append(defaultItemHeight)
+                        }
+                    }
                 } else {
                     items.append(itemsInfo)
+                    itemHeights.append(defaultItemHeight)
                 }
                 self.tableView.reloadData()
-                self.tableView.scrollToRowAtIndexPath(NSIndexPath(forRow: self.items.count - 1, inSection: 0), atScrollPosition: UITableViewScrollPosition.Bottom, animated: true)
+                self.tableView.scrollToRowAtIndexPath(NSIndexPath(forRow: self.items.count - 1, inSection: 0), atScrollPosition: .Bottom, animated: true)
+                dispatch_after(dispatch_time(DISPATCH_TIME_NOW, Int64(0.2 * Double(NSEC_PER_SEC))), dispatch_get_main_queue()) { () -> Void in
+                    self.tableView.scrollToRowAtIndexPath(NSIndexPath(forRow: self.items.count - 1, inSection: 0), atScrollPosition: .Bottom, animated: true)
+                }
             }
         }
     }
@@ -213,6 +253,8 @@ class SwipeList: SwipeView, UITableViewDelegate, UITableViewDataSource {
                 }
                 
                 // loop on properties in info until get to a String
+            } else {
+                print("no cellIndexPath")
             }
             break;
         default:

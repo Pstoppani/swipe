@@ -55,11 +55,13 @@ class SwipeView: SwipeNode {
     }()
     
     func endEditing() {
+        if view != nil {
         let ended = view!.endEditing(true)
         if !ended {
             if let p = self.parent as? SwipeView {
                 p.endEditing()
             }
+        }
         }
     }
     
