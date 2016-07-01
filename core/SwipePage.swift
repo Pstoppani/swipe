@@ -548,7 +548,7 @@ class SwipePage: SwipeView, SwipeElementDelegate {
             for e in elementsInfo {
                 let element = SwipeElement(info: e, scale:scale, parent:self, delegate:self)
                 if let subview = element.loadView(dimension) {
-                    if self.autoplay && element.isVideoElement() {
+                    if (self.autoplay || !self.scroll) && element.isVideoElement() {
                         // HACK: video element can not be played normally if it is added to the animation layer, which has the speed property zero.
                         self.viewVideo!.addSubview(subview)
                     } else {
