@@ -27,7 +27,7 @@
                 "post":{
                   "target":{ "url":"https://aiaas.pandorabots.com/talk/1409612655930/padawan" },
                   "params":{
-                    "input":{ "valueOf":{ "property":"text"}},
+                    "input":{ "valueOf":{ "property":"data"}},
                     "user_key":"c8df9d6e0866e2655ac73132bb5bb7fa"
                   },
                   "events":{
@@ -58,6 +58,7 @@
   },
   "pages":[
     {
+      "//":"Chatbot page",
       "play":"pause",
       "elements":[
         { "//":"Temporary hack to cache images used in the demo.  Browser needs to scan 'templates' and loaded"},
@@ -137,13 +138,6 @@
               ]
             }
           }
-        }
-      ]
-    },
-    {
-      "elements": [
-        {
-          "video":"https://dev.uiexm.com/uploads/v2/video/392B75DDF5B1415FA50008176EED7F3E/C1EB0677786940669FF326AF5C43B92E/prius.mp4"
         }
       ]
     }

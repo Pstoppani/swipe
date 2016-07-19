@@ -54,6 +54,15 @@ class SwipeView: SwipeNode {
         return "" // default
     }()
     
+    lazy var data:AnyObject = {
+        if let value = self.info["data"] as? String {
+            return value
+        } else if let value = self.info["data"] as? [String:AnyObject] {
+            return value
+        }
+        return "" // default
+    }()
+    
     func endEditing() {
         if view != nil {
         let ended = view!.endEditing(true)
@@ -128,6 +137,14 @@ class SwipeView: SwipeNode {
         return false
     }
     
+    override func getPropertyValue(originator: SwipeNode, property: String) -> AnyObject? {
+        switch (property) {
+        case "data":
+            return self.data
+        default:
+            return nil
+        }
+    }
     func appendList(originator: SwipeNode, name: String, up: Bool, info: [String:AnyObject])  -> Bool {
         return false
     }

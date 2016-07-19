@@ -1379,7 +1379,7 @@ class SwipeElement: SwipeView {
         case "enabled":
             return self.fEnabled
         default:
-            return nil
+            return super.getPropertyValue(originator, property: property)
         }
     }
     
