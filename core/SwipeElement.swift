@@ -241,17 +241,18 @@ class SwipeElement: SwipeView {
         
         if let src = info["img"] as? String {
             //imageSrc = SwipeParser.imageSourceWith(src)
-            if let url = NSURL.url(src, baseURL: baseURL),
-                   urlLocal = self.delegate.map(url),
-                   imageS = CGImageSourceCreateWithURL(urlLocal, nil) {
-                imageSrc = imageS
-                if CGImageSourceGetCount(imageS) > 0 {
-                    imageRef = CGImageSourceCreateImageAtIndex(imageS, 0, nil)
+            if let url = NSURL.url(src, baseURL: baseURL) {
+                if let urlLocal = self.delegate.map(url) {
+                    imageSrc = CGImageSourceCreateWithURL(urlLocal, nil)
                 } else {
-                    imageSrc = nil
+                    imageSrc = CGImageSourceCreateWithURL(url, nil)
+                }
+                if imageSrc != nil && CGImageSourceGetCount(imageSrc!) > 0 {
+                    imageRef = CGImageSourceCreateImageAtIndex(imageSrc!, 0, nil)
                 }
             }
         }
+        
         if let src = info["mask"] as? String {
             //maskSrc = SwipeParser.imageWith(src)
             if let url = NSURL.url(src, baseURL: baseURL),
