@@ -12,7 +12,7 @@ class SwipeEventHandler: NSObject {
     
     func parse(eventsInfo: [String:AnyObject]) {
         for eventType in eventsInfo.keys {
-            NSLog("XdEventH parsed event: \(eventType)");
+            //NSLog("XdEventH parsed event: \(eventType)");
             if let eventInfo = eventsInfo[eventType] as? [String:AnyObject] {
                 let event = SwipeEvent(type: eventType, info: eventInfo)
                 events[eventType] = event

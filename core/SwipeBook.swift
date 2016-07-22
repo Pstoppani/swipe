@@ -115,7 +115,7 @@ class SwipeBook: NSObject, SwipePageDelegate {
             return elements
         }
         else if let elements = self.bookInfo["elements"] as? [String:AnyObject] {
-            NSLog("DEPRECATED named elements; use 'templates'")
+            MyLog("DEPRECATED named elements; use 'templates'")
             return elements
         }
         return [String:AnyObject]()
@@ -129,7 +129,7 @@ class SwipeBook: NSObject, SwipePageDelegate {
             }
         }
         else if let pageTemplates = self.bookInfo["scenes"] as? [String:[String:AnyObject]] {
-            NSLog("DEPRECATED scenes; use 'templates'")
+            MyLog("DEPRECATED scenes; use 'templates'")
             for (key, info) in pageTemplates {
                 ret[key] = SwipePageTemplate(name:key, info: info, baseURL:self.url)
             }

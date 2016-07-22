@@ -540,7 +540,7 @@ class SwipeElement: SwipeView {
             shapeLayer.strokeColor = SwipeParser.parseColor(info["strokeColor"], defaultColor: blackColor)
             shapeLayer.lineWidth = SwipeParser.parseCGFloat(info["lineWidth"]) * self.scale.width
             
-            processShadow(info, layer: shapeLayer)
+            SwipeElement.processShadow(info, scale:scale, layer: shapeLayer)
 
             shapeLayer.lineCap = "round"
             shapeLayer.strokeStart = SwipeParser.parseCGFloat(info["strokeStart"], defalutValue: 0.0)
@@ -580,7 +580,7 @@ class SwipeElement: SwipeView {
             }
             
         } else {
-            processShadow(info, layer: layer)
+            SwipeElement.processShadow(info, scale:scale, layer: layer)
         }
         
         var mds = info["markdown"]
@@ -606,7 +606,7 @@ class SwipeElement: SwipeView {
         
         if let text = parseText(self, info: info, key:"text") {
             if self.helper == nil || !self.helper!.setText(text, scale:self.scale, info: info, dimension:screenDimension, layer: layer) {
-                self.setTextLayer(text, scale:self.scale, info: info, dimension:screenDimension, layer: layer)
+                self.textLayer = SwipeElement.addTextLayer(text, scale:scale, info: info, dimension: screenDimension, layer: layer)
             }
         }
         
@@ -1253,32 +1253,34 @@ class SwipeElement: SwipeView {
         return SwipeParser.localizedString(params, langId: delegate.languageIdentifier())
     }
 
-    private func processShadow(info:[String:AnyObject], layer:CALayer) {
+    static func processShadow(info:[String:AnyObject], scale:CGSize, layer:CALayer) {
         if let shadowInfo = info["shadow"] as? [String:AnyObject] {
-            layer.shadowColor = SwipeParser.parseColor(shadowInfo["color"], defaultColor: blackColor)
+            layer.shadowColor = SwipeParser.parseColor(shadowInfo["color"], defaultColor: UIColor.blackColor().CGColor)
             layer.shadowOffset = SwipeParser.parseSize(shadowInfo["offset"], defalutValue: CGSizeMake(1, 1), scale:scale)
             layer.shadowOpacity = SwipeParser.parseFloat(shadowInfo["opacity"], defalutValue:0.5)
-            layer.shadowRadius = SwipeParser.parseCGFloat(shadowInfo["radius"], defalutValue: 1.0) * self.scale.width
+            layer.shadowRadius = SwipeParser.parseCGFloat(shadowInfo["radius"], defalutValue: 1.0) * scale.width
         }
     }
     
-    func setTextLayer(text:String, scale:CGSize, info:[String:AnyObject], dimension:CGSize, layer:CALayer) {
-        self.text = text
+    static func processTextInfo(info:[String:AnyObject], dimension:CGSize, scale:CGSize) -> ([String:AnyObject], String, Bool, Bool, CTFontRef, CGFloat) {
         var fTextBottom = false
         var fTextTop = false
-
         let paragraphStyle = NSParagraphStyle.defaultParagraphStyle().mutableCopy() as! NSMutableParagraphStyle
         paragraphStyle.alignment = NSTextAlignment.Center
         paragraphStyle.lineBreakMode = NSLineBreakMode.ByWordWrapping
+        var alignmentMode = kCAAlignmentCenter
         
         func processAlignment(alignment:String) {
             switch(alignment) {
             case "left":
                 paragraphStyle.alignment = NSTextAlignment.Left
+                alignmentMode = kCAAlignmentLeft
             case "right":
                 paragraphStyle.alignment = NSTextAlignment.Right
+                alignmentMode = kCAAlignmentRight
             case "justified":
                 paragraphStyle.alignment = NSTextAlignment.Justified
+                alignmentMode = kCAAlignmentJustified
             case "top":
                 fTextTop = true
             case "bottom":
@@ -1294,45 +1296,66 @@ class SwipeElement: SwipeView {
                 processAlignment(alignment)
             }
         }
+
         let fontSize: CGFloat = {
             let defaultSize = 20.0 / 480.0 * dimension.height
             let size = SwipeParser.parseFontSize(info, full: dimension.height, defaultValue: defaultSize, markdown: false)
             return round(size * scale.height)
         }()
         let fontNames = SwipeParser.parseFontName(info, markdown: false)
-        let font: UIFont = {
+        func createFont() -> CTFontRef {
             for fontName in fontNames {
-                if let font = UIFont(name: fontName, size: fontSize) {
-                    return font
-                }
+                return CTFontCreateWithName(fontName, fontSize, nil)
             }
-            return UIFont(name: "Helvetica", size: fontSize)!
-        }()
-
+            return CTFontCreateWithName("Helvetica", fontSize, nil)
+        }
+        let font:CTFontRef = createFont()
         let attr:[String:AnyObject] = [
             NSFontAttributeName:font,
-            NSForegroundColorAttributeName:UIColor(CGColor: SwipeParser.parseColor(info["textColor"], defaultColor: UIColor.blackColor().CGColor)),
+            //NSForegroundColorAttributeName:UIColor(CGColor: SwipeParser.parseColor(info["textColor"], defaultColor: UIColor.blackColor().CGColor)),
             NSParagraphStyleAttributeName:paragraphStyle]
+        return (attr, alignmentMode, fTextTop, fTextBottom, font, fontSize)
+    }
+    
+    static func processTextStorage(text:String, attr:[String:AnyObject], fTextBottom:Bool, fTextTop:Bool, rcBound:CGRect) -> CGRect {
         let textStorage = NSTextStorage(string: text, attributes: attr)
-
-        var rcText = layer.bounds
-        UIGraphicsBeginImageContextWithOptions(rcText.size, false, 2); defer {
-            UIGraphicsEndImageContext()
-        }
-        
         let manager = NSLayoutManager()
         textStorage.addLayoutManager(manager)
-        let container = NSTextContainer(size: CGSizeMake(rcText.width, 99999))
+        let container = NSTextContainer(size: CGSizeMake(rcBound.width, 99999))
         manager.addTextContainer(container)
         manager.ensureLayoutForTextContainer(container)
-        let height = manager.usedRectForTextContainer(container).size.height
+        let box = manager.usedRectForTextContainer(container)
+        var rcText = rcBound
         if fTextBottom {
-            rcText.origin.y = rcText.size.height - height
+            rcText.origin.y = rcText.size.height - box.size.height
         } else if !fTextTop {
-            rcText.origin.y =  (rcText.size.height - height) / 2
+            rcText.origin.y =  (rcText.size.height - box.size.height) / 2
         }
-        textStorage.drawInRect(rcText)
-        layer.contents = UIGraphicsGetImageFromCurrentImageContext().CGImage
+        return rcText
+    }
+
+    static func addTextLayer(text:String, scale:CGSize, info:[String:AnyObject], dimension:CGSize, layer:CALayer) -> CATextLayer {
+        let (attr, alignmentMode, fTextBottom, fTextTop, font, fontSize) = SwipeElement.processTextInfo(info, dimension: dimension, scale: scale)
+
+        // NOTE: CATextLayer does not use the paragraph style in NSAttributedString (*).
+        // In addition, we can't use NSAttributedString if we want to animate something,
+        // such as foregroundColor and fontSize (**).
+        let textLayer = CATextLayer()
+#if !os(OSX)
+        textLayer.contentsScale = UIScreen.mainScreen().scale
+#endif
+        textLayer.wrapped = true // *
+        textLayer.alignmentMode = alignmentMode // *
+        textLayer.foregroundColor = SwipeParser.parseColor(info["textColor"], defaultColor: UIColor.blackColor().CGColor) // animatable **
+        textLayer.fontSize = fontSize // animatable **
+        textLayer.font = font
+        textLayer.string = text // NOTE: This is no longer an attributed string
+        
+        SwipeElement.processShadow(info, scale:scale, layer: layer)
+
+        textLayer.frame = SwipeElement.processTextStorage(text, attr: attr, fTextBottom: fTextBottom, fTextTop: fTextTop, rcBound: layer.bounds)
+        layer.addSublayer(textLayer)
+        return textLayer
     }
     
     /*
@@ -1450,13 +1473,27 @@ class SwipeElement: SwipeView {
         return nil
     }
 
+    var updateCnt = 0
+    
     func update(originator: SwipeNode, info: [String:AnyObject]) {
+        
         if let text = parseText(originator, info: info, key:"text") {
             if let textAreaHelper = self.helper as? SwipeTextArea {
                 textAreaHelper.setText(text, scale: self.scale, info: info, dimension: screenDimension, layer: nil)
             }
             else {
-                self.setTextLayer(text, scale:self.scale, info: info, dimension:screenDimension, layer: layer!)
+                dispatch_async(dispatch_get_main_queue(), { () -> Void in
+                    CATransaction.begin()
+                    CATransaction.setDisableActions(true)
+                    self.textLayer?.string = text
+                    if self.updateCnt % 2 == 0 {
+                        self.textLayer?.backgroundColor = UIColor.blueColor().CGColor
+                    } else {
+                        self.textLayer?.backgroundColor = UIColor.magentaColor().CGColor
+                    }
+                    self.updateCnt += 1
+                    CATransaction.commit()
+                })
             }
         }
         
