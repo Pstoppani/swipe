@@ -465,9 +465,11 @@ class SwipePage: SwipeView, SwipeElementDelegate {
         
         //view.tag = 100 + index // for debugging only
         layer.backgroundColor = self.backgroundColor
-        aniLayer.speed = 0 // to manually specify the media timing
-        aniLayer.beginTime = 0 // to manually specify the media timing
-        aniLayer.fillMode = kCAFillModeForwards
+        if animation != "never" {
+            aniLayer.speed = 0 // to manually specify the media timing
+            aniLayer.beginTime = 0 // to manually specify the media timing
+            aniLayer.fillMode = kCAFillModeForwards
+        }
 #if os(OSX)
         viewAnimation.autoresizingMask = [.ViewWidthSizable, .ViewHeightSizable]
 #else
@@ -667,6 +669,7 @@ class SwipePage: SwipeView, SwipeElementDelegate {
     }
 
     // <SwipeElementDelegate> method
+    
     func languageIdentifier() -> String? {
         return delegate.languageIdentifier()
     }
@@ -750,7 +753,7 @@ class SwipePage: SwipeView, SwipeElementDelegate {
         self.delegate.tapped()
     }
     
-
+    
     // SwipeNode
 
     override func updateElement(originator: SwipeNode, name: String, up: Bool, info: [String:AnyObject]) -> Bool {

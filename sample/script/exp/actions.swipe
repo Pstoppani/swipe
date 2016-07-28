@@ -49,6 +49,7 @@
 	"pages": [
 		{
 			"//": "Tap on element updates element",
+			"play":"never",
 			"elements": [
 				{
 					"text": "tap me",
@@ -70,6 +71,7 @@
 		},
 		{
 			"//": "Tap on element updates other element",
+			"play":"never",
 			"elements": [
 				{
 					"text": "tap me",
@@ -99,6 +101,7 @@
 		},
 		{
 			"//": "Tap on element updates self then after a pause updates self again",
+			"play":"never",
 			"elements": [
 				{
 					"text": "tap me",
@@ -134,6 +137,7 @@
 		},
 		{
 			"//": "Tap on page, updates element",
+			"play":"never",
 			"elements": [
 			  {
 				  "name": "text1",
@@ -157,6 +161,7 @@
 		{
 			"name":"main",
 			"template":"p1",
+			"play":"never",
 			"elements": [
 			  {
 					"template": "t1",

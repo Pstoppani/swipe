@@ -6,6 +6,7 @@
   },
   "pages": [
     {
+      "play":"never",
       "elements": [
         { "template":"text", "text":"Enter Text Below"},
         {

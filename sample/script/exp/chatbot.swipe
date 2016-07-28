@@ -19,30 +19,43 @@
         "bc":"#eee", "fontSize":16, "textAlign":"left"
       },
       "botButton":{
-        "bc":"#fff", "textAlign":"center", "textColor":"#1E88E5", "fontSize":16,
+        "bc":"#fff", "textAlign":"center", "textColor":"#1E88E5", "fontSize":18,
         "events": {
           "tapped": {
             "actions":[
+              { "update":{ "opacity":0.4, "duration":0.2 }},
               {
-                "post":{
-                  "target":{ "url":"https://aiaas.pandorabots.com/talk/1409612655930/padawan" },
-                  "params":{
-                    "input":{ "valueOf":{ "property":"data"}},
-                    "user_key":"c8df9d6e0866e2655ac73132bb5bb7fa"
-                  },
-                  "events":{
-                    "error":{
-                      "params":{ "message":{ "type":"string" }},
-                      "actions":[
-                        { "append":{ "name":"aList", "items":[{ "elements":[{ "template":"botText" }], "data":{ "valueOf":{ "property":{ "params":"message" }}}}]}}
-                      ]
-                    },
-                    "completion":{
-                      "params":{ "status":"string", "responses":["string"], "sessionid":"number" },
-                      "actions":[
+                "timer": {
+                  "duration":0.2,
+                  "events": {
+                    "tick": {
+                      "actions": [
+                        { "update":{ "opacity":1, "duration":0.2 }},
                         {
-                          "append":{
-                            "name":"aList", "items":[{ "elements":[{ "template":"botText" }], "data":{ "valueOf":{ "property":{ "params":"responses" }}}}]
+                          "post":{
+                            "target":{ "url":"https://aiaas.pandorabots.com/talk/1409612655930/padawan" },
+                            "params":{
+                              "input":{ "valueOf":{ "property":"data"}},
+                              "user_key":"c8df9d6e0866e2655ac73132bb5bb7fa"
+                            },
+                            "events":{
+                              "error":{
+                                "params":{ "message":{ "type":"string" }},
+                                "actions":[
+                                  { "append":{ "name":"aList", "items":[{ "elements":[{ "template":"botText" }], "data":{ "valueOf":{ "property":{ "params":"message" }}}}]}}
+                                ]
+                              },
+                              "completion":{
+                                "params":{ "status":"string", "responses":["string"], "sessionid":"number" },
+                                "actions":[
+                                  {
+                                    "append":{
+                                      "name":"aList", "items":[{ "elements":[{ "template":"botText" }], "data":{ "valueOf":{ "property":{ "params":"responses" }}}}]
+                                    }
+                                  }
+                                ]
+                              }
+                            }
                           }
                         }
                       ]
@@ -59,7 +72,7 @@
   "pages":[
     {
       "//":"Chatbot page",
-      "play":"pause",
+      "play":"never",
       "elements":[
         {
           "//":"Chat list contains user and bot msgs",
@@ -79,13 +92,13 @@
         },
         {
           "//":"Send button",
-          "name":"btn", "text":"^", "x":"84%", "y":"91%", "w":50, "h":50, "textColor":"#1E88E5", "bc":"#fff", "borderWidth":1, "borderColor":"#1E88E5", "cornerRadius":25,
+          "name":"btn", "text":"", "x":"84%", "y":"91%", "w":50, "h":50, "textColor":"#ccc", "bc":"#fff", "borderWidth":1, "borderColor":"#ccc", "cornerRadius":25, "enabled":false,
           "events":{
             "enabled":{
-              "actions":[ { "update":{ "text":"^" } } ]
+              "actions":[ { "update":{ "text":"^", "textColor":"#1E88E5", "borderColor":"#1E88E5" } } ]
             },
             "disabled":{
-              "actions":[ { "update":{ "text":"" } } ]
+              "actions":[ { "update":{ "text":"", "textColor":"#ccc", "borderColor":"#ccc" } } ]
             },
             "tapped":{
               "//": "fired only if enabled",

@@ -28,6 +28,7 @@
 	"pages": [
 		{
 			"name": "main",
+			"play":"never",
 			"elements": [
 				{ "bc":"#fdd"},
 				{ "h":"8%", "w":"45%", "pos":["25%","95%"],"text":"selected", "textAlign":"right"},

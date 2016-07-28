@@ -1,6 +1,7 @@
 {
 	"pages": [
 		{
+			"play":"never",
 			"elements": [
 				{"text":"HTTP GET", "h":"10%", "pos":["50%", "5%"]},
 				{"name":"label", "text":"", "h":"20%", "pos":["50%", "20%"] },
@@ -47,6 +48,7 @@
 			}
 		},
 		{
+			"play":"never",
 			"elements": [
 				{"text":"HTTP POST", "h":"10%", "pos":["50%", "5%"]},
 				{"name":"label", "text":"", "h":"20%", "pos":["50%", "20%"] },
