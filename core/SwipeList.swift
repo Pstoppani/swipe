@@ -49,6 +49,9 @@ class SwipeList: SwipeView, UITableViewDelegate, UITableViewDataSource {
         if let selectedIndex = self.info["selectedItem"] as? Int {
             self.tableView.selectRowAtIndexPath(NSIndexPath(forRow: selectedIndex, inSection: 0), animated: true, scrollPosition: .Middle)
         }
+        if let scrollEnabled = self.info["scrollEnabled"] as? Bool {
+            self.tableView.scrollEnabled = scrollEnabled
+        }
     }
     
     required init?(coder aDecoder: NSCoder) {
