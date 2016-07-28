@@ -1914,8 +1914,14 @@ class SwipeElement: SwipeView, SwipeViewDelegate {
             UIView.animateWithDuration(0.25, animations: {
                 CATransaction.begin()
                 CATransaction.setDisableActions(true)
-                CATransaction.setCompletionBlock({ 
-                    //print("ani completed")
+                CATransaction.setCompletionBlock({
+                    if let eventsInfo = info["events"] as? [String:AnyObject] {
+                        let eventHandler = SwipeEventHandler()
+                        eventHandler.parse(eventsInfo)
+                        if let actions = eventHandler.actionsFor("completion") {
+                            originator.execute(self, actions:actions)
+                        }
+                    }
                 })
                 
                 if let text = self.parseText(originator, info: info, key:"text") {

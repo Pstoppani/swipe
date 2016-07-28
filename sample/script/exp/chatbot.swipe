@@ -20,43 +20,31 @@
       },
       "botButton":{
         "bc":"#fff", "textAlign":"center", "textColor":"#1E88E5", "fontSize":18,
-        "events": {
-          "tapped": {
+        "events":{
+          "tapped":{
             "actions":[
-              { "update":{ "opacity":0.4, "duration":0.2 }},
+              { "update":{ "opacity":0.4, "duration":0.2, "events":{ "completion":{ "actions":[ { "update":{ "opacity":1, "duration":0.2 }} ] } } } },
               {
-                "timer": {
-                  "duration":0.2,
-                  "events": {
-                    "tick": {
-                      "actions": [
-                        { "update":{ "opacity":1, "duration":0.2 }},
+                "post":{
+                  "target":{ "url":"https://aiaas.pandorabots.com/talk/1409612655930/padawan" },
+                  "params":{
+                    "input":{ "valueOf":{ "property":"data"}},
+                    "user_key":"c8df9d6e0866e2655ac73132bb5bb7fa"
+                  },
+                  "events":{
+                    "error":{
+                      "params":{ "message":{ "type":"string" }},
+                      "actions":[
+                        { "append":{ "name":"aList", "items":[{ "elements":[{ "template":"botText" }], "data":{ "valueOf":{ "property":{ "params":"message" }}}}]}}
+                      ]
+                    },
+                    "completion":{
+                      "params":{ "status":"string", "responses":["string"], "sessionid":"number" },
+                      "actions":[
                         {
-                          "post":{
-                            "target":{ "url":"https://aiaas.pandorabots.com/talk/1409612655930/padawan" },
-                            "params":{
-                              "input":{ "valueOf":{ "property":"data"}},
-                              "user_key":"c8df9d6e0866e2655ac73132bb5bb7fa"
-                            },
-                            "events":{
-                              "error":{
-                                "params":{ "message":{ "type":"string" }},
-                                "actions":[
-                                  { "append":{ "name":"aList", "items":[{ "elements":[{ "template":"botText" }], "data":{ "valueOf":{ "property":{ "params":"message" }}}}]}}
-                                ]
-                              },
-                              "completion":{
-                                "params":{ "status":"string", "responses":["string"], "sessionid":"number" },
-                                "actions":[
-                                  {
-                                    "append":{
-                                      "//":"if 'data' is JSON containing 'elements', then we automatically assume 'data' defines the complete list item, and use it instead of the definition below.  We do this because the chat bot can return plain strings in 'data' or list items in 'data'",
-                                      "name":"aList", "items":[{ "elements":[{ "template":"botText" }], "data":{ "valueOf":{ "property":{ "params":"responses" }}}}]
-                                    }
-                                  }
-                                ]
-                              }
-                            }
+                          "append":{
+                            "//":"if 'data' is JSON containing 'elements', then we automatically assume 'data' defines the complete list item, and use it instead of the definition below.  We do this because the chat bot can return plain strings in 'data' or list items in 'data'",
+                            "name":"aList", "items":[{ "elements":[{ "template":"botText" }], "data":{ "valueOf":{ "property":{ "params":"responses" }}}}]
                           }
                         }
                       ]

@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		C137E0F61D4A9F6E003EDF62 /* SwipeHttpGet.swift in Sources */ = {isa = PBXBuildFile; fileRef = C137E0F51D4A9F6E003EDF62 /* SwipeHttpGet.swift */; };
 		C13B9FD01CE62CF800D4C62A /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = C13B9FCF1CE62CF800D4C62A /* AppDelegate.swift */; };
 		C13B9FD21CE62CF800D4C62A /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C13B9FD11CE62CF800D4C62A /* ViewController.swift */; };
 		C13B9FD51CE62CF800D4C62A /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C13B9FD31CE62CF800D4C62A /* Main.storyboard */; };
@@ -36,11 +37,11 @@
 		C17DF6691D00790800DADBCB /* SwipePageTemplate.swift in Sources */ = {isa = PBXBuildFile; fileRef = C17DF6611D00790800DADBCB /* SwipePageTemplate.swift */; };
 		C17DF66A1D00790800DADBCB /* SwipeTimer.swift in Sources */ = {isa = PBXBuildFile; fileRef = C17DF6621D00790800DADBCB /* SwipeTimer.swift */; };
 		C17DF66B1D00790800DADBCB /* SwipeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C17DF6631D00790800DADBCB /* SwipeView.swift */; };
-		C1D6D8FE1D18622D00128195 /* SwipeFetcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1D6D8FB1D18622D00128195 /* SwipeFetcher.swift */; };
 		C1D6D9001D18622D00128195 /* SwipeTextArea.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1D6D8FD1D18622D00128195 /* SwipeTextArea.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		C137E0F51D4A9F6E003EDF62 /* SwipeHttpGet.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SwipeHttpGet.swift; sourceTree = "<group>"; };
 		C13B9FCC1CE62CF800D4C62A /* Padawan.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Padawan.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		C13B9FCF1CE62CF800D4C62A /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		C13B9FD11CE62CF800D4C62A /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -72,7 +73,6 @@
 		C17DF6611D00790800DADBCB /* SwipePageTemplate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SwipePageTemplate.swift; sourceTree = "<group>"; };
 		C17DF6621D00790800DADBCB /* SwipeTimer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SwipeTimer.swift; sourceTree = "<group>"; };
 		C17DF6631D00790800DADBCB /* SwipeView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SwipeView.swift; sourceTree = "<group>"; };
-		C1D6D8FB1D18622D00128195 /* SwipeFetcher.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SwipeFetcher.swift; sourceTree = "<group>"; };
 		C1D6D8FD1D18622D00128195 /* SwipeTextArea.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SwipeTextArea.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -121,8 +121,8 @@
 		C13B9FEA1CE62E6C00D4C62A /* core */ = {
 			isa = PBXGroup;
 			children = (
+				C137E0F51D4A9F6E003EDF62 /* SwipeHttpGet.swift */,
 				C14927501D2430CA0063A3CE /* SwipeHttpPost.swift */,
-				C1D6D8FB1D18622D00128195 /* SwipeFetcher.swift */,
 				C1D6D8FD1D18622D00128195 /* SwipeTextArea.swift */,
 				C17DF65C1D00790800DADBCB /* SwipeAction.swift */,
 				C17DF65D1D00790800DADBCB /* SwipeEvent.swift */,
@@ -237,7 +237,6 @@
 				C13BA0041CE62E6C00D4C62A /* SwipeDocumentViewer.swift in Sources */,
 				C13BA00A1CE62E6C00D4C62A /* SwipePath.swift in Sources */,
 				C13BA00D1CE62E6C00D4C62A /* SwipeViewController.swift in Sources */,
-				C1D6D8FE1D18622D00128195 /* SwipeFetcher.swift in Sources */,
 				C13BA0081CE62E6C00D4C62A /* SwipePage.swift in Sources */,
 				C13BA0101CE62E6C00D4C62A /* SwipeAssetManager.swift in Sources */,
 				C13BA00C1CE62E6C00D4C62A /* SwipeSynthesizer.swift in Sources */,
@@ -245,6 +244,7 @@
 				C17DF6671D00790800DADBCB /* SwipeList.swift in Sources */,
 				C13BA00E1CE62E6C00D4C62A /* asset.xcdatamodeld in Sources */,
 				C17DF6661D00790800DADBCB /* SwipeEventHandler.swift in Sources */,
+				C137E0F61D4A9F6E003EDF62 /* SwipeHttpGet.swift in Sources */,
 				C17DF66B1D00790800DADBCB /* SwipeView.swift in Sources */,
 				C17DF6681D00790800DADBCB /* SwipeNode.swift in Sources */,
 				C13B9FD21CE62CF800D4C62A /* ViewController.swift in Sources */,
