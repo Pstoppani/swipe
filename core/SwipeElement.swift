@@ -36,12 +36,13 @@ protocol SwipeElementDelegate:NSObjectProtocol {
     func parseMarkdown(element:SwipeElement, markdowns:[String]) -> NSAttributedString
     func baseURL() -> NSURL?
     func map(url:NSURL) -> NSURL?
+    func addedResourceURLs(urls:[NSURL:String], callback:() -> Void)
     func pageIndex() -> Int // for debugging
     func localizedStringForKey(key:String) -> String?
     func languageIdentifier() -> String?
 }
 
-class SwipeElement: SwipeView {
+class SwipeElement: SwipeView, SwipeViewDelegate {
     // Debugging
     static var objectCount = 0
     private let pageIndex:Int
@@ -1914,7 +1915,7 @@ class SwipeElement: SwipeView {
                 CATransaction.begin()
                 CATransaction.setDisableActions(true)
                 CATransaction.setCompletionBlock({ 
-                    print("ani completed")
+                    //print("ani completed")
                 })
                 
                 if let text = self.parseText(originator, info: info, key:"text") {
@@ -2049,4 +2050,15 @@ class SwipeElement: SwipeView {
         
         return false
     }
+    
+    // SwipeViewDelegate
+    func addedResourceURLs(urls:[NSURL:String], callback:() -> Void) {
+        for (url,prefix) in urls {
+            self.resourceURLs[url] = prefix
+        }
+        self.delegate?.addedResourceURLs(urls) {
+            callback()
+        }
+    }
+
 }

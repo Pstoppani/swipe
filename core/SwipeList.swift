@@ -124,38 +124,65 @@ class SwipeList: SwipeView, UITableViewDelegate, UITableViewDataSource {
 
     override func appendList(originator: SwipeNode, info: [String:AnyObject]) {
         if let itemsInfoArray = info["items"] as? [[String:AnyObject]] {
-            for itemsInfo in itemsInfoArray {
-                if let _ = itemsInfo["data"] as? [String:AnyObject] {
-                    let eval = originator.evaluate(itemsInfo)
+            var itemInfos = [[String:AnyObject]]()
+
+            for itemInfo in itemsInfoArray {
+                if let _ = itemInfo["data"] as? [String:AnyObject] {
+                    var eval = originator.evaluate(itemInfo)
                     // if 'data' is a JSON object, use it, otherwise, use the info as is
                     if let dataStr = eval["data"] as? String, data = dataStr.dataUsingEncoding(NSUTF8StringEncoding) {
                         do {
                             guard let json = try NSJSONSerialization.JSONObjectWithData(data, options: NSJSONReadingOptions()) as? [String:AnyObject] else {
                                 // 'data' is a plain String
-                                items.append(eval)
-                                itemHeights.append(defaultItemHeight)
+                                itemInfos.append(eval)
                                 break
                             }
                             
                             // 'data' is a JSON object
-                            items.append(json)
-                            itemHeights.append(defaultItemHeight)
+                            if (json["elements"] as? [[String:AnyObject]]) != nil {
+                                // 'data' is a redefinition of the item
+                                itemInfos.append(json)
+                            } else {
+                                // 'data' is just data
+                                eval["data"] = json
+                                itemInfos.append(eval)
+                            }
                         } catch  {
                             // 'data' is a plain String
-                            items.append(eval)
-                            itemHeights.append(defaultItemHeight)
+                            itemInfos.append(eval)
                         }
                     }
                 } else {
-                    items.append(itemsInfo)
-                    itemHeights.append(defaultItemHeight)
+                    itemInfos.append(itemInfo)
                 }
             }
-                        
-            self.tableView.reloadData()
-            self.tableView.scrollToRowAtIndexPath(NSIndexPath(forRow: self.items.count - 1, inSection: 0), atScrollPosition: .Bottom, animated: true)
-            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, Int64(0.4 * Double(NSEC_PER_SEC))), dispatch_get_main_queue()) { () -> Void in
+            
+            var urls = [NSURL:String]()
+
+            for itemInfo in itemInfos {
+                if let elementsInfo = itemInfo["elements"] as? [[String:AnyObject]] {
+                    let scaleDummy = CGSizeMake(0.1, 0.1)
+                    
+                    for e in elementsInfo {
+                        let element = SwipeElement(info: e, scale:scaleDummy, parent:self, delegate:self.delegate!)
+                        for (url, prefix) in element.resourceURLs {
+                            urls[url] = prefix
+                        }
+                    }
+                }
+            }
+            
+            self.delegate.addedResourceURLs(urls) {
+                for itemInfo in itemInfos {
+                    self.items.append(itemInfo)
+                    self.itemHeights.append(self.defaultItemHeight)
+                }
+                
+                self.tableView.reloadData()
                 self.tableView.scrollToRowAtIndexPath(NSIndexPath(forRow: self.items.count - 1, inSection: 0), atScrollPosition: .Bottom, animated: true)
+                dispatch_after(dispatch_time(DISPATCH_TIME_NOW, Int64(0.4 * Double(NSEC_PER_SEC))), dispatch_get_main_queue()) { () -> Void in
+                    self.tableView.scrollToRowAtIndexPath(NSIndexPath(forRow: self.items.count - 1, inSection: 0), atScrollPosition: .Bottom, animated: true)
+                }
             }
         }
     }

@@ -1,20 +1,20 @@
 //
-//  SwipeFetcher.swift
+//  SwipeHttpGet.swift
 //
 //  Created by Pete Stoppani on 6/9/16.
 //
 
 import Foundation
 
-class SwipeFetcher : SwipeNode {
-    let TAG = "SWFetcher"
-    private static var fetchers = [SwipeFetcher]()
+class SwipeHttpGet : SwipeNode {
+    let TAG = "SwipeHttpGet"
+    private static var getters = [SwipeHttpGet]()
     private var params: [String:AnyObject]?
     private var data: [String:AnyObject]?
     
-    static func create(parent: SwipeNode, fetchInfo: [String:AnyObject]) {
-        let fetcher = SwipeFetcher(parent: parent, fetchInfo: fetchInfo)
-        fetchers.append(fetcher)
+    static func create(parent: SwipeNode, getInfo: [String:AnyObject]) {
+        let geter = SwipeHttpGet(parent: parent, getInfo: getInfo)
+        getters.append(geter)
     }
     
     override init() {
@@ -22,20 +22,20 @@ class SwipeFetcher : SwipeNode {
         self.parent = nil
     }
     
-    init(parent: SwipeNode, fetchInfo: [String:AnyObject]) {
+    init(parent: SwipeNode, getInfo: [String:AnyObject]) {
         super.init(parent: parent)
 
-        if let eventsInfo = fetchInfo["events"] as? [String:AnyObject] {
+        if let eventsInfo = getInfo["events"] as? [String:AnyObject] {
             eventHandler.parse(eventsInfo)
         }
         
-        if let sourceInfo = fetchInfo["source"] as? [String:AnyObject] {
+        if let sourceInfo = getInfo["source"] as? [String:AnyObject] {
             if let urlString = sourceInfo["url"] as? String, url = NSURL(string: urlString) {
                 SwipeAssetManager.sharedInstance().loadAsset(url, prefix: "", bypassCache:true) { (urlLocal:NSURL?,  error:NSError!) -> Void in
                     if let urlL = urlLocal where error == nil, let data = NSData(contentsOfURL: urlL) {
                         do {
                             guard let json = try NSJSONSerialization.JSONObjectWithData(data, options: NSJSONReadingOptions()) as? [String:AnyObject] else {
-                                self.handleError("fetch \(urlString): not a dictionary.")
+                                self.handleError("get \(urlString): not a dictionary.")
                                 return
                             }
                             // Success
@@ -45,18 +45,18 @@ class SwipeFetcher : SwipeNode {
                                 self.execute(self, actions: actionsInfo)
                             }
                         } catch let error as NSError {
-                            self.handleError("fetch \(urlString): invalid JSON file \(error.localizedDescription)")
+                            self.handleError("get \(urlString): invalid JSON file \(error.localizedDescription)")
                             return
                         }
                     } else {
-                        self.handleError("fetch \(urlString): \(error.localizedDescription)")
+                        self.handleError("get \(urlString): \(error.localizedDescription)")
                     }
                 }
             } else {
-                self.handleError("fetch missing or invalid url")
+                self.handleError("get missing or invalid url")
             }
         } else {
-            self.handleError("fetch missing source")
+            self.handleError("get missing source")
         }
     }
     
@@ -75,11 +75,11 @@ class SwipeFetcher : SwipeNode {
     }
     
     static func cancelAll() {
-        for timer in fetchers {
+        for timer in getters {
             timer.cancel()
         }
         
-        fetchers.removeAll()
+        getters.removeAll()
     }
     
     // SwipeNode

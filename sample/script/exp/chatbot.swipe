@@ -50,6 +50,7 @@
                                 "actions":[
                                   {
                                     "append":{
+                                      "//":"if 'data' is JSON containing 'elements', then we automatically assume 'data' defines the complete list item, and use it instead of the definition below.  We do this because the chat bot can return plain strings in 'data' or list items in 'data'",
                                       "name":"aList", "items":[{ "elements":[{ "template":"botText" }], "data":{ "valueOf":{ "property":{ "params":"responses" }}}}]
                                     }
                                   }
@@ -128,6 +129,7 @@
                         "actions":[
                           {
                             "append":{
+                              "//":"if 'data' is JSON containing 'elements', then we automatically assume 'data' defines the complete list item, and use it instead of the definition below.  We do this because the chat bot can return plain strings in 'data' or list items in 'data'",
                               "name":"aList",
                               "items":[{ "elements":[{ "template":"botText" }], "data":{ "valueOf":{ "property":{ "params":"responses" }}}}]
                             }

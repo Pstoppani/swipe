@@ -49,8 +49,8 @@ class SwipeNode: NSObject {
     }
     
     func executeAction(originator: SwipeNode, action: SwipeAction) {
-        if let fetchInfo = action.info["fetch"] as? [String:AnyObject] {
-            SwipeFetcher.create(self, fetchInfo: fetchInfo)
+        if let getInfo = action.info["fetch"] as? [String:AnyObject] {
+            SwipeHttpGet.create(self, getInfo: getInfo)
         } else if let postInfo = action.info["post"] as? [String:AnyObject] {
             SwipeHttpPost.create(self, postInfo: postInfo)
         } else if let timerInfo = action.info["timer"] as? [String:AnyObject] {

@@ -610,6 +610,15 @@ class SwipePage: SwipeView, SwipeElementDelegate {
     }
     
     // <SwipeElementDelegate> method
+    
+    func addedResourceURLs(urls:[NSURL:String], callback:() -> Void) {
+        self.prefetcher.append(urls) { (completed:Bool, _:[NSURL], _:[NSError]) -> Void in
+            if completed {
+                callback()
+            }
+        }
+    }
+    
     func prototypeWith(name:String?) -> [String:AnyObject]? {
         return delegate.prototypeWith(name)
     }
