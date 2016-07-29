@@ -36,7 +36,7 @@ class SwipeView: SwipeNode {
     func setupGestureRecognizers() {
         var doubleTapRecognizer: UITapGestureRecognizer?
         
-        if eventHandler.actionsFor("doubleTap") != nil {
+        if eventHandler.actionsFor("doubleTapped") != nil {
             doubleTapRecognizer = UITapGestureRecognizer(target: self, action:#selector(SwipeView.didDoubleTap(_:)))
             doubleTapRecognizer!.numberOfTapsRequired = 2
             doubleTapRecognizer!.cancelsTouchesInView = false
@@ -106,7 +106,7 @@ class SwipeView: SwipeNode {
     }
     
     func didDoubleTap(recognizer: UITapGestureRecognizer) {
-        if let actions = eventHandler.actionsFor("doubleTap") {
+        if let actions = eventHandler.actionsFor("doubleTapped") {
             execute(self, actions: actions)
         }
     }

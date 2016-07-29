@@ -173,7 +173,7 @@
 					"bc":"#fdd",
 					"events": {
 						"//": "Test merging of events",
-						"doubleTap": {
+						"doubleTapped": {
 							"actions": [
 								{
 									"update": {"id":"text2", "text":"text1 double tapped"}
