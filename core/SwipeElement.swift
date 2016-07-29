@@ -1438,7 +1438,7 @@ class SwipeElement: SwipeView, SwipeViewDelegate {
     
     override func getValue(originator: SwipeNode, info: [String:AnyObject]) -> AnyObject? {
         var name = "*"
-        if let val = info["name"] as? String {
+        if let val = info["id"] as? String {
             name = val
         }
         

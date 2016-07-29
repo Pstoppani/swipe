@@ -7,7 +7,7 @@
 					{ "img":"icon-180.png", "pos":[20,"50%"], "w":20 },
 					{
 						"x":40, "w":"80%",
-						"text":{"valueOf":{"name":"aList", "property":{"items":{"data":{"person":{"name":"first"}}}}}},
+						"text":{"valueOf":{"id":"aList", "property":{"items":{"data":{"person":{"id":"first"}}}}}},
 						"textAlign":"left"
 					}
 				]
@@ -18,7 +18,7 @@
 					{ "img":"icon-180.png", "pos":["90%","50%"], "w":20},
 					{
 						"x":0, "w":"80%",
-						"text":{"valueOf":{"name":"aList", "property":{"items":{"data":{"person":{"name":"first"}}}}}},
+						"text":{"valueOf":{"id":"aList", "property":{"items":{"data":{"person":{"id":"first"}}}}}},
 						"textAlign":"right"
 					}
 				]
@@ -27,15 +27,15 @@
 	},
 	"pages": [
 		{
-			"name": "main",
+			"id": "main",
 			"play":"never",
 			"elements": [
 				{ "bc":"#fdd"},
 				{ "h":"8%", "w":"45%", "pos":["25%","95%"],"text":"selected", "textAlign":"right"},
-				{ "name":"echo", "h":"8%", "w":"45%", "pos":["75%","95%"],"text":"2"},
+				{ "id":"echo", "h":"8%", "w":"45%", "pos":["75%","95%"],"text":"2"},
 				{ "text":"Tap on List Items", "h":"8%", "pos":["50%", "5%"]},
 				{
-					"name": "aList",
+					"id": "aList",
 					"h":"80%",
 					"w":"90%",
 					"bc":"#ffe",
@@ -43,18 +43,18 @@
 					"list": {
 						"selectedItem":2,
 						"items": [
-							{ "elements":[ {"template":"even" }], "data":{ "person": { "name": { "first":"fred", "last":"flintstone"}}}},
-							{ "elements":[ {"template":"odd" }], "data":{ "person": { "name": { "first":"wilma", "last":"flintstone"}}}},
-							{ "elements":[ {"template":"even" }], "data":{ "person": { "name": { "first":"pebbles", "last":"flintstone"}}}},
-							{ "elements":[ {"template":"odd" }], "data":{ "person": { "name": { "first":"barney", "last":"rubble"}}}},
-							{ "elements":[ {"template":"even" }], "data":{ "person": { "name": { "first":"betty", "last":"rubble"}}}},
-							{ "elements":[ {"template":"odd" }], "data":{ "person": { "name": { "first":"bambam", "last":"rubble"}}}}
+							{ "elements":[ {"template":"even" }], "data":{ "person": { "id": { "first":"fred", "last":"flintstone"}}}},
+							{ "elements":[ {"template":"odd" }], "data":{ "person": { "id": { "first":"wilma", "last":"flintstone"}}}},
+							{ "elements":[ {"template":"even" }], "data":{ "person": { "id": { "first":"pebbles", "last":"flintstone"}}}},
+							{ "elements":[ {"template":"odd" }], "data":{ "person": { "id": { "first":"barney", "last":"rubble"}}}},
+							{ "elements":[ {"template":"even" }], "data":{ "person": { "id": { "first":"betty", "last":"rubble"}}}},
+							{ "elements":[ {"template":"odd" }], "data":{ "person": { "id": { "first":"bambam", "last":"rubble"}}}}
 						]
 					},
 					"events": {
 						"rowSelected": {
 							"actions": [
-								{ "update": { "name":"echo", "text":{"valueOf":{"name":"aList", "property":"selectedItem"}}}}
+								{ "update": { "id":"echo", "text":{"valueOf":{"id":"aList", "property":"selectedItem"}}}}
 							]
 						}
 					}
@@ -70,14 +70,14 @@
 										"actions": [
 											{
 												"append": {
-													"name":"aList",
+													"id":"aList",
 													"items": [
-														{ "elements":[ {"template":"even" }], "data":{ "person": { "name": { "first":"george", "last":"jetson"}}}},
-														{ "elements":[ {"template":"odd" }], "data":{ "person": { "name": { "first":"jane", "last":"jetson"}}}},
-														{ "elements":[ {"template":"even" }], "data":{ "person": { "name": { "first":"elroy", "last":"jetson"}}}},
-														{ "elements":[ {"template":"odd" }], "data":{ "person": { "name": { "first":"judy", "last":"jetson"}}}},
-														{ "elements":[ {"template":"even" }], "data":{ "person": { "name": { "first":"rosie"}}}},
-														{ "elements":[ {"template":"odd" }], "data":{ "person": { "name": { "first":"cosmo", "last":"spacely"}}}}
+														{ "elements":[ {"template":"even" }], "data":{ "person": { "id": { "first":"george", "last":"jetson"}}}},
+														{ "elements":[ {"template":"odd" }], "data":{ "person": { "id": { "first":"jane", "last":"jetson"}}}},
+														{ "elements":[ {"template":"even" }], "data":{ "person": { "id": { "first":"elroy", "last":"jetson"}}}},
+														{ "elements":[ {"template":"odd" }], "data":{ "person": { "id": { "first":"judy", "last":"jetson"}}}},
+														{ "elements":[ {"template":"even" }], "data":{ "person": { "id": { "first":"rosie"}}}},
+														{ "elements":[ {"template":"odd" }], "data":{ "person": { "id": { "first":"cosmo", "last":"spacely"}}}}
 													]
 												}
 											}

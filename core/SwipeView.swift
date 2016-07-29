@@ -52,7 +52,7 @@ class SwipeView: SwipeNode {
     }
     
     lazy var name:String = {
-        if let value = self.info["name"] as? String {
+        if let value = self.info["id"] as? String {
             return value
         }
         return "" // default
@@ -114,7 +114,7 @@ class SwipeView: SwipeNode {
     override func executeAction(originator: SwipeNode, action: SwipeAction) {
         if let updateInfo = action.info["update"] as? [String:AnyObject] {
             var name = "*"; // default is 'self'
-            if let value = updateInfo["name"] as? String {
+            if let value = updateInfo["id"] as? String {
                 name = value
             }
             var up = true
@@ -124,7 +124,7 @@ class SwipeView: SwipeNode {
             updateElement(originator, name:name, up:up, info: updateInfo)
         } else if let appendInfo = action.info["append"] as? [String:AnyObject] {
             var name = "*"; // default is 'self'
-            if let value = appendInfo["name"] as? String {
+            if let value = appendInfo["id"] as? String {
                 name = value
             }
             var up = true

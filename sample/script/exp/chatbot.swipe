@@ -5,14 +5,14 @@
         "//":"List element for user's msgs to the bot",
 				"bc":"#1E88E5", "x":"20%", "y":"4%", "w":"80%", "h":"94%", "cornerRadius":10,
 				"elements":[
-					{ "w":"92%", "textAlign":"right", "fontSize":16, "textColor":"#fff", "text":{ "valueOf":{ "name":"aList", "property":{ "items":"data" }}}}
+					{ "w":"92%", "textAlign":"right", "fontSize":16, "textColor":"#fff", "text":{ "valueOf":{ "id":"aList", "property":{ "items":"data" }}}}
 				]
 			},
 			"botText":{
         "//":"List element for bots's reply msgs",
 				"bc":"#eee", "x":"2%", "y":"4%", "w":"80%", "h":"94%", "cornerRadius":10,
 				"elements":[
-					{ "x":"4%", "w":"96%", "textAlign":"left", "fontSize":16, "text":{ "valueOf":{ "name":"aList", "property":{ "items":"data" }}}}
+					{ "x":"4%", "w":"96%", "textAlign":"left", "fontSize":16, "text":{ "valueOf":{ "id":"aList", "property":{ "items":"data" }}}}
 				]
       },
       "botHeader":{
@@ -35,7 +35,7 @@
                     "error":{
                       "params":{ "message":{ "type":"string" }},
                       "actions":[
-                        { "append":{ "name":"aList", "items":[{ "elements":[{ "template":"botText" }], "data":{ "valueOf":{ "property":{ "params":"message" }}}}]}}
+                        { "append":{ "id":"aList", "items":[{ "elements":[{ "template":"botText" }], "data":{ "valueOf":{ "property":{ "params":"message" }}}}]}}
                       ]
                     },
                     "completion":{
@@ -44,7 +44,7 @@
                         {
                           "append":{
                             "//":"if 'data' is JSON containing 'elements', then we automatically assume 'data' defines the complete list item, and use it instead of the definition below.  We do this because the chat bot can return plain strings in 'data' or list items in 'data'",
-                            "name":"aList", "items":[{ "elements":[{ "template":"botText" }], "data":{ "valueOf":{ "property":{ "params":"responses" }}}}]
+                            "id":"aList", "items":[{ "elements":[{ "template":"botText" }], "data":{ "valueOf":{ "property":{ "params":"responses" }}}}]
                           }
                         }
                       ]
@@ -65,23 +65,23 @@
       "elements":[
         {
           "//":"Chat list contains user and bot msgs",
-					"name":"aList", "x":0, "y":0, "h":"88%","w":"98%", "cornerRadius":10, "list":{
+					"id":"aList", "x":0, "y":0, "h":"88%","w":"98%", "cornerRadius":10, "list":{
             "itemH":26, "items":[{ "elements":[{ "template":"botText" }], "data":"Hi.  How can I help you?"}]
           }
         },
         {
           "//":"Text input box",
-          "name":"input", "textArea":{}, "textAlign":"center", "text":"", "borderWidth":1, "borderColor":"#ccc", "cornerRadius":10,
+          "id":"input", "textArea":{}, "textAlign":"center", "text":"", "borderWidth":1, "borderColor":"#ccc", "cornerRadius":10,
           "x":"1%", "y":"91%", "w":"82%", "h":50, "bc":"#fff",
           "events":{
             "textChanged":{
-              "actions":[{ "update":{ "name":"btn", "enabled":{ "valueOf":{ "property":"text.length" }}}}]
+              "actions":[{ "update":{ "id":"btn", "enabled":{ "valueOf":{ "property":"text.length" }}}}]
             }
           }
         },
         {
           "//":"Send button",
-          "name":"btn", "text":"", "x":"84%", "y":"91%", "w":50, "h":50, "textColor":"#ccc", "bc":"#fff", "borderWidth":1, "borderColor":"#ccc", "cornerRadius":25, "enabled":false,
+          "id":"btn", "text":"", "x":"84%", "y":"91%", "w":50, "h":50, "textColor":"#ccc", "bc":"#fff", "borderWidth":1, "borderColor":"#ccc", "cornerRadius":25, "enabled":false,
           "events":{
             "enabled":{
               "actions":[ { "update":{ "text":"^", "textColor":"#1E88E5", "borderColor":"#1E88E5" } } ]
@@ -94,22 +94,22 @@
               "actions":[
                 {
                   "append":{
-                    "name":"aList",
-                    "items":[{ "elements":[{ "template":"userText" }], "data":{ "valueOf":{ "name":"input", "property":"text" }}}]
+                    "id":"aList",
+                    "items":[{ "elements":[{ "template":"userText" }], "data":{ "valueOf":{ "id":"input", "property":"text" }}}]
                   }
                 },
                 { "update":{ "enabled":false } },
                 {
                   "post":{
                     "target":{ "url":"https://aiaas.pandorabots.com/talk/1409612655930/padawan" },
-                    "params":{ "input":{ "valueOf":{ "name":"input", "property":"text" }},
+                    "params":{ "input":{ "valueOf":{ "id":"input", "property":"text" }},
                       "user_key":"c8df9d6e0866e2655ac73132bb5bb7fa"
                     },
                     "events":{
                       "error":{
                         "params":{ "message":{ "type":"string" }},
                         "actions":[
-                          { "append":{ "name":"aList", "items":[{ "elements":[{ "template":"botText" }], "data":{ "valueOf":{ "property":{ "params":"message" }}}}]}}
+                          { "append":{ "id":"aList", "items":[{ "elements":[{ "template":"botText" }], "data":{ "valueOf":{ "property":{ "params":"message" }}}}]}}
                         ]
                       },
                       "completion":{
@@ -118,7 +118,7 @@
                           {
                             "append":{
                               "//":"if 'data' is JSON containing 'elements', then we automatically assume 'data' defines the complete list item, and use it instead of the definition below.  We do this because the chat bot can return plain strings in 'data' or list items in 'data'",
-                              "name":"aList",
+                              "id":"aList",
                               "items":[{ "elements":[{ "template":"botText" }], "data":{ "valueOf":{ "property":{ "params":"responses" }}}}]
                             }
                           }
@@ -127,7 +127,7 @@
                     }
                   }
                 },
-                { "update":{ "name":"input", "text":"" } }
+                { "update":{ "id":"input", "text":"" } }
               ]
             }
           }

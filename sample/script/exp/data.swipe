@@ -4,13 +4,13 @@
 			"play":"never",
 			"elements": [
 				{"text":"HTTP GET", "h":"10%", "pos":["50%", "5%"]},
-				{"name":"label", "text":"", "h":"20%", "pos":["50%", "20%"] },
-				{"name":"error", "textColor":"red", "h":"50%", "pos":["50%", "75%"] },
+				{"id":"label", "text":"", "h":"20%", "pos":["50%", "20%"] },
+				{"id":"error", "textColor":"red", "h":"50%", "pos":["50%", "75%"] },
 			 ],
 			"events": {
 					"load": {
 						"actions": [
-						{ "update":{"name":"label", "text":"Loading ..."}},
+						{ "update":{"id":"label", "text":"Loading ..."}},
 						{
 							"fetch":{
 								"source": {"url":"http://www.stoppani.net/swipe/simpledata.txt"},
@@ -18,8 +18,8 @@
 									"error": {
 										"params": {"message":{"type":"string"}},
 										"actions": [
-											{ "update":{"name":"label", "text":"** Error **"}},
-											{ "update":{"name":"error", "text":{"valueOf":{"property":{"params":"message"}}, "opacity":1}}}
+											{ "update":{"id":"label", "text":"** Error **"}},
+											{ "update":{"id":"error", "text":{"valueOf":{"property":{"params":"message"}}, "opacity":1}}}
 										]
 									},
 									"completion": {
@@ -31,7 +31,7 @@
 														"tick": {
 															"actions": [
 																{
-																	"update":{"name":"label", "text":{"valueOf":{"property":{"params":"d1"}}}}
+																	"update":{"id":"label", "text":{"valueOf":{"property":{"params":"d1"}}}}
 																}
 															]
 														}
@@ -51,13 +51,13 @@
 			"play":"never",
 			"elements": [
 				{"text":"HTTP POST", "h":"10%", "pos":["50%", "5%"]},
-				{"name":"label", "text":"", "h":"20%", "pos":["50%", "20%"] },
-				{"name":"error", "textColor":"red", "h":"50%", "pos":["50%", "75%"] },
+				{"id":"label", "text":"", "h":"20%", "pos":["50%", "20%"] },
+				{"id":"error", "textColor":"red", "h":"50%", "pos":["50%", "75%"] },
 			 ],
 			"events": {
 					"load": {
 						"actions": [
-						{ "update":{"name":"label", "text":"Loading ..."}},
+						{ "update":{"id":"label", "text":"Loading ..."}},
 						{
 							"post":{
 								"target": {"url":"https://cloudtestv2-1.uiexm.com/v1/xos/chatbot/talk/"},
@@ -67,8 +67,8 @@
 									"error": {
 										"params": {"message":{"type":"string"}},
 										"actions": [
-											{ "update":{"name":"label", "text":"** Error **"}},
-											{ "update":{"name":"error", "text":{"valueOf":{"property":{"params":"message"}}, "opacity":1}}}
+											{ "update":{"id":"label", "text":"** Error **"}},
+											{ "update":{"id":"error", "text":{"valueOf":{"property":{"params":"message"}}, "opacity":1}}}
 										]
 									},
 									"completion": {
@@ -80,7 +80,7 @@
 														"tick": {
 															"actions": [
 																{
-																	"update":{"name":"label", "text":{"valueOf":{"property":{"params":"responses"}}}}
+																	"update":{"id":"label", "text":{"valueOf":{"property":{"params":"responses"}}}}
 																}
 															]
 														}

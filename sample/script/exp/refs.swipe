@@ -1,10 +1,10 @@
 {
   "pages": [
     {
-      "name": "main",
+      "id": "main",
       "elements": [
-        { "name":"one", "text":"text one", "bc":"#ddf", "h":"10%", "pos":["50%","33%"]},
-        { "name":"two", "text":{"valueOf":"one.text"}, "bc":"#ddf", "h":"10%", "pos":["50%","50%"]},
+        { "id":"one", "text":"text one", "bc":"#ddf", "h":"10%", "pos":["50%","33%"]},
+        { "id":"two", "text":{"valueOf":"one.text"}, "bc":"#ddf", "h":"10%", "pos":["50%","50%"]},
       ]
     },
   ]

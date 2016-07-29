@@ -3,13 +3,13 @@
     {
       "elements": [
         {
-          "name":"echo",
+          "id":"echo",
           "x":"2%", "y":"30%", "w":"96%", "h":"10%", "bc":"#fef",
           "borderWidth":1, "borderColor":"#fdf", "cornerRadius":10,
           "text": {
             "rules": {
               "*": "default",
-              "btn.tapped": {"valueOf":{"name":"input", "property":"text"}}
+              "btn.tapped": {"valueOf":{"id":"input", "property":"text"}}
             }
           },
           "enabled": {
@@ -21,7 +21,7 @@
           }
         },
         {
-          "name":"input", "textArea":{},
+          "id":"input", "textArea":{},
           "borderWidth":1, "borderColor":"#ddf", "cornerRadius":10,
           "x":"2%", "y":"50%", "w":"78%", "h":"10%", "bc":"#eef",
           "text": {
@@ -32,32 +32,32 @@
           },
         },
         {
-          "name":"btn", "x":"81%", "y":"50%", "w":"18%", "h":"10%", "textColor":"#8f8", "bc":"#dfd",
+          "id":"btn", "x":"81%", "y":"50%", "w":"18%", "h":"10%", "textColor":"#8f8", "bc":"#dfd",
           "borderWidth":1, "borderColor":"#ccf", "cornerRadius":10,
           "text": {
             "rules": {
               "*": "^",
-              "btn.tapped": {"valueOf":{"name":"input", "property":"text"}},
+              "btn.tapped": {"valueOf":{"id":"input", "property":"text"}},
             }
           },
           "rules": {
             "btn.enabled": {
-              "> 0":{"param":{"valueOf":{"name":"input", "property":{"text":"length"}}}},
+              "> 0":{"param":{"valueOf":{"id":"input", "property":{"text":"length"}}}},
             },
             "tappped": {
               "sequence": [
-                {"name":"echo"},
+                {"id":"echo"},
                 {"timer": {
-                    "name":"aTimer",
+                    "id":"aTimer",
                     "duration":2,
                     "rules": {
                       "tick": {
-                        "sequence": [ {"name":"btn", "rule":"*" }]
+                        "sequence": [ {"id":"btn", "rule":"*" }]
                       }
                     }
                   }
                 },
-                {"name":"input"}
+                {"id":"input"}
              ]
             }
           }

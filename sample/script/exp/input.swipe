@@ -10,17 +10,17 @@
       "elements": [
         { "template":"text", "text":"Enter Text Below"},
         {
-          "name":"input", "textArea":{}, "template":"text", "text":"hello", "h":"20%", "y":"55%",
+          "id":"input", "textArea":{}, "template":"text", "text":"hello", "h":"20%", "y":"55%",
           "events": {
             "endEdit": {
               "actions": [
-                { "update": { "name":"echo", "text":{"valueOf":{"property":"text"}}}}
+                { "update": { "id":"echo", "text":{"valueOf":{"property":"text"}}}}
               ]
             }
           }
         },
         {
-          "name":"echo", "template":"text", "h":"20%", "text":"", "y":"30%"
+          "id":"echo", "template":"text", "h":"20%", "text":"", "y":"30%"
         }
       ]
     }
