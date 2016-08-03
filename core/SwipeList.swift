@@ -154,6 +154,8 @@ class SwipeList: SwipeView, UITableViewDelegate, UITableViewDataSource {
                             // 'data' is a plain String
                             itemInfos.append(eval)
                         }
+                    } else {
+                        itemInfos.append(eval)                        
                     }
                 } else {
                     itemInfos.append(itemInfo)
