@@ -118,7 +118,7 @@ class SwipeView: SwipeNode {
                 name = value
             }
             var up = true
-            if let value = updateInfo["include"] as? String {
+            if let value = updateInfo["search"] as? String {
                 up = value != "children"
             }
             updateElement(originator, name:name, up:up, info: updateInfo)
@@ -128,7 +128,7 @@ class SwipeView: SwipeNode {
                 name = value
             }
             var up = true
-            if let value = appendInfo["include"] as? String {
+            if let value = appendInfo["search"] as? String {
                 up = value != "children"
             }
             appendList(originator, name:name, up:up, info: appendInfo)

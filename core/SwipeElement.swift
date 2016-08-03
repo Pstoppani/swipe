@@ -1443,7 +1443,7 @@ class SwipeElement: SwipeView, SwipeViewDelegate {
         }
         
         var up = true
-        if let val = info["include"] as? String {
+        if let val = info["search"] as? String {
             up = val != "children"
         }
         

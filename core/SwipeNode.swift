@@ -70,7 +70,7 @@ class SwipeNode: NSObject {
     
     func getValue(originator: SwipeNode, info: [String:AnyObject]) -> AnyObject? {
         var up = true
-        if let val = info["include"] as? String {
+        if let val = info["search"] as? String {
             up = val != "children"
         }
         
