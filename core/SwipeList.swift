@@ -132,7 +132,7 @@ class SwipeList: SwipeView, UITableViewDelegate, UITableViewDataSource {
             for itemInfo in itemsInfoArray {
                 if let _ = itemInfo["data"] as? [String:AnyObject] {
                     var eval = originator.evaluate(itemInfo)
-                    // if 'data' is a JSON object, use it, otherwise, use the info as is
+                    // if 'data' is a JSON string, use it, otherwise, use the info as is
                     if let dataStr = eval["data"] as? String, data = dataStr.dataUsingEncoding(NSUTF8StringEncoding) {
                         do {
                             guard let json = try NSJSONSerialization.JSONObjectWithData(data, options: NSJSONReadingOptions()) as? [String:AnyObject] else {
@@ -141,7 +141,7 @@ class SwipeList: SwipeView, UITableViewDelegate, UITableViewDataSource {
                                 break
                             }
                             
-                            // 'data' is a JSON object
+                            // 'data' is a JSON string so use the JSON object
                             if (json["elements"] as? [[String:AnyObject]]) != nil {
                                 // 'data' is a redefinition of the item
                                 itemInfos.append(json)
@@ -155,6 +155,7 @@ class SwipeList: SwipeView, UITableViewDelegate, UITableViewDataSource {
                             itemInfos.append(eval)
                         }
                     } else {
+                        // 'data' is a 'valueOf' JSON object
                         itemInfos.append(eval)                        
                     }
                 } else {
