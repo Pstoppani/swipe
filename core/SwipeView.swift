@@ -20,7 +20,7 @@ protocol SwipeViewDelegate:NSObjectProtocol {
 
 class SwipeView: SwipeNode {
     var view: UIView?
-    internal let info:[String:AnyObject]
+    internal var info = [String:AnyObject]()
     internal var fEnabled = true
 
     init(info: [String:AnyObject]) {

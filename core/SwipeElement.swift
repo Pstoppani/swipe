@@ -1363,6 +1363,20 @@ class SwipeElement: SwipeView, SwipeViewDelegate {
         return textLayer
     }
     
+    static func updateTextLayer(textLayer:CATextLayer, text:String, scale:CGSize, info:[String:AnyObject], dimension:CGSize, layer:CALayer) {
+        let (attr, alignmentMode, fTextBottom, fTextTop, font, fontSize) = SwipeElement.processTextInfo(info, dimension: dimension, scale: scale)
+        
+        textLayer.alignmentMode = alignmentMode // *
+        textLayer.foregroundColor = SwipeParser.parseColor(info["textColor"], defaultColor: UIColor.blackColor().CGColor) // animatable **
+        textLayer.fontSize = fontSize // animatable **
+        textLayer.font = font
+        textLayer.string = text // NOTE: This is no longer an attributed string
+        
+        SwipeElement.processShadow(info, scale:scale, layer: layer)
+        
+        textLayer.frame = SwipeElement.processTextStorage(text, attr: attr, fTextBottom: fTextBottom, fTextTop: fTextTop, rcBound: layer.bounds)
+    }
+    
     /*
     func isPlaying() -> Bool {
         if self.fPlaying {
@@ -1906,6 +1920,9 @@ class SwipeElement: SwipeView, SwipeViewDelegate {
     }
     
     func update(originator: SwipeNode, info: [String:AnyObject]) {
+        for key in info.keys {
+            self.info[key] = info[key]
+        }
         
         dispatch_async(dispatch_get_main_queue(), { () -> Void in
             self.layer?.removeAllAnimations()
@@ -1915,7 +1932,7 @@ class SwipeElement: SwipeView, SwipeViewDelegate {
                 CATransaction.begin()
                 CATransaction.setDisableActions(true)
                 CATransaction.setCompletionBlock({
-                    if let eventsInfo = info["events"] as? [String:AnyObject] {
+                    if let eventsInfo = self.info["events"] as? [String:AnyObject] {
                         let eventHandler = SwipeEventHandler()
                         eventHandler.parse(eventsInfo)
                         if let actions = eventHandler.actionsFor("completion") {
@@ -1924,17 +1941,24 @@ class SwipeElement: SwipeView, SwipeViewDelegate {
                     }
                 })
                 
-                if let text = self.parseText(originator, info: info, key:"text") {
+                if let text = self.parseText(originator, info: self.info, key:"text") {
                     if let textAreaHelper = self.helper as? SwipeTextArea {
-                        textAreaHelper.setText(text, scale: self.scale, info: info, dimension: self.screenDimension, layer: nil)
+                        textAreaHelper.setText(text, scale: self.scale, info: self.info, dimension: self.screenDimension, layer: nil)
                     }
                     else {
-                        var tbdNeedToReProcess = true
-                        self.textLayer?.string = text
+                        if self.textLayer == nil {
+                            self.textLayer = SwipeElement.addTextLayer(text, scale: self.scale, info: self.info, dimension: self.screenDimension, layer: self.layer!)
+                        } else {
+                            SwipeElement.updateTextLayer(self.textLayer!, text: text, scale: self.scale, info: self.info, dimension: self.screenDimension, layer: self.layer!)
+                        }
                     }
                 }
                 
-                self.setupAnimations(self.layer!, info: info)
+                if let text = self.textLayer?.string as? String where self.info["textAlign"] != nil || self.info["textColor"] != nil || self.info["fontName"] != nil || self.info["fontSize"] != nil {
+                    SwipeElement.updateTextLayer(self.textLayer!, text: text, scale: self.scale, info: self.info, dimension: self.screenDimension, layer: self.layer!)
+                }
+                
+                self.setupAnimations(self.layer!, info: self.info)
                 CATransaction.commit()
                 
                 }, completion: { (done: Bool) in
@@ -1944,10 +1968,10 @@ class SwipeElement: SwipeView, SwipeViewDelegate {
             var enabledVal: AnyObject?
             var enabled = false
             
-            if let enabledInfo = info["enabled"] as? [String:AnyObject], valOfInfo = enabledInfo["valueOf"] as? [String:AnyObject] {
+            if let enabledInfo = self.info["enabled"] as? [String:AnyObject], valOfInfo = enabledInfo["valueOf"] as? [String:AnyObject] {
                 enabledVal = originator.getValue(originator, info:valOfInfo)
             } else {
-                enabledVal = info["enabled"]
+                enabledVal = self.info["enabled"]
             }
             
             if let enabledInt = enabledVal as? Int {

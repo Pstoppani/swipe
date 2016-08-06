@@ -1,0 +1,26 @@
+{
+  "templates":{
+    "elements": {
+      "button":{
+        "x":0, "w":"100%", "h":30, "bc":"#efe",
+        "events":{
+          "tapped":{
+            "actions":[
+              { "update":{ "id":"echo", "text":{"valueOf":{ "property":"text"} }}}
+            ]
+          }
+        }
+      }
+    }
+  },
+  "pages":[
+    {
+      "play":"never",
+      "elements":[
+        { "template":"button", "text":"one", "y":50 },
+        { "template":"button", "text":"two", "y":82 },
+        { "id":"echo", "x":0, "y":114, "w":"100%", "h":30, "bc":"#eee" }
+      ]
+    }
+  ]
+}

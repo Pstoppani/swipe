@@ -39,7 +39,7 @@
                       ]
                     },
                     "completion":{
-                      "params":{ "status":"string", "responses":["string"], "sessionid":"number" },
+                      "params":{ "status":{ "type":"string" }, "responses":{ "type":"array", "items":{ "type":"string"} }, "sessionid":{ "type":"integer" } },
                       "actions":[
                         {
                           "append":{
