@@ -286,6 +286,7 @@ An **Element** is a visible entity on a **Page**. It occupies a specified rectan
 - **tiling** (Bool): Specifies the tiling (to be used with *shift* loop animation)
 - **action** (String): Specifies the action (only **play** is supported)
 - **repeat** (Bool): Repeat rule for the element. The default is false.
+- **shadow** (shadow properties): Specifies the shadow properties; *color* (Color, default is black), *offset* ([Float, Float], default is [1,1]), *opacity* (Float, default is 0.5) and *radius* (Float, default is 1.0).
 - **list** (List): List of items (refer to the List section below)
 - **input** (Input): User text input box (refer to the Input section below)
 - **id** (String): Identifier used in Actions to reference the page
@@ -426,6 +427,8 @@ The **Loop Animation** must have a "style" property, and the value of this prope
 - *shift*: The **Element** shift to the specified direction where the "direction" property specifies the direction ("n", "s", "e" or "w", the default is "s"). Use it with the "tiling" property.
 - *path*: The **Element** performs path animation, where the "path" property specifies a collection of **Paths**.
 - *sprite*: The **Element** performs a sprite animation.
+
+The "timing" property of a loop animation specifies the timing of animation with two floating values, start and end (must be between 0.0 and 1.0). The default is [0.0, 1.0].
 
 Following example wiggles the text "I'm wiggling!" three times when the second page appears on the screen.
 
