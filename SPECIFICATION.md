@@ -1,34 +1,34 @@
-#Swipe Language Specification
+# Swipe Language Specification
 
-##Abstract
+## Abstract
 
 This specification defines the features and syntax of Swipe, a mark-up language for non-developers to create media-rich and animated documents for touch-enabled devices.
 
-##Status of this document
+## Status of this document
 
 This specification describes the current snapshot of the Swipe 0.1, which is still under development and may change drastically.
 
-##1. Introduction
+## 1. Introduction
 
-Swipe is a domain-specific, declarative language for non-developers (such as designers, animators, illustrators, musicians, videographers and comic writers) to create media-rich documents (books and presentations) that contains photos, videos, vector graphics, animations, voices, music and sound effects, which will be consumed on touch-enabled devices (such as smartphones, tablets and touch-enabled set-top-boxes). 
+Swipe is a domain-specific, declarative language for non-developers (such as designers, animators, illustrators, musicians, videographers and comic writers) to create media-rich documents (books and presentations) that contains photos, videos, vector graphics, animations, voices, music and sound effects, which will be consumed on touch-enabled devices (such as smartphones, tablets and touch-enabled set-top-boxes).
 
 Since the introduction of iPhone, the capability of those mobile devices advanced significantly with faster CPU/GPU, a large amount memory and various sensors, but taking a full advantage of those capability is not easy.
 
 While the "native programming" (such as in Objective-C, Swift, Java, and etc.) gives the best possible performance and the user experience, the development cost is very expensive, and supporting multiple devices is a nightmare.
 
-Using a "cross-platform development environment", such as Unity, Coco3D, Corona and Flash has some advantages over native programming, but it still requires a "procedural programming", which only skilled developers are able to do. 
+Using a "cross-platform development environment", such as Unity, Coco3D, Corona and Flash has some advantages over native programming, but it still requires a "procedural programming", which only skilled developers are able to do.
 
 Building interactive applications on top of HTML browsers became possible because of HTML5, but it still has many issues. Providing a good user experience is very difficult (this is why Facebook gave up this approach), and the development cost is as expensive as native or cross-platform development, requiring skilled developers.
 
-People often debate over those three approaches, but they often overlook one important disadvantage of those three approaches. All those approaches require "procedural programming", which can be done only by skilled developers and are very expensive, error-prone and time-consuming. 
+People often debate over those three approaches, but they often overlook one important disadvantage of those three approaches. All those approaches require "procedural programming", which can be done only by skilled developers and are very expensive, error-prone and time-consuming.
 
-This disadvantage makes it very difficult for those creative people to make quick prototypes and experimental works, just like an artist makes sketches with pencils and erasers. It is economically impossible for individual creators to create interactive, media-rich books and publish them. 
+This disadvantage makes it very difficult for those creative people to make quick prototypes and experimental works, just like an artist makes sketches with pencils and erasers. It is economically impossible for individual creators to create interactive, media-rich books and publish them.
 
-Swipe was born to fill this gap. It allows non-developers to create interactive and media-rich documents without any help from developers. The declarative nature of Swipe language (and the lack of "procedural programming environment") makes very easy to learn, write and read. It also makes it easy to auto-generate documents (from data) and create authoring environments. 
+Swipe was born to fill this gap. It allows non-developers to create interactive and media-rich documents without any help from developers. The declarative nature of Swipe language (and the lack of "procedural programming environment") makes very easy to learn, write and read. It also makes it easy to auto-generate documents (from data) and create authoring environments.
 
 ### Scope
 
-Swipe was designed for a specific set of applications and contents. 
+Swipe was designed for a specific set of applications and contents.
 
 - Animated Comics
 - Animated Children Books
@@ -39,12 +39,12 @@ Swipe was designed for a specific set of applications and contents.
 - Media-rich Presentations
 - Video Instructions & Tutorials
 
-Swipe is NOT 
+Swipe is NOT
 
 - A replacement of ePub, which is designed for text-centric books and supports flow layout
 - A general-purpose programming environment where programmers write procedural code
 - A game engine
- 
+
 ### Design Principles
 
 - Domain-specific (not general purpose)
@@ -63,9 +63,9 @@ Swipe is NOT
 - **StringId**: Regular string used as an identifier
 - **LangId**: Language identifier, such as "\*", "en", "ja", "de", etc., where "\*" represents the default
 
-##2. Document
+## 2. Document
 
-A **Document** is a UTF8 JSON file, which consists of a collection of **Pages**. The order of **Pages** in the collection is significant, and they will be presented to the user in the specified order. 
+A **Document** is a UTF8 JSON file, which consists of a collection of **Pages**. The order of **Pages** in the collection is significant, and they will be presented to the user in the specified order.
 
 Here is a sample **Document** which consists of two pages:
 
@@ -102,17 +102,17 @@ When the user opens this document with a Swipe viewer, the user will see only th
 - **paths** ({Name:Path}): Named **Paths** dictionary
 - **markdown** ({Name:Style}): Named **Markdown** style
 - **voices** ({Name:VoiceInfo}): Named **Voice** style
-- **pages** ([Page,...]): Collection of **Pages** 
+- **pages** ([Page,...]): Collection of **Pages**
 - **resources** ([String,...]): Resource keys for on-demand resources
-- **viewstate** (Bool): Indicate if we need to save&restore view state. The default is true. 
+- **viewstate** (Bool): Indicate if we need to save&restore view state. The default is true.
 - **languages** ({"id":LangId, "title":String},...): Languages to display via the "Lang." button in the Swipe viewer.
 
 
-##3. Page
+## 3. Page
 
-**Page** consists of a collection of **Elements**. The order of **Elements** in the collection is significant, those elements will be rendered in the specified order (from bottom to top). 
+**Page** consists of a collection of **Elements**. The order of **Elements** in the collection is significant, those elements will be rendered in the specified order (from bottom to top).
 
-Here is a **Document** with a **Page**, which has two **Elements**. 
+Here is a **Document** with a **Page**, which has two **Elements**.
 
 ```
 {
@@ -143,8 +143,15 @@ Here is a **Document** with a **Page**, which has two **Elements**.
 - **elements** ([Element+]): Collection of Elements
 - **eyePosition** (Float): Eye position (z-height) for the perspective relative to width, default is 1.0
 - **strings** ([StringId:[LangId:String]]): String resources
- 
-##4. Paging direction, inter-page transition and animation
+- **id** (String): Identifier used in Actions to reference the page
+- **events** ([Event+]): List of Events
+
+### Page Events
+- **loaded**: The page is loaded into the viewer and ready to display
+- **tapped**: The user singled-tapped on the page
+- **doubleTapped**: The user double-tapped on the page
+
+## 4. Paging direction, inter-page transition and animation
 
 The paging direction is defined by the "paging" property of the **Document**. It must be either *vertical*, *leftToRight* or *rightToLeft*, and the default is *vertical*.
 
@@ -156,7 +163,7 @@ The inter-page transition is defined by the "transition" property of the precedi
 - *fadeIn*: The preceding **Page** will fade-in while the user drags it in.
 - *replace*: The preceding **Page** will replace when the user start dragging.
 
-The "play" property defines the timing of play/animation defined on the **Page**, and it must be either *auto*, *pause*, *always* or *scroll*. If "auto" is specified, the animation will start automatically after the completion of the forward paging action. If "always" is specified, the animation will start after the completion of the backward paging action as well. If *scroll* is specified, the animation will be played while the user is scrolling the page. 
+The "play" property defines the timing of play/animation defined on the **Page**, and it must be either *auto*, *pause*, *always* or *scroll*. If "auto" is specified, the animation will start automatically after the completion of the forward paging action. If "always" is specified, the animation will start after the completion of the backward paging action as well. If *scroll* is specified, the animation will be played while the user is scrolling the page.
 
 ### Values for the "play" property
 
@@ -164,8 +171,9 @@ The "play" property defines the timing of play/animation defined on the **Page**
 - *pause*: The animation on the **Page** will not automatically start
 - *always*: The animation on the **Page** will be played after scrolling to this page
 - *scroll*: The animation on the **Page** will be performed while the user scrolls the page
+- *never*: Page animations are disabled for the **Page**.  Used when a page contains Actions that perform animations
 
-##5. Page Template
+## 5. Page Template
 
 A **PageTemplate** defines a set of properties and **Elements** to be shared among multiple **Pages**. It also defines a background music to be played when one of those **Pages** is active.
 
@@ -230,9 +238,9 @@ The following example uses the "id" to identify a particular **Element** in the 
 ### PageTemplate specific properties
 - bgm (URL): Specifies the background music to play.
 
-##6. Element
+## 6. Element
 
-An **Element** is a visible entity on a **Page**. It occupies a specified rectangle area within a **Page**. An **Element** may contain child **Elements**. 
+An **Element** is a visible entity on a **Page**. It occupies a specified rectangle area within a **Page**. An **Element** may contain child **Elements**.
 
 ### Element properties
 
@@ -250,7 +258,7 @@ An **Element** is a visible entity on a **Page**. It occupies a specified rectan
 - **borderColor** (Color): Color of the border, animatable
 - **cornerRadius** (Float): Size of the corner radius, animatable
 - **opacity** (Float): Opacity of the element, between 0 to 1, animatable
-- **rotate** (Float or Float[3]): Rotation in degree around the anchor point, clockwise, default is 0, animatable. 
+- **rotate** (Float or Float[3]): Rotation in degree around the anchor point, clockwise, default is 0, animatable.
 - **scale** (Float or [Float, Float]): Scaling factor around the anchor point, default is [1, 1], animatable
 - **translate** ([Float, Float]): Translation, default is [0, 0], animatable
 - **text** (String, [langId:String] or ["ref":StringId]): Text to display
@@ -276,8 +284,19 @@ An **Element** is a visible entity on a **Page**. It occupies a specified rectan
 - **to** (Transition Animation): Specifies the Transitional Animation
 - **loop** (Loop Animation): Specifies the Loop Animation
 - **tiling** (Bool): Specifies the tiling (to be used with *shift* loop animation)
-- **action** (String): Specifies the Action
+- **action** (String): Specifies the action (only **play** is supported)
 - **repeat** (Bool): Repeat rule for the element. The default is false.
+- **list** (List): List of items (refer to the List section below)
+- **input** (Input): User text input box (refer to the Input section below)
+- **id** (String): Identifier used in Actions to reference the page
+- **events** ([Event+]): List of Events and their associated Actions
+- **enabled** (Bool): Specifies if events are enabled
+
+### Element Events
+- **tapped**: The user singled-tapped on the element. *Propagated*
+- **doubleTapped**: The user double-tapped on the element. *Propagated*
+
+Unhandled element events are propagated to their parent (containing **element**).  If no **element** in the hierarchy handles the event, then the containing **page** receives the event.
 
 ### Element Template
 
@@ -346,15 +365,15 @@ The following example shows how to use a **ElementTemplate** with child **Elemen
 }
 ```
 
-##7. Transition Animation
+## 7. Transition Animation
 
 The **Transition Animation** specifies a set of animations to play right after or during the page transition (depending on the "transition" property of the page).
 
-The "to" property of each element specifies the animation to be performed on the element, by specifying a new value for animatable properties (such as "opacity", "rotate", "translate", "bc", "path", "pos", "mode"). 
+The "to" property of each element specifies the animation to be performed on the element, by specifying a new value for animatable properties (such as "opacity", "rotate", "translate", "bc", "path", "pos", "mode").
 
 The "timing" property specifies the timing of animation with two floating values, start and end (must be between 0.0 and 1.0). The default is [0.0, 1.0].
 
-Following example animates the text "I'm animatable!" down when the second page appears on the screen. 
+Following example animates the text "I'm animatable!" down when the second page appears on the screen.
 
 ```
 {
@@ -372,9 +391,9 @@ Following example animates the text "I'm animatable!" down when the second page 
     ]
 }
 ```
-If the "play" property of the page is "auto" (which is default) like the sample above, the animation happens after the page scrolling, and the duration of the animation is determined by the "duration" property of the page (the default is 0.2 seconds). 
+If the "play" property of the page is "auto" (which is default) like the sample above, the animation happens after the page scrolling, and the duration of the animation is determined by the "duration" property of the page (the default is 0.2 seconds).
 
-If the "play" property of the page is "scroll" like the example below, the animation takes place while the user swipes the previous page up to see this page, and the "duration" property of the page will be ignored (since the user's swipe action determines the duration). 
+If the "play" property of the page is "scroll" like the example below, the animation takes place while the user swipes the previous page up to see this page, and the "duration" property of the page will be ignored (since the user's swipe action determines the duration).
 
 ```
 {
@@ -394,21 +413,21 @@ If the "play" property of the page is "scroll" like the example below, the anima
 }
 ```
 
-##8. Loop Animation
+## 8. Loop Animation
 
-The "loop" property of the element specifies the **Loop Animation** associated with the element. Unlike **Transition Animation**, it repeats the same animation multiple times specified by the *count* property (the default is 1). 
+The "loop" property of the element specifies the **Loop Animation** associated with the element. Unlike **Transition Animation**, it repeats the same animation multiple times specified by the *count* property (the default is 1).
 
 The **Loop Animation** must have a "style" property, and the value of this property must be one of following.
 
 - *vibrate*: The **Element** vibrates left to right, where the "delta" property specifies the distance (the default is 10)
-- *blink*: The **Element** blinks changing its opacity from 1 to 0. 
+- *blink*: The **Element** blinks changing its opacity from 1 to 0.
 - *wiggle*: The **Element** rotates left and right, where the "delta" property specifies the angle in degree (the default is 15)
-- *spin*: The **Element** spins, where the "clockwise" property (boolean) specifies the direction, the default is true. 
+- *spin*: The **Element** spins, where the "clockwise" property (boolean) specifies the direction, the default is true.
 - *shift*: The **Element** shift to the specified direction where the "direction" property specifies the direction ("n", "s", "e" or "w", the default is "s"). Use it with the "tiling" property.
-- *path*: The **Element** performs path animation, where the "path" property specifies a collection of **Paths**. 
-- *sprite*: The **Element** performs a sprite animation. 
- 
-Following example wiggles the text "I'm wiggling!" three times when the second page appears on the screen. 
+- *path*: The **Element** performs path animation, where the "path" property specifies a collection of **Paths**.
+- *sprite*: The **Element** performs a sprite animation.
+
+Following example wiggles the text "I'm wiggling!" three times when the second page appears on the screen.
 
 ```
 {
@@ -427,7 +446,278 @@ Following example wiggles the text "I'm wiggling!" three times when the second p
 }
 ```
 
-##9. Multilingual Strings
+## 9. Events and Actions
+
+The **events** property and the corresponding **actions** property provide a way to respond to events.  Events can be generated internally by Swipe, such as the completion of an animation or timer, and by the user, such as taps on the screen.  An event contains the actions to be performed when the specified event occurs.
+
+### Syntax
+```
+  "events":{
+    Event:{
+      "actions":[
+        Action, Action, ...
+      ]      
+    },
+    Event:{
+      "params":Schema,
+      "actions":[
+        Action, Action, ...
+      ]      
+    },
+    ...
+  }
+```
+
+**Event** is the String name of the event.  The available events are specified in the sections throughout this document.  Some examples:
+
+- **Page**: "loaded", "tapped", "doubleTapped"
+- **Element**: "tapped", "doubleTapped"
+
+**params** optionally define the JSON schema for data parameters provided by the **Event**.  The **params** can be referenced using **valueOf** (described later in this document).  Currently, **params** are not used to validate the **valueOf**.  A future release will validate.
+
+**actions** specifies a list of actions to perform when the event occurs.  The actions are performed in the order listed.
+
+### Element Actions
+- **update**: Updates **element**'s properties
+
+#### Update Action
+Updates the specified **element**'s properties.  If no **element** is specified, then the enclosing **element**'s properties are updated.
+
+Any **page** that use the **update** action must specify "play":"never" to avoid animation conflicts with **page** animations.
+
+##### Syntax
+```
+  { "update": { "id":String, "search":Search Property:Value, Property:Value, ..., "duration":Float } }
+```
+**id** specifies the target **element** and is optional.  Wen **id** is specified, the **update** is performed on the first **element** in the parent hierarchy with a matching **id** (including the enclosing **element**).  If no **element** is found, the enclosing **page** searches its **elements** for a match.  When **id** is not specified, the **update** is performed on the enclosing **element**.
+
+**search** determines if the search for a matching **element** should be performed up the parent/child hierarchy or from the current element to its child **element**s.  A **search** value of "children" specifies the latter.  When **search** is not specified, then search is down up the parent/child hierarchy.  If no element with the matching **id** is found when search up the parent child hierarchy, the containing page searches its child **elements** for a match.
+
+**duration** specifies the animation duration in seconds.
+
+### Example
+
+The example below updates the **element**'s **text** property to "tapped" when the user taps on the **element**.
+```
+"pages": [
+  {
+    "play":"never", "//":"Required when using 'update' action",
+    "elements": [
+      {
+        "text": "tap me",
+        "pos": ["50%", "33%"],
+        "w":"90%",
+        "h":"10%",
+        "bc":"#fdd",
+        "events": {
+          "tapped": {
+            "actions": [
+              {
+                "update": {"text":"tapped"}
+              },
+            ]
+          }
+        }
+      }
+    ]
+  }
+```
+
+## 10. Accessing Property Values
+
+JSON property values can be referenced using **valueOf**.
+
+### Syntax
+```
+  "valueOf:{"id":ElementId, "property":String}"
+```
+
+**id** optionally specifies the **element**, **params** item, or **list** item to reference.  If **id** is not specified, then the enclosing **element** is referenced.
+
+**property** specifies the name of the property to be referenced.
+
+The type of the result matches the type of the referenced property.
+
+Currently supported **element** Properties:
+- **text**
+- **text.length**
+- **enabled**
+
+Currently supported non-**element**s:
+- **params**
+- **data**
+- **list** **items**
+
+### Examples
+
+The example below displays 2 buttons ("one" and "two") and a text element with **id** of "echo".  When either button is tapped, the action updates "echo"'s **text** property with the button's **text** property using **valueOf**.
+
+```
+{
+  "templates":{
+    "elements": {
+      "button":{
+        "x":"10%", "w":"80%", "h":30, "bc":"#efe",
+        "events":{
+          "tapped":{ "actions":[ { "update":{ "id":"echo", "text":{"valueOf":{ "property":"text"} }}} ]}
+        }
+      }
+    }
+  },
+  "pages":[
+    {
+      "play":"never",
+      "elements":[
+        { "template":"button", "text":"one", "y":50 },
+        { "template":"button", "text":"two", "y":82 },
+        { "id":"echo", "x":"10%", "y":114, "w":"80%", "h":30, "bc":"#eee" }
+      ]
+    }
+  ]
+}
+```
+
+The following sets the **element** property **text** to the value of the corresponding **list** **item**'s **data**.  See the **list** examples later in this document for more context and details.  Using programming language syntax, this is equivalent to:
+- *list[current].element.text = aList[current].data.person.id.first*
+
+```
+{
+	"templates":{
+		"elements":{
+			"item":{	"bc":"#eef", "text":{"valueOf":{"id":"aList", "property":{"items":{"data":{"person":{"id":"first"}}}}}}}
+		}
+	}
+```
+
+## 11. List Element
+
+Displays a scrollable list of items.  The items are composed of **elements** that define the visual layout of each item.  Items also contain **data** which defines String to be displayed.  
+
+### Syntax
+```
+  "elements": [
+    {
+      "list": {
+        "selectedItem":Integer,
+        "scrollEnabled":Boolean,
+        "items": [
+          { "elements":[ Element, ... ], "data":String or JSON },
+          ...
+        ]
+      }
+    }
+  ]
+```
+
+**selectedItem** optionally specifies the initially selected item.  Items are numbering starts with 0 (zero).  The default is 0 (zero), the first item.
+
+**scrollEnabled** optionally specifies whether the list items are scrollable.  Default is *true*.
+
+**items** optionally specifies the initial items to be displayed.  **elements** define the visual layout of the item.  **data** typically is a string to be displayed and is referenced from the **elements** using "valueOf".  **data** can also be JSON and if it contains **elements** and **data** child elements, then the JSON is used to define the item, replacing the item definition.  This is done so that a server response can fully define the item.
+
+### Events
+- **rowSelected**: Notification when the selected item changes
+
+### Actions
+- **append**: appends one or more list items to the **list**
+
+#### Syntax
+
+```
+{
+  "append": {
+    "id":String,
+    "items": [
+      { "elements":[ Element, ... ], "data":String or JSON},
+      ...
+    ]
+}
+```
+
+### Examples
+The example below displays a list and a text element that displays the currently selected list item.  When an item is tapped/selected, the **rowSelected** event occurs and the associated **action** updates the text element.
+
+```
+{
+	"templates":{
+		"elements":{
+			"item":{	"bc":"#eef", "text":{"valueOf":{"id":"aList", "property":{"items":{"data":{"person":{"id":"first"}}}}}}}
+		}
+	},
+	"pages":[
+		{
+			"id": "main",
+			"play":"never",
+			"elements":[
+				{ "h":"8%", "w":"45%", "pos":["25%","95%"], "text":"selected", "textAlign":"right"},
+				{ "id":"echo", "h":"8%", "w":"45%", "pos":["75%","95%"],"text":"2"},
+				{
+					"id": "aList",
+					"h":"80%",
+					"w":"90%",
+					"bc":"#ffe",
+					"pos":["50%","50%"],
+					"list":{
+						"selectedItem":2,
+						"items":[
+							{ "elements":[ {"template":"item" }], "data":{ "person": { "id": { "first":"fred", "last":"flintstone"}}}},
+							{ "elements":[ {"template":"item" }], "data":{ "person": { "id": { "first":"wilma", "last":"flintstone"}}}},
+							{ "elements":[ {"template":"item" }], "data":{ "person": { "id": { "first":"barney", "last":"rubble"}}}},
+							{ "elements":[ {"template":"item" }], "data":{ "person": { "id": { "first":"betty", "last":"rubble"}}}}
+						]
+					},
+					"events":{
+						"rowSelected":{
+							"actions":[
+								{ "update":{ "id":"echo", "text":{"valueOf":{"id":"aList", "property":"selectedItem"}}}}
+							]
+						}
+					}
+				}
+			]
+		}
+	]
+}
+```
+
+## 12. Input Element
+
+### Syntax
+```
+
+```
+
+### Events
+- **tick**:
+
+### Actions
+
+### Example
+
+## 13. Timers
+
+### Syntax
+```
+```
+
+### Events
+- **tick**:
+
+### Example
+
+## 14. HTTP GET and POST
+
+### Syntax
+```
+```
+
+### Events
+- **error**:
+- **completion**:
+
+### Example
+
+## 15. Multilingual Strings
 
 The "strings" property of the page specifies strings in multiple languages.  The format is:
 
@@ -440,17 +730,17 @@ The "strings" property of the page specifies strings in multiple languages.  The
 	"text":{"ref":StringId}
 ```
 
-Following example displays "good day" and "good evening" unless the locale is "de"; then "Guten Tag" and "guten Abend" are displayed. 
+Following example displays "good day" and "good evening" unless the locale is "de"; then "Guten Tag" and "guten Abend" are displayed.
 
 ```
 {
     "pages":[
         {
-            "strings": { 
+            "strings": {
             	"good day": {"*":"good day", "de": "Guten Tag"},
             	"good evening": {"*":"good evening", "de": "guten Abend"},
             },
-            	
+
             "elements":[
                 { "text":{"ref":"good day"}, "h":"20%", "pos":["50%", "12%"]},
                 { "text":{"ref":"good evening"}, "h":"20%", "pos":["50%", "34%"]},
@@ -465,7 +755,7 @@ Alternatively, the "text" element can directly specify the strings for each lang
 	"text":{ LangId:String, ...}
 ```
 
-Following example displays "good morning" and "good afternoon" unless the locale is "de"; then "guten Morgen" and "guten Nachmittag" are displayed. 
+Following example displays "good morning" and "good afternoon" unless the locale is "de"; then "guten Morgen" and "guten Nachmittag" are displayed.
 ```
 {
     "pages":[
@@ -487,7 +777,7 @@ To enable language selection in the Swipe viewer via the "Lang." button, use the
 
 Example:
 ```
-{ 
+{
     "languages":[
         {"id": "en", "title": "English"},
         {"id": "de", "title": "German"},
