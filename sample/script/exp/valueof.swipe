@@ -2,13 +2,9 @@
   "templates":{
     "elements": {
       "button":{
-        "x":0, "w":"100%", "h":30, "bc":"#efe",
+        "x":"10%", "w":"80%", "h":30, "bc":"#efe",
         "events":{
-          "tapped":{
-            "actions":[
-              { "update":{ "id":"echo", "text":{"valueOf":{ "property":"text"} }}}
-            ]
-          }
+          "tapped":{ "actions":[ { "update":{ "id":"echo", "text":{"valueOf":{ "property":"text"} }}} ]}
         }
       }
     }
@@ -19,7 +15,33 @@
       "elements":[
         { "template":"button", "text":"one", "y":50 },
         { "template":"button", "text":"two", "y":82 },
-        { "id":"echo", "x":0, "y":114, "w":"100%", "h":30, "bc":"#eee" }
+        { "id":"echo", "x":"10%", "y":114, "w":"80%", "h":30, "bc":"#eee" }
+      ]
+    },
+    {
+      "play":"never",
+      "elements":[
+        {
+          "text":"one", "x":"5%", "y":50, "w":"90%", "h":30,
+          "events":{
+            "tapped":{
+              "actions":[
+                { "update":{ "id":"echo", "fontName":"Baskerville-Italic", "fontSize":20, "textAlign":"left", "textColor":"green", "text":{"valueOf":{ "property":"text"} }}}
+              ]
+            }
+          }
+        },
+        {
+          "text":"two", "x":"5%", "y":82, "w":"90%", "h":30,
+          "events":{
+            "tapped":{
+              "actions":[
+                { "update":{ "id":"echo", "fontName":"AcademyEngravedLetPlain", "fontSize":30, "textAlign":"right", "textColor":"blue", "text":{"valueOf":{ "property":"text"} }}}
+              ]
+            }
+          }
+         },
+        { "id":"echo", "x":"5%", "y":114, "w":"90%", "h":30 }
       ]
     }
   ]
