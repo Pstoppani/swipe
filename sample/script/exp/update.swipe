@@ -1,6 +1,5 @@
 {
   "pages": [
-    { "elements":[ {"text":"first page"}]},
     {
       "play":"never",
       "elements": [
@@ -22,7 +21,6 @@
           }
         }
       ]
-    },
-    { "elements":[ {"text":"last page", "to":{"opacity":0.5, "textColor":"#f0f"}}]}
+    }
   ]
 }
