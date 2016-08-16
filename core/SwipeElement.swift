@@ -1921,7 +1921,9 @@ class SwipeElement: SwipeView, SwipeViewDelegate {
     
     func update(originator: SwipeNode, info: [String:AnyObject]) {
         for key in info.keys {
-            self.info[key] = info[key]
+            if key != "events" {
+                self.info[key] = info[key]
+            }
         }
         
         dispatch_async(dispatch_get_main_queue(), { () -> Void in
@@ -1932,7 +1934,7 @@ class SwipeElement: SwipeView, SwipeViewDelegate {
                 CATransaction.begin()
                 CATransaction.setDisableActions(true)
                 CATransaction.setCompletionBlock({
-                    if let eventsInfo = self.info["events"] as? [String:AnyObject] {
+                    if let eventsInfo = info["events"] as? [String:AnyObject] {
                         let eventHandler = SwipeEventHandler()
                         eventHandler.parse(eventsInfo)
                         if let actions = eventHandler.actionsFor("completion") {
