@@ -45,6 +45,7 @@ class SwipeBrowser: UIViewController, SwipeDocumentViewerDelegate {
     @IBOutlet var bottombar:UIView?
     @IBOutlet var slider:UISlider!
     @IBOutlet var labelTitle:UILabel?
+    @IBOutlet var btnExport:UIButton?
     private var landscapeMode = false
 #elseif os(tvOS)
     override weak var preferredFocusedView: UIView? { return controller?.view }
@@ -95,6 +96,7 @@ class SwipeBrowser: UIViewController, SwipeDocumentViewerDelegate {
         }
         
 #if os(iOS)
+        btnExport?.enabled = false
         slider.hidden = true
 #endif
 
@@ -153,6 +155,9 @@ class SwipeBrowser: UIViewController, SwipeDocumentViewerDelegate {
 #endif
         var rcFrame = self.view.bounds
 #if os(iOS)
+        if let _ = controller as? SwipeViewController {
+            btnExport?.enabled = true
+        }
         if documentViewer.hideUI() {
             let tap = UITapGestureRecognizer(target: self, action: #selector(SwipeBrowser.tapped))
             self.view.addGestureRecognizer(tap)
@@ -441,6 +446,7 @@ class SwipeBrowser: UIViewController, SwipeDocumentViewerDelegate {
         }
     }
 
+#if os(iOS)
     @IBAction func export() {
         guard let swipeVC = controller as? SwipeViewController else {
             return
@@ -448,15 +454,27 @@ class SwipeBrowser: UIViewController, SwipeDocumentViewerDelegate {
         let docURL = try! NSFileManager.defaultManager().URLForDirectory(.DocumentDirectory, inDomain: .UserDomainMask, appropriateForURL: nil, create: true)
         let fileURL = docURL.URLByAppendingPathComponent("ani.gif")
         
+        self.viewLoading?.alpha = 1.0
+        self.labelLoading?.text = "Exporting as a GIF animation...".localized
         let exporter = SwipeExporter(swipeViewController: swipeVC, fps:4)
         exporter.exportAsGifAnimation(fileURL, startPage: swipeVC.book.pageIndex, pageCount: 3) { (complete, error) -> Void in
+            self.progress?.progress = Float(exporter.progress)
             if complete {
                 print("GIF animation export done")
+                UIView.animateWithDuration(0.2, animations: { () -> Void in
+                    self.viewLoading?.alpha = 0.0
+                }, completion: { (_:Bool) -> Void in
+                    let activity = UIActivityViewController(activityItems: [fileURL], applicationActivities: nil)
+                    activity.popoverPresentationController?.sourceView = self.btnExport
+                    self.presentViewController(activity, animated: true, completion: nil)
+                })
             } else if let error = error {
+                self.viewLoading?.alpha = 0.0
                 print("Error", error)
             } else {
                 print("progress", exporter.progress)
             }
         }
     }
+#endif
 }
