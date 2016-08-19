@@ -8,16 +8,10 @@ import Foundation
 
 class SwipeNode: NSObject {
     var children = [SwipeNode]()
-    weak var parent:SwipeNode?
+    private(set) weak var parent:SwipeNode?
     let eventHandler = SwipeEventHandler()
-    var session: NSURLSession?
 
-    override init() {
-        self.parent = nil
-        super.init()
-    }
-    
-    init(parent: SwipeNode) {
+    init(parent: SwipeNode? = nil) {
         self.parent = parent
         super.init()
     }
@@ -49,7 +43,7 @@ class SwipeNode: NSObject {
     }
     
     func executeAction(originator: SwipeNode, action: SwipeAction) {
-        if let getInfo = action.info["fetch"] as? [String:AnyObject] {
+        if let getInfo = action.info["get"] as? [String:AnyObject] {
             SwipeHttpGet.create(self, getInfo: getInfo)
         } else if let postInfo = action.info["post"] as? [String:AnyObject] {
             SwipeHttpPost.create(self, postInfo: postInfo)

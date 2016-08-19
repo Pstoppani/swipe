@@ -751,7 +751,6 @@ class SwipeElement: SwipeView, SwipeViewDelegate {
                 ani.fromValue = layer.opacity
                 ani.toValue = opacity
                 ani.fillMode = kCAFillModeBoth
-                ani.removedOnCompletion = true
                 ani.beginTime = start
                 ani.duration = duration
                 layer.addAnimation(ani, forKey: "opacity")
@@ -1502,7 +1501,7 @@ class SwipeElement: SwipeView, SwipeViewDelegate {
         return nil
     }
     
-    func setupAnimations(layer: CALayer, info: [String:AnyObject]) {
+    func setupAnimations(layer: CALayer, originator: SwipeNode, info: [String:AnyObject]) {
         let dimension = self.screenDimension
         let baseURL = self.delegate.baseURL()
         var x = layer.frame.origin.x
@@ -1671,24 +1670,30 @@ class SwipeElement: SwipeView, SwipeViewDelegate {
             }
         }
         
-        if let srcs = info["img"] as? [String] {
-            var images = [CGImage]()
-            for src in srcs {
-                if let url = NSURL.url(src, baseURL: baseURL),
-                    urlLocal = self.delegate.map(url),
-                    image = CGImageSourceCreateWithURL(urlLocal, nil) {
-                    if CGImageSourceGetCount(image) > 0 {
-                        images.append(CGImageSourceCreateImageAtIndex(image, 0, nil)!)
+        if info["img"] != nil && self.imageLayer != nil {
+            var urls = [NSURL:String]()
+            var urlStr: String?
+            
+            if let str = info["img"] as? String {
+                urlStr = str
+            } else if let valInfo = info["img"] as? [String:AnyObject],
+                valOfInfo = valInfo["valueOf"] as? [String:AnyObject],
+                str = originator.getValue(originator, info:valOfInfo) as? String {
+                urlStr = str
+            }
+            if urlStr != nil {
+                if let url = NSURL.url(urlStr!, baseURL: baseURL) {
+                    urls[url] = "img"
+            
+                    self.delegate.addedResourceURLs(urls) {
+                        if let urlLocal = self.delegate.map(urls.first!.0),
+                            image = CGImageSourceCreateWithURL(urlLocal, nil) {
+                            if CGImageSourceGetCount(image) > 0 {
+                                self.imageLayer!.contents = CGImageSourceCreateImageAtIndex(image, 0, nil)!
+                            }
+                        }
                     }
                 }
-            }
-            if let imageLayer = self.imageLayer {
-                let ani = CAKeyframeAnimation(keyPath: "contents")
-                ani.values = images
-                ani.beginTime = start
-                ani.duration = duration
-                ani.fillMode = kCAFillModeBoth
-                imageLayer.addAnimation(ani, forKey: "contents")
             }
         }
         
@@ -1769,156 +1774,8 @@ class SwipeElement: SwipeView, SwipeViewDelegate {
                 shapeLayer.addAnimation(ani, forKey: "strokeEnd")
             }
         }
-    
-        if let animation = info["loop"] as? [String:AnyObject],
-            let style = animation["style"] as? String {
-            //
-            // Note: Use the inner layer (either image or shape) for the loop animation
-            // to avoid any conflict with other transformation if it is available.
-            // In this case, the loop animation does not effect child elements (because
-            // we use UIView hierarchy instead of CALayer hierarchy.
-            //
-            // It means the loop animation on non-image/non-shape element does not work well
-            // with other transformation.
-            //
-            var loopLayer = layer
-            if let l = self.imageLayer {
-                loopLayer = l
-            } else if let l = self.shapeLayer {
-                loopLayer = l
-            }
-            
-            let start, duration:Double
-            if let timing = animation["timing"] as? [Double]
-                where timing.count == 2 && timing[0] >= 0 && timing[0] <= timing[1] && timing[1] <= 1 {
-                start = timing[0] == 0 ? 1e-10 : timing[0]
-                duration = timing[1] - start
-            } else {
-                start = 1e-10
-                duration = 1.0
-            }
-            let repeatCount = Float(self.valueFrom(animation, key: "count", defaultValue: 1))
-            
-            switch(style) {
-            case "vibrate":
-                let delta = self.valueFrom(animation, key: "delta", defaultValue: 10.0)
-                let ani = CAKeyframeAnimation(keyPath: "transform")
-                ani.values = [NSValue(CATransform3D:loopLayer.transform),
-                              NSValue(CATransform3D:CATransform3DConcat(CATransform3DMakeTranslation(delta, 0.0, 0.0), loopLayer.transform)),
-                              NSValue(CATransform3D:loopLayer.transform),
-                              NSValue(CATransform3D:CATransform3DConcat(CATransform3DMakeTranslation(-delta, 0.0, 0.0), loopLayer.transform)),
-                              NSValue(CATransform3D:loopLayer.transform)]
-                ani.repeatCount = repeatCount
-                ani.beginTime = start
-                ani.duration = CFTimeInterval(duration / Double(ani.repeatCount))
-                ani.fillMode = kCAFillModeBoth
-                loopLayer.addAnimation(ani, forKey: "transform")
-            case "shift":
-                var innerLayer:CALayer? // TBD ???
-                let shiftLayer = (innerLayer == nil) ? layer : innerLayer!
-                let ani = CAKeyframeAnimation(keyPath: "transform")
-                let shift:CGSize = {
-                    if let dir = animation["direction"] as? String {
-                        switch(dir) {
-                        case "n":
-                            return CGSizeMake(0, -h)
-                        case "e":
-                            return CGSizeMake(w, 0)
-                        case "w":
-                            return CGSizeMake(-w, 0)
-                        default:
-                            return CGSizeMake(0, h)
-                        }
-                    } else {
-                        return CGSizeMake(0, h)
-                    }
-                }()
-                ani.values = [NSValue(CATransform3D:shiftLayer.transform),
-                              NSValue(CATransform3D:CATransform3DConcat(CATransform3DMakeTranslation(shift.width, shift.height, 0.0), shiftLayer.transform))]
-                ani.repeatCount = repeatCount
-                ani.beginTime = start
-                ani.duration = CFTimeInterval(duration / Double(ani.repeatCount))
-                ani.fillMode = kCAFillModeBoth
-                shiftLayer.addAnimation(ani, forKey: "transform")
-            case "blink":
-                let ani = CAKeyframeAnimation(keyPath: "opacity")
-                ani.values = [1.0, 0.0, 1.0]
-                ani.repeatCount = repeatCount
-                ani.beginTime = start
-                ani.duration = CFTimeInterval(duration / Double(ani.repeatCount))
-                ani.fillMode = kCAFillModeBoth
-                loopLayer.addAnimation(ani, forKey: "opacity")
-            case "spin":
-                let fClockwise = self.booleanValueFrom(animation, key: "clockwise", defaultValue: true)
-                let degree = (fClockwise ? 120 : -120) * CGFloat(M_PI / 180.0)
-                let ani = CAKeyframeAnimation(keyPath: "transform")
-                ani.values = [NSValue(CATransform3D:loopLayer.transform),
-                              NSValue(CATransform3D:CATransform3DConcat(CATransform3DMakeRotation(degree, 0.0, 0.0, 1.0), loopLayer.transform)),
-                              NSValue(CATransform3D:CATransform3DConcat(CATransform3DMakeRotation(degree * 2, 0.0, 0.0, 1.0), loopLayer.transform)),
-                              NSValue(CATransform3D:CATransform3DConcat(CATransform3DMakeRotation(degree * 3, 0.0, 0.0, 1.0), loopLayer.transform))]
-                ani.repeatCount = repeatCount
-                ani.beginTime = start
-                ani.duration = CFTimeInterval(duration / Double(ani.repeatCount))
-                ani.fillMode = kCAFillModeBoth
-                loopLayer.addAnimation(ani, forKey: "transform")
-            case "wiggle":
-                let delta = self.valueFrom(animation, key: "delta", defaultValue: 15) * CGFloat(M_PI / 180.0)
-                let ani = CAKeyframeAnimation(keyPath: "transform")
-                ani.values = [NSValue(CATransform3D:loopLayer.transform),
-                              NSValue(CATransform3D:CATransform3DConcat(CATransform3DMakeRotation(delta, 0.0, 0.0, 1.0), loopLayer.transform)),
-                              NSValue(CATransform3D:loopLayer.transform),
-                              NSValue(CATransform3D:CATransform3DConcat(CATransform3DMakeRotation(-delta, 0.0, 0.0, 1.0), loopLayer.transform)),
-                              NSValue(CATransform3D:loopLayer.transform)]
-                ani.repeatCount = repeatCount
-                ani.beginTime = start
-                ani.duration = CFTimeInterval(duration / Double(ani.repeatCount))
-                ani.fillMode = kCAFillModeBoth
-                loopLayer.addAnimation(ani, forKey: "transform")
-            case "path":
-                if let shapeLayer = self.shapeLayer {
-                    var values = [shapeLayer.path!]
-                    if let params = animation["path"] as? [AnyObject] {
-                        for param in params {
-                            if let path = self.parsePath(param, w: w0, h: h0, scale:self.scale) {
-                                values.append(path)
-                            }
-                        }
-                    } else if let path = self.parsePath(animation["path"], w: w0, h: h0, scale:self.scale) {
-                        values.append(path)
-                    }
-                    if values.count >= 2 {
-                        values.append(shapeLayer.path!)
-                        let ani = CAKeyframeAnimation(keyPath: "path")
-                        ani.values = values
-                        ani.repeatCount = repeatCount
-                        ani.beginTime = start
-                        ani.duration = CFTimeInterval(duration / Double(ani.repeatCount))
-                        ani.fillMode = kCAFillModeBoth
-                        shapeLayer.addAnimation(ani, forKey: "path")
-                    }
-                }
-            case "sprite":
-                if let targetLayer = self.spriteLayer {
-                    let ani = CAKeyframeAnimation(keyPath: "contentsRect")
-                    let rc0 = CGRectMake(0, self.slot.y/self.slice.height, 1.0/self.slice.width, 1.0/self.slice.height)
-                    ani.values = Array(0..<Int(self.slice.width)).map() { (index:Int) -> NSValue in
-                        NSValue(CGRect: CGRect(origin: CGPointMake(CGFloat(index) / self.slice.width, rc0.origin.y), size: rc0.size))
-                    }
-                    ani.repeatCount = repeatCount
-                    ani.beginTime = start
-                    ani.duration = CFTimeInterval(duration / Double(ani.repeatCount))
-                    ani.fillMode = kCAFillModeBoth
-                    ani.calculationMode = kCAAnimationDiscrete
-                    targetLayer.addAnimation(ani, forKey: "contentsRect")
-                }
-                //self.dir = (1,0)
-            //self.repeatCount = CGFloat(repeatCount)
-            default:
-                break
-            }
-        }
     }
-    
+            
     func update(originator: SwipeNode, info: [String:AnyObject]) {
         for key in info.keys {
             if key != "events" {
@@ -1960,7 +1817,7 @@ class SwipeElement: SwipeView, SwipeViewDelegate {
                     SwipeElement.updateTextLayer(self.textLayer!, text: text, scale: self.scale, info: self.info, dimension: self.screenDimension, layer: self.layer!)
                 }
                 
-                self.setupAnimations(self.layer!, info: self.info)
+                self.setupAnimations(self.layer!, originator: originator, info: self.info)
                 CATransaction.commit()
                 
                 }, completion: { (done: Bool) in

@@ -16,11 +16,6 @@ class SwipeTimer : SwipeNode {
         timers.append(timer)
     }
     
-    override init() {
-        super.init()
-        self.parent = nil
-    }
-    
     init(parent: SwipeNode, timerInfo: [String:AnyObject]) {
         super.init(parent: parent)
         var duration = 0.2

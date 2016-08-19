@@ -17,11 +17,6 @@ class SwipeHttpPost : SwipeNode {
         posters.append(poster)
     }
     
-    override init() {
-        super.init()
-        self.parent = nil
-    }
-    
     init(parent: SwipeNode, postInfo: [String:AnyObject]) {
         super.init(parent: parent)
         

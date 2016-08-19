@@ -288,7 +288,7 @@ An **Element** is a visible entity on a **Page**. It occupies a specified rectan
 - **repeat** (Bool): Repeat rule for the element. The default is false.
 - **shadow** (shadow properties): Specifies the shadow properties; *color* (Color, default is black), *offset* ([Float, Float], default is [1,1]), *opacity* (Float, default is 0.5) and *radius* (Float, default is 1.0).
 - **list** (List): List of items (refer to the List section below)
-- **input** (Input): User text input box (refer to the Input section below)
+- **textArea** (TextInput): Multiline text input box (refer to the TextArea section below)
 - **id** (String): Identifier used in Actions to reference the page
 - **events** ([Event+]): List of Events and their associated Actions
 - **enabled** (Bool): Specifies if events are enabled
@@ -683,7 +683,7 @@ The example below displays a list and a text element that displays the currently
 }
 ```
 
-## 12. Input Element
+## 12. TextArea Element
 
 ### Syntax
 ```

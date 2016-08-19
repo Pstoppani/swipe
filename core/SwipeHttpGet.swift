@@ -17,11 +17,6 @@ class SwipeHttpGet : SwipeNode {
         getters.append(geter)
     }
     
-    override init() {
-        super.init()
-        self.parent = nil
-    }
-    
     init(parent: SwipeNode, getInfo: [String:AnyObject]) {
         super.init(parent: parent)
 

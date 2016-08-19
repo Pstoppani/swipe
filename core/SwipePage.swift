@@ -113,9 +113,10 @@ class SwipePage: SwipeView, SwipeElementDelegate {
     }
 
     func unloadView() {
+#if !os(tvOS)
         NSNotificationCenter.defaultCenter().removeObserver(self, name: UIKeyboardWillShowNotification, object: nil)
         NSNotificationCenter.defaultCenter().removeObserver(self, name: UIKeyboardWillHideNotification, object: nil)
-        
+#endif
         if let view = self.view {
             MyLog("SWPage  unloading @\(index)", level: 2)
             view.removeFromSuperview()
@@ -493,9 +494,10 @@ class SwipePage: SwipeView, SwipeElementDelegate {
         }
         
         setupGestureRecognizers()
+#if !os(tvOS)
         NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(SwipePage.keyboardWillShow(_:)), name: UIKeyboardWillShowNotification, object: nil)
         NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(SwipePage.keyboardWillHide(_:)), name: UIKeyboardWillHideNotification, object: nil)
-
+#endif
         if let actions = eventHandler.actionsFor("load") {
             execute(self, actions: actions)
         }
@@ -503,6 +505,7 @@ class SwipePage: SwipeView, SwipeElementDelegate {
         return view
     }
     
+#if !os(tvOS)
     func keyboardWillShow(notification: NSNotification) {
         if let info:NSDictionary = notification.userInfo {
             if let kbFrame = (info[UIKeyboardFrameBeginUserInfoKey] as? NSValue)?.CGRectValue() {
@@ -529,6 +532,7 @@ class SwipePage: SwipeView, SwipeElementDelegate {
             }
         }
     }
+#endif
     
     private func loadSubviews() {
         let scale = delegate.scale(self)

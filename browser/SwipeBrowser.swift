@@ -326,6 +326,9 @@ class SwipeBrowser: UIViewController, SwipeDocumentViewerDelegate {
     @IBAction func slided(sender:UISlider) {
         MyLog("SWBrows \(slider.value)")
     }
+#else
+    func tapped() {
+    }
 #endif
 
     private func processError(message:String) {
@@ -435,6 +438,25 @@ class SwipeBrowser: UIViewController, SwipeDocumentViewerDelegate {
                 }))
             }
             self.presentViewController(alert, animated: true, completion: nil)
+        }
+    }
+
+    @IBAction func export() {
+        guard let swipeVC = controller as? SwipeViewController else {
+            return
+        }
+        let docURL = try! NSFileManager.defaultManager().URLForDirectory(.DocumentDirectory, inDomain: .UserDomainMask, appropriateForURL: nil, create: true)
+        let fileURL = docURL.URLByAppendingPathComponent("ani.gif")
+        
+        let exporter = SwipeExporter(swipeViewController: swipeVC, fps:4)
+        exporter.exportAsGifAnimation(fileURL, startPage: swipeVC.book.pageIndex, pageCount: 3) { (complete, error) -> Void in
+            if complete {
+                print("GIF animation export done")
+            } else if let error = error {
+                print("Error", error)
+            } else {
+                print("progress", exporter.progress)
+            }
         }
     }
 }
