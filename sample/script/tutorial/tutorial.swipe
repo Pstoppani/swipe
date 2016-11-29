@@ -46,9 +46,6 @@
             "```": { "font":{ "size":24, "name":"Damascus" } },
         }
     },
-    "styles":{
-        "*":"body{ font-family:Helvetica, sans-serif;margin:0;font-size:36px } h1{ color:#000080;font-size:50px } h2{ color:#000080;font-size:44px } h3 { color:#004000 } li { margin-top:12px } .code { color:#000080;font-size:24px;font-weight:200;font-family:Damascus }",
-    },
 
     "pages":[
         {
@@ -254,7 +251,7 @@
                     "      \"duration\":1.0,",
                     "      \"elements\": [",
                     "        { \"img\":\"shuttle.png\",",
-                    "          \"to\":{\"pos\":",
+                    "          \"to\":{ \"mode\":\"auto\", \"pos\":",
                     "            \"M 0,0 C 500,0 0,800 500,500\"}},",
                     "      ]",
                     "    },",
@@ -265,7 +262,7 @@
                 { "template":"demo",
                     "elements": [
                         { "img":"shuttle.png", "x":0, "y":50,
-                          "to": { "pos":"M 0,0 C 500,0 0,800 500,500" } },
+                          "to": { "mode":"auto", "pos":"M 0,0 C 500,0 0,800 500,500" } },
                     ]
                 }
             ]
@@ -284,7 +281,7 @@
                     "      \"audio\":\"sound01.wav\",",
                     "      \"elements\": [",
                     "        { \"img\":\"shuttle.png\",",
-                    "          \"to\":{\"pos\":",
+                    "          \"to\":{ \"mode\":\"auto\", \"pos\":",
                     "            \"M 0,0 C 500,0 0,800 500,500\"}},",
                     "      ]",
                     "    },",
@@ -295,7 +292,7 @@
                 { "template":"demo",
                     "elements": [
                         { "img":"shuttle.png", "x":0, "y":50,
-                          "to": { "pos":"M 0,0 C 500,0 0,800 500,500" } },
+                          "to": { "mode":"auto", "pos":"M 0,0 C 500,0 0,800 500,500" } },
                     ]
                 }
             ]
@@ -314,7 +311,7 @@
                     "        { \"w\":192,\"h\":288,",
                     "          \"sprite\":\"chara_walk.png\",",
                     "          \"slice\":[14,4], \"slot\":[0,2],",
-                    "          \"loop\":{ \"style\":\"sprite\", \"repeat\":3 },",
+                    "          \"loop\":{ \"style\":\"sprite\", \"count\":3 },",
                     "          \"to\":{\"translate\":[440,0]} },",
                     "      ]",
                     "    },",
@@ -327,7 +324,7 @@
                         { "x":0, "y":"center", "w":192, "h":288,
                           "sprite":"chara_walk.png",
                           "slice":[14, 4], "slot":[0,2],
-                          "loop":{ "style":"sprite", "repeat":3 },
+                          "loop":{ "style":"sprite", "count":3 },
                           "to":{ "translate":[440,0] } },
                     ]
                 }
@@ -404,7 +401,7 @@
                     "      \"play\":\"scroll\",",
                     "      \"elements\": [",
                     "        { \"img\":\"shuttle.png\",",
-                    "          \"to\":{\"pos\":",
+                    "          \"to\":{ \"mode\":\"auto\", \"pos\":",
                     "            \"M 0,0 C 500,0 0,800 500,500\"}},",
                     "      ]",
                     "    },",
@@ -431,7 +428,7 @@
                     "      \"play\":\"scroll\",",
                     "      \"elements\": [",
                     "        { \"img\":\"shuttle.png\",",
-                    "          \"to\":{\"pos\":",
+                    "          \"to\":{ \"mode\":\"auto\", \"pos\":",
                     "            \"M 0,0 C 500,0 0,800 500,500\"}},",
                     "      ]",
                     "    },",
@@ -442,7 +439,7 @@
                 { "template":"demo",
                     "elements": [
                         { "img":"shuttle.png", "x":0, "y":50,
-                            "to": { "pos":"M 0,0 C 500,0 0,800 500,500" } },
+                            "to": { "mode":"auto", "pos":"M 0,0 C 500,0 0,800 500,500" } },
                     ]
                 }
             ]
@@ -525,7 +522,7 @@
                     "      \"elements\": [",
                     "        { \"w\":192,\"h\":288,\"sprite\":\"chara_walk.png\",",
                     "          \"slice\":[14,4], \"slot\":[0,2],",
-                    "          \"loop\":{ \"style\":\"sprite\", \"repeat\":3 },",
+                    "          \"loop\":{ \"style\":\"sprite\", \"count\":3 },",
                     "          \"to\":{\"translate\":[440,0]} },",
                     "      ]",
                     "    },",
@@ -554,7 +551,7 @@
                     "      \"elements\": [",
                     "        { \"w\":192,\"h\":288,\"sprite\":\"chara_walk.png\",",
                     "          \"slice\":[14,4], \"slot\":[0,2],",
-                    "          \"loop\":{ \"style\":\"sprite\", \"repeat\":3 },",
+                    "          \"loop\":{ \"style\":\"sprite\", \"count\":3 },",
                     "          \"to\":{\"translate\":[440,0]} },",
                     "      ]",
                     "    },",
@@ -566,7 +563,7 @@
                     "elements": [
                         { "x":0, "y":"center", "w":192, "h":288, "sprite":"chara_walk.png",
                           "slice":[14, 4], "slot":[0,2],
-                           "loop":{ "style":"sprite", "repeat":3 },
+                           "loop":{ "style":"sprite", "count":3 },
                             "to":{ "translate":[440,0] } },
                     ]
                 }

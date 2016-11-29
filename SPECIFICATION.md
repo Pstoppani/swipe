@@ -92,7 +92,7 @@ When the user opens this document with a Swipe viewer, the user will see only th
 - **type** (String): This must be "net.swipe.swipe" for a Swipe document
 - **version** (String): Version of the Swipe language specification used in the document
 - **title** (String): Title of the document, optional
-- **bc** (Color): Background color, default is *darkGray*
+- **bc** (Color): Background color, default is *Black*
 - **dimension** ([Int, Int]): Dimension of the document, default is [320, 568]
 - **paging** (String): Paging direction, *vertical* (default), or *leftToRight*
 - **orientation** (String): Document orientation, *portrait* (default) or *landscape*
@@ -120,9 +120,9 @@ Here is a **Document** with a **Page**, which has two **Elements**.
         {
             "elements": [
                 { "x":50, "y":100, "w":100, "h":100, "bc":"red" },
-                { "x":100, "y":150, "w":100, "h":100, "bc":"blue" },
+                { "x":100, "y":150, "w":100, "h":100, "bc":"blue" }
             ]
-        },
+        }
     ]
 }
 ```
@@ -130,7 +130,7 @@ Here is a **Document** with a **Page**, which has two **Elements**.
 ### Page Properties
 
 - **bc** (Color): Background color, the default is *white*
-- **fpt** (Int): Frame per second, the default is 60
+- **fps** (Int): Frame per second, the default is 60
 - **transition** (String): Inter-page transition style, *scroll* (default), *fadeIn* or *replace*
 - **play** (String): Play(animation) control, *auto* (default), *pause*, *always* or *scroll*
 - **duration** (Float): Duration of the animation in seconds, the default is 0.2 seconds
@@ -188,7 +188,7 @@ Here is a **Document** with two **Pages**, where the first **Page** is associate
     "templates": {
         "pages": {
             "*": { "bc":"blue" },
-            "alternative": { "bc":"green" },
+            "alternative": { "bc":"green" }
         }
     },
     "pages": [
@@ -215,7 +215,7 @@ The following example uses the "id" to identify a particular **Element** in the 
         "pages": {
             "*": {
                 "elements": [
-                    { "id":"hello", "text":"Hello World" },
+                    { "id":"hello", "text":"Hello World" }
                 ]
             }
         }
@@ -230,7 +230,7 @@ The following example uses the "id" to identify a particular **Element** in the 
             "elements": [
                 { "id":"hello", "textColor":"green" }
             ]
-        },
+        }
     ]
 }
 ```
@@ -245,6 +245,7 @@ An **Element** is a visible entity on a **Page**. It occupies a specified rectan
 ### Element properties
 
 - **id** (String): the element identifier in the associated **ElementTemplate** at the same nesting level
+- **visible** (Bool): the visibility of the element, default is true, not animatable.
 - **template** (String): the name of the **ElementTemplate** to inherit properties from
 - **x** (Float or Percent): x-position of the left-top corner of element, default is 0
 - **y** (Float or Percent): y-position of the left-top corner of the element, default is 0
@@ -262,7 +263,7 @@ An **Element** is a visible entity on a **Page**. It occupies a specified rectan
 - **scale** (Float or [Float, Float]): Scaling factor around the anchor point, default is [1, 1], animatable
 - **translate** ([Float, Float]): Translation, default is [0, 0], animatable
 - **text** (String, [langId:String] or ["ref":StringId]): Text to display
-  - **textAlign** (String): Text alignment, *center* (default), *left* or *right*
+  - **textAlign** (String or [String]): Text alignment, *center* (default), *left*, *right*, *top*, *bottom*, or *justified*
   - **fontSize** (Float or Percent): Font size
   - **fontName** (String or [String]): Font name or names (the first name existing in the system is used)
   - **textColor** (Color): Color of the text, animatable
@@ -293,10 +294,20 @@ An **Element** is a visible entity on a **Page**. It occupies a specified rectan
 - **enabled** (Bool): Specifies if events are enabled
 - **list** (List): List of items (refer to the List section below)
 - **textArea** (TextInput): Multiline text input box (refer to the TextArea section below)
+- **data** (String or JSON): Application-defined data associated with the element.  May be referenced using **valueOf**
+- **focusable** (Bool): For non-touch devices, such as a TV, this property specifies that the device can move focus to the element when set to *true*.  Otherwise, the focusing mechanism will ignore the element.  An element must be in focus to receive user input and fire the corresponding events.
 
 ### Element Events
 - **tapped**: The user singled-tapped on the element. *Propagated*
 - **doubleTapped**: The user double-tapped on the element. *Propagated*
+- **gainedFocus**: The user moved focus to the element.
+- **lostFocus**: The user moved focus away from the element.  
+- **enabled**: Element **enabled** property set to **true**
+- **disnabled**: Element **enabled** property set to **false**
+- **focusable**: Element **focusable** property set to **true**
+- **unfocusable**: Element **focusable** property set to **false**
+
+**lostFocus** is always received before **gainedFocus**.
 
 Unhandled element events are propagated to their parent (containing **element**).  If no **element** in the hierarchy handles the event, then the containing **page** receives the event.
 
@@ -313,7 +324,7 @@ The sample below uses a **ElementTemplate**, "smile" as a template for five diff
             "smile": {
                 "lineWidth":3,
                 "path":"M0,0 C10,50 90,50 100,0",
-                "strokeColor":"red",
+                "strokeColor":"red"
             }
         }
     },
@@ -324,9 +335,9 @@ The sample below uses a **ElementTemplate**, "smile" as a template for five diff
                 { "template":"smile", "pos":["50%", 200], "rotate":30 },
                 { "template":"smile", "pos":["50%", 300], "lineWidth":10 },
                 { "template":"smile", "pos":["50%", 400], "strokeColor":"#37F" },
-                { "template":"smile", "pos":["50%", 500], "scale":[2,1] },
-            ],
-        },
+                { "template":"smile", "pos":["50%", 500], "scale":[2,1] }
+            ]
+        }
     ]
 }
 ```
@@ -343,9 +354,9 @@ The following example shows how to use a **ElementTemplate** with child **Elemen
                 "w":160, "h":100,
                 "elements":[
                     { "id":"hello", "text":"Hello", "textAlign":"left" },
-                    { "id":"world", "text":"World", "textAlign":"left", "x":80 },
-                ],
-            },
+                    { "id":"world", "text":"World", "textAlign":"left", "x":80 }
+                ]
+            }
         }
     },
     "pages": [
@@ -354,15 +365,15 @@ The following example shows how to use a **ElementTemplate** with child **Elemen
                 { "template":"helloWorld", "pos":[160, 100] },
                 { "template":"helloWorld", "pos":[160, 200],
                   "elements":[
-                    { "id":"hello", "textColor":"red", },
-                    { "id":"world", "textColor":"blue", },
+                    { "id":"hello", "textColor":"red" },
+                    { "id":"world", "textColor":"blue" }
                   ]},
                 { "template":"helloWorld", "pos":[160, 300],
                   "elements":[
-                    { "id":"world", "text":"Swipe!" },
-                  ]},
-            ],
-        },
+                    { "id":"world", "text":"Swipe!" }
+                  ]}
+            ]
+        }
     ]
 }
 ```
@@ -371,7 +382,9 @@ The following example shows how to use a **ElementTemplate** with child **Elemen
 
 The **Transition Animation** specifies a set of animations to play right after or during the page transition (depending on the "transition" property of the page).
 
-The "to" property of each element specifies the animation to be performed on the element, by specifying a new value for animatable properties (such as "opacity", "rotate", "translate", "bc", "path", "pos", "mode"). 
+The "to" property of each element specifies the animation to be performed on the element, by specifying a new value for animatable properties, such as "opacity", "rotate", "translate", "bc", "path", "pos" (the value should be a SVG style path, and the "translate" will be ignored), "mode". 
+
+The "mode" property can be "auto", "reverse" or empty. "mode" applies only when "pos" specifies an animation path.  When "auto" is specified, the element's rotation matches the angle along the path.  When "reverse" is specified, the element's rotation is the reverse (rotated 180 degrees) of the angle along the path.  When "mode" is not specified or is empty, the element's rotation is not affected by the path.
 
 The "timing" property specifies the timing of animation with two floating values, start and end (must be between 0.0 and 1.0). The default is [0.0, 1.0].
 
@@ -469,6 +482,10 @@ Currently supported **element** Properties:
 - **text**
 - **text.length**
 - **enabled**
+- **data**
+- **x**, **y**, **w**, **h**
+- **screenX**: The screen-relative **x**
+- **screenY**: The screen-relative **y**
 
 Currently supported non-**element**s:
 - **params**
@@ -558,31 +575,120 @@ If **events** is specified, the event **completion** occurs after the update has
 
 The example below updates the **element**'s **text** property to "tapped" when the user taps on the **element**.
 ```
-"pages": [
-  {
-    "play":"never", "//":"Required when using 'update' action",
-    "elements": [
+{
+    "pages": [
       {
-        "text": "tap me",
-        "pos": ["50%", "33%"],
-        "w":"90%",
-        "h":"10%",
-        "bc":"#fdd",
-        "events": {
-          "tapped": {
-            "actions": [
-              {
-                "update": {"text":"tapped"}
-              },
+        "play":"never", "//":"Required when using 'update' action",
+        "elements": [
+          {
+            "text": "tap me",
+            "pos": ["50%", "33%"],
+            "w":"90%",
+            "h":"10%",
+            "bc":"#fdd",
+            "events": {
+              "tapped": {
+                "actions": [
+                  {
+                    "update": {"text":"tapped"}
+                  }
+                ]
+              }
+            }
+          }
+        ]
+      }
+    ]
+}
+```
+
+## 11. Element Focus
+An **element** is in focus when the user highlights an item using a remote control or keyboard. Therefore, the notion of *focus* makes sense only on non-touch devices such as TVs.
+
+The **element** becomes focused as the user navigates through the **focuasable** elements on the screen. In a focus-based interaction model, a single **element** onscreen is considered focused, and the user can move focus to other **element**s by navigating through the **element** onscreen using a remote control.  This navigation of **element**s triggers the **lostFocus** and **gainedFocus** events on the **element**s as the lose and gain focus. The focused **element** is used as the target of any user actions. For example, when an **element** is focused, the **tapped** is triggered when the user presses the **select** button on the remote.
+
+The TV's focus engine automatically determines where focus should move in response to navigation events from a remote. Users can move focus in any two-dimensional direction: left, right, up, down, or diagonal (as supported by the remote/TV).
+
+### Focus Highlighting
+Highlighting the focused **element** can be done in many ways and is left to the app.  The following example uses a simple red focus rectangle to highlight the focused element.
+
+```
+{
+  "templates":{
+    "elements":{
+      "button":{
+        "data":"one", "h":50, "bc":"#ccc", "borderWidth":1, "borderColor":"#ccc", "cornerRadius":10, "focusable":true,  
+        "events":{
+          "load":{
+            "actions":[
+              { "update": {"text":{"valueOf":{"property":"data"}}} }
+            ]
+          },
+          "gainedFocus":{
+            "actions":[
+              { 
+                "update":{ 
+                  "id":"focus", 
+                  "x":{"valueOf":{"property":"screenX"}}, 
+                  "y":{"valueOf":{"property":"screenY"}}, 
+                  "w":{"valueOf":{"property":"w"}}, 
+                  "h":{"valueOf":{"property":"h"}},
+                  "opacity":1,
+                  "duration":0.4
+                } 
+              }
+            ]
+          },
+          "lostFocus":{
+            "actions":[
+              { 
+                "update":{ 
+                  "id":"focus", 
+                  "opacity":0
+                } 
+              }
+            ]
+          },
+          "tapped":{
+            "actions":[
+              { 
+                "update":{ 
+                  "text":"tapped", "bc":"#eee", "duration":0.4, 
+                  "events":{
+                    "completion":{
+                      "actions":[
+                        { "update": {"text":{"valueOf":{"property":"data"}}, "bc":"#ccc" } }
+                      ]
+                    }
+                  }
+                }
+              }
             ]
           }
         }
       }
-    ]
-  }
+    }
+  },
+  "pages":[
+    {
+      "play":"never",
+      "elements":[
+        { "template":"button", "data":"1", "y":50 },
+        { 
+          "y":105, "h":"50", 
+          "elements":[
+            { "template":"button", "data":"2", "w":"50%" },
+            { "template":"button", "data":"3", "x":"50%", "w":"50%" }
+          ]
+        },
+        { "id":"focus", "borderWidth":2, "borderColor":"red", "opacity":0 }
+      ]
+    }
+  ]
+}
 ```
 
-## 11. List Element
+## 12. List Element
 
 Displays a scrollable list of items.  The items are composed of **elements** that define the visual layout of each item.  Items also contain **data** which defines String to be displayed.  
 
@@ -673,7 +779,7 @@ The example below displays a list and a text element that displays the currently
 }
 ```
 
-## 12. TextArea Element
+## 13. TextArea Element
 
 The **textArea** element defines a multi-line text input box where the user can enter text.  It's **text** property can be changed using the **update** action and referenced using **valueOf**.
 
@@ -724,7 +830,7 @@ In the example below, text entered into the **textArea** is copied to the elemen
 }
 ```
 
-## 13. HTTP GET and POST
+## 14. HTTP GET and POST 
 The actions **get** and **post** provide ways to communication with an HTTP server.
 
 ### Get Syntax
@@ -787,7 +893,7 @@ In the example below, when the "HTTP GET" element is tapped, the **get** action 
 					}},
 				{"id":"label", "h":40, "pos":["50%", 130] },
 				{"id":"image", "w":150, "h":150, "pos":["50%", 240], "img":"more.png" },
-				{"id":"error", "textColor":"red", "h":40, "pos":["50%", 20] },
+				{"id":"error", "textColor":"red", "h":40, "pos":["50%", 20] }
 			 ]
 		}
   ]
@@ -820,7 +926,67 @@ The example below uses **post** to send "hello" to a chat bot and displays the r
 }
 ```
 
-## 14. Multilingual Strings
+## 15. Timers
+The **timer** action provides a way to perform other actions based on timed intervals that may or may not repeat.
+
+### Syntax
+```
+  { "timer": { "duration":1, "repeats":true, "events":Events } }
+```
+
+**duration** specifies the time interval in seconds
+**repeats** specifies whether or not the timer continues to fire after the first **duration**.  The default is **false**
+
+### Events
+- **tick**: Occurs when the specified **duration** seconds have transpired.
+
+### Example
+In the example below, when the "tap me" element is tapped, a repeating timer with a duration of 1 sec is started.  The **text** then alternates between "tick" and "tock" every 30 seconds (due to the additional 0.5 sec update animation).  Also notice that the element is disabled so that it can receive the **tapped** event only once.
+
+```
+{
+	"pages": [
+		{
+			"play":"never",
+			"elements": [
+				{
+					"text": "tap me to start timer", "fontSize":20, "pos": ["50%", "33%"], "w":"90%", "h":"10%", "bc":"#fdd",
+					"events": {
+						"tapped": {
+							"actions": [
+								{
+									"update": {
+										"text":"tapped", "bc":"#fee",	"duration":0.5, 
+										"events":{ 
+											"completion":{
+												"actions":[ { "update":{	"text":"tap me", "bc":"#fdd", "enabled":false	}	}	] 
+											} 
+										}
+									}
+								},
+								{
+									"timer": { 
+										"duration":1, "repeats":true,
+										"events":{
+											"tick":{
+												"actions":[
+													{ "update":{ "text":"tick", "duration":0.5, "events":{ "completion":{ "actions":[	{ "update":{ "text":"tock" }}]}}}}
+												]
+											}
+										}
+									}
+								}
+							]
+						}
+					}
+				}
+			]
+		}
+  ]
+}
+```
+
+## 16. Multilingual Strings
 
 The "strings" property of the page specifies strings in multiple languages.  The format is:
 
@@ -841,13 +1007,13 @@ Following example displays "good day" and "good evening" unless the locale is "d
         {
             "strings": { 
             	"good day": {"*":"good day", "de": "Guten Tag"},
-            	"good evening": {"*":"good evening", "de": "guten Abend"},
+            	"good evening": {"*":"good evening", "de": "guten Abend"}
             },
             	
             "elements":[
                 { "text":{"ref":"good day"}, "h":"20%", "pos":["50%", "12%"]},
-                { "text":{"ref":"good evening"}, "h":"20%", "pos":["50%", "34%"]},
-            ],
+                { "text":{"ref":"good evening"}, "h":"20%", "pos":["50%", "34%"]}
+            ]
         }
     ]
 }
@@ -865,7 +1031,7 @@ Following example displays "good morning" and "good afternoon" unless the locale
         {
             "elements":[
                 { "text":{"*":"good morning", "de": "guten Morgen"}, "h":"20%", "pos":["50%", "12%"]},
-                { "text":{"*":"good afternoon", "de": "guten Nachmittag"}, "h":"20%", "pos":["50%", "34%"]},
+                { "text":{"*":"good afternoon", "de": "guten Nachmittag"}, "h":"20%", "pos":["50%", "34%"]}
             ]
         }
     ]
@@ -883,14 +1049,14 @@ Example:
 { 
     "languages":[
         {"id": "en", "title": "English"},
-        {"id": "de", "title": "German"},
+        {"id": "de", "title": "German"}
     ],
     "pages":[
         {
             "elements":[
                 { "text":{"*":"good morning", "de": "guten Morgen"}, "h":"20%", "pos":["50%", "12%"]},
-                { "text":{"*":"good afternoon", "de": "guten Nachmittag"}, "h":"20%", "pos":["50%", "34%"]},
-            ],
+                { "text":{"*":"good afternoon", "de": "guten Nachmittag"}, "h":"20%", "pos":["50%", "34%"]}
+            ]
         }
     ]
 }
